@@ -1,5 +1,7 @@
-# ObjectFinder
+## ObjectFinder
 Recognize structures (i.e. synapses) in three dimensional image stacks
+
+![app_icon_big.png]({{site.baseurl}}/docs/app_icon_big.png)
 
 In order to use this program on your image stacks:
 
