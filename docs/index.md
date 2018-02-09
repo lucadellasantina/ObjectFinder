@@ -1,4 +1,4 @@
-
+<p align="center">
 ## ObjectFinder
 
 ![app_icon_big.png]({{site.baseurl}}/docs/app_icon_big.png)
@@ -13,6 +13,7 @@ In order to use this program on your image stacks:
 2) Create a folder "MyAnalysis" with a subfolder "MyAnalysis/I" in which you place images to analyze
 3) Change Matlab's current working folder to "MyAnalysis"
 3) Execute RunAnalysis.m
+<p>
 <p align="center">
   <b>Some Links:</b><br>
   <a href="#">Link 1</a> |
