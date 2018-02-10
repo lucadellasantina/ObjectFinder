@@ -1,7 +1,7 @@
 
 ## ObjectFinder
 
-![Logo](https://lucadellasantina.github.com/app_icon_big.png)
+![Logo](https://lucadellasantina.github.io/ObjectFinder/index)
 
 ##  Recognize 3D structures in image stacks
 
