@@ -1,23 +1,24 @@
 
 ## ObjectFinder
 
-[app_icon_big.png]({{site.baseurl}}/app_icon_big.png)
+![Logo](https://lucadellasantina.github.com/app_icon_big.png)
 
 ##  Recognize 3D structures in image stacks
 
-
 ### What is ObjectFinder?
-Symphony is a MATLAB® program that allows recognition of small structures within three-dimensional image stacks. It is especially suited for neuroscience research, where it can be used to detect fluorescently-labeled synapses in image stacks acquired using confocal or super-resolution microscopes.
+ObjectFinder is a MATLAB® program that allows recognition of small structures within three-dimensional image stacks. Developed for neuroscience research, it can be used to detect fluorescently-labeled synapses in image stacks acquired using confocal or super-resolution microscopes.
 
 ### Tuned for speed
-ObjectFinder takes full advances of your computer's CPU by fully implementing multi-threaded search inside the 3D volume. On a computer with 8 cores this is an 8X fold speed bump!
+ObjectFinder can search for hundred thosand objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. On a typical workstation with 8-core CPU this means an 8X fold faster speed compared to a classic app!
 
-### Seamlessly integrated with Bitplane Imaris®
+### Seamlessly integrates with Bitplane Imaris®
 ObjectFinder can display detected objects in Imaris® to take full advantage of its 3D rendering capabilities. You can visually add, remove or filter objects by visual inspection against the original 3D image.
 
-### Create publication-quality plots
-Using the "Plot" feature of ObjectFinder, you will be able to generate 
+### Create publication-quality figures
+Using the "Plot" feature of ObjectFinder, you will be able to generate publication-quality figures of objects density, neuronal skeletons and synaptic distribution along neurites.
 
+### Export results to Microsoft Excel®
+Analysis results can be exported to Excel spreadsheets for further elaboration or plotting using your favorite data analysis application.
 
 ### How do I use ObjectFinder to find structures in my image?
 The semi-automated object recognition process starts with creating a folder structure for your experiment with a base directory called after your experiment. Let's assume you'll call it "MyExperiment".
