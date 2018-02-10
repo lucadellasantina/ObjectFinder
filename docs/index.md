@@ -12,7 +12,8 @@ This licensing approach ensures you will always have the right to obtain ObjectF
 
 <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/gplv3.png" /></div>
 
-We strongly believe that software developed for data analysis in scientific research must have these two fundamental features:
+We strongly believe that software developed for data analysis in scientific research must:
+
 * Be open source, to ensure the highest level of reproducibility of your science.
 * Be free of charge for everyone, to ensure no cultural divide is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.
 
