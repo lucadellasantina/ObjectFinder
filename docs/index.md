@@ -16,10 +16,8 @@ This strong copyleft license ensures you will always have the right to obtain Ob
 
 We strongly believe that software developed for data analysis in scientific research must:
 
-<ul>
-  <li>Be open source, to ensure the highest level of reproducibility of your science.</li>
-  <li>Be free of charge for everyone, to ensure no divide of opportunities is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.</li>
-</ul>
+  <i>Be open source, to ensure the highest level of reproducibility of your science.</i>
+  <i>Be free of charge for everyone, to ensure no divide of opportunities is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.</i>
 
   <h3>Tuned for speed!</h3>
 
@@ -64,7 +62,7 @@ The semi-automated object recognition process starts with creating a folder stru
 
 <h3>System Requirements</h3>
 
-<b>Software:</b>
+<i>Software:</i>
 <ul style="list-style-type:none">
   <li>MATLAB R2016b+</li>
   <li>Image Processing Toolbox</li>
@@ -72,7 +70,7 @@ The semi-automated object recognition process starts with creating a folder stru
   <li>BitPlane Imaris® 7 (optional)</li>
 </ul>
 
-<b>Hardware:</b>
+<i>Hardware:</i>
 <ul style="list-style-type:none">
   <li>CPU: Intel Core i5+ or Xeon clocked at >2GHz</li>
   <li>System Memory (RAM): 16Gb</li>
