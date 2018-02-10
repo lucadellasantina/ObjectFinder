@@ -1,6 +1,3 @@
-
-## ObjectFinder
-
 <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" />></div>
 
 ### What is ObjectFinder?
