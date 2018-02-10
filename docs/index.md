@@ -1,5 +1,7 @@
 
-## ![ObjectFinder Logo](https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png) ObjectFinder
+## ObjectFinder
+
+<div style="text-align:center">![ObjectFinder Logo](https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png)></div>
 
 ##  Recognize 3D structures in image stacks
 
