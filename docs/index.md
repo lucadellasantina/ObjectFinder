@@ -23,13 +23,13 @@ Analysis results can be exported to Excel spreadsheets for further elaboration o
 ### How do I use ObjectFinder to find structures in my image?
 The semi-automated object recognition process starts with creating a folder structure for your experiment with a base directory called after your experiment. Let's assume you'll call it "MyExperiment".
 1. Create a subfolder called "MyExperiment/I" where you will place your original image stacks.
-2. Start ObjectFinder from your MATLAB® Apps
-3. Click the folder icon to select your experiment folder "MyExperiment"
-4. Click "Load Images", the available images will be displayed as x-y projection and you will be asked to tell ObjectFinder which image contains the structures to recognize. Optionally, you can also specify which image contains a binary mask to limit the search.
-5. Click "Search Objects" to start the automatic search of objects. Tip: enable the local cluster of cores in MATLAB® (bottom-left icon in your matlab main screen) to go at maximum speed taking full advantage of ObjectFinder's multithreaded search.
-6. Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) and touching the optional mask's border.
-7. If you have Bitplane Imaris® 7 installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects in three dimentions.
-8. Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.
+1. Start ObjectFinder from your MATLAB® Apps
+1. Click the folder icon to select your experiment folder "MyExperiment"
+1. Click "Load Images", the available images will be displayed as x-y projection and you will be asked to tell ObjectFinder which image contains the structures to recognize. Optionally, you can also specify which image contains a binary mask to limit the search.
+1. Click "Search Objects" to start the automatic search of objects. Tip: enable the local cluster of cores in MATLAB® (bottom-left icon in your matlab main screen) to go at maximum speed taking full advantage of ObjectFinder's multithreaded search.
+1. Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) and touching the optional mask's border.
+1. If you have Bitplane Imaris® 7 installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects in three dimentions.
+1. Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.
 
 ### System Requirements
 Software:
