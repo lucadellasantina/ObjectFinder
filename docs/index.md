@@ -1,12 +1,12 @@
 
-## ObjectFinder
-
-![Logo](https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png)
+## ![ObjectFinder Logo](https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png) ObjectFinder
 
 ##  Recognize 3D structures in image stacks
 
 ### What is ObjectFinder?
-ObjectFinder is a MATLAB® program that allows recognition of small structures within three-dimensional image stacks. Developed for neuroscience research, it can be used to detect fluorescently-labeled synapses in image stacks acquired using confocal or super-resolution microscopes.
+ObjectFinder is a MATLAB® app that allows you to recognize thousands to millions of small structures within three-dimensional image volumes. 
+
+ObjectFinder is specifically developed for neuroscience research, where it is particularly suited to detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.
 
 ### Tuned for speed
 ObjectFinder can search for hundred thosand objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. On a typical workstation with 8-core CPU this means an 8X fold faster speed compared to a classic app!
