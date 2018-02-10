@@ -8,7 +8,7 @@ ObjectFinder is a MATLAB® app that allows you to recognize thousands of small s
 
 ObjectFinder was originally developed for neuroscience research purposes, where it is able to detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.
 
-<h4>Free, as in freedom, for everyone.</h4>
+  <h3>Free, as in freedom, for everyone.</h3>
 
 ObjectFinder is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.</a>
 This strong copyleft license ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.
@@ -21,7 +21,7 @@ We strongly believe that software developed for data analysis in scientific rese
   <li>Be free of charge for everyone, to ensure no divide of opportunities is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.</li>
 </ul>
 
-<h5>Tuned for speed!</h5>
+  <h3>Tuned for speed!</h3>
 
 ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. 
 
@@ -29,22 +29,26 @@ ObjectFinder can search hundred thosands objects in a matter of minutes by takin
 
 For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!
 
-<h1>Multiplatform architecture</h1>
+  <h3>Multiplatform architecture</h3>
 
 Whether your workstation relies on Microsoft Windows, macOS or Linux, ObjectFinder can run on your computer since it relies only on core Matlab functions.
 
 Having a single codebase for all platforms makes developing new features as well as fixing bugs faster.
 
-<h1>Seamlessly integrates with Bitplane Imaris®</h1>
+  <h3>Seamlessly integrates with Bitplane Imaris®</h3>
+  
 ObjectFinder can display detected objects in Imaris® to take full advantage of Imaris advanced 3D rendering capabilities. You can visually add, remove or filter objects by visual inspection against the original signal and export them back to ObjectFinder for further processing.
 
-<h1>Create publication quality figures</h1>
+  <h3>Create publication quality figures</h3>
+  
 Using the Plot tab in ObjectFinder, you will be able to generate publication-quality figures of objects density, neuronal skeletons and synaptic distribution along neurites to visually enrich your numeric results when preparing a manuscript.
 
-<h1>Export results to Microsoft Excel®</h1>
+  <h3>Export results to Microsoft Excel®</h3>
+
 Analysis results can be exported to Excel spreadsheets for further elaboration or plotting using your favorite data analysis application.
 
-<h1>How do I use ObjectFinder to find structures in my image?</h1>
+  <h3>How do I use ObjectFinder to find structures in my image?</h3>
+  
 The semi-automated object recognition process starts with creating a folder structure for your experiment with a base directory called after your experiment. Let's assume your experiment folder's name is "MyExperiment".
 
 <ol>
@@ -58,7 +62,7 @@ The semi-automated object recognition process starts with creating a folder stru
   <li>If you have Bitplane Imaris® 7 installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects in three dimentions.</li>
  <li>Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.</li>
 
-<h1>System Requirements</h1>
+<h3>System Requirements</h3>
 
 <b>Software:</b>
 <ul style="list-style-type:none">
@@ -77,7 +81,7 @@ The semi-automated object recognition process starts with creating a folder stru
 
 This computer configuration will allow you to process a confocal microscope's image stack of typical size (2048x2048x150 voxels) in about 10 minutes.
 
-<h1>Credits</h1>
+<h3>Credits</h3>
 
 ObjectFinder is developed and maintained by Luca Della Santina at the University of California San Francisco. It builds on ideas initially developed in the <a href="http://wonglab.biostr.washington.edu/">Wong Lab</a>[Wong Lab](http://wonglab.biostr.washington.edu/) at the University of Washington.
 </div>
