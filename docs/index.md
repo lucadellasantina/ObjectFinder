@@ -42,15 +42,11 @@ The semi-automated object recognition process starts with creating a folder stru
 1. Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.
 
 ### System Requirements
-Software:
-
-MATLAB R2016b+
-
-Image Processing Toolbox
-
-Parallel Computing Toolbox
-
-BitPlane Imaris® 7 (optional)
+Software: /n
+MATLAB R2016b+ /n
+Image Processing Toolbox /n
+Parallel Computing Toolbox /n
+BitPlane Imaris® 7 (optional) /n
 
 Hardware:
 CPU: Intel Core i5+ or Xeon clocked at >2GHz
