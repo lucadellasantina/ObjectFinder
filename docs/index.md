@@ -5,7 +5,8 @@ ObjectFinder is a MATLAB® app that allows you to recognize thousands to million
 
 ObjectFinder is specifically developed for neuroscience research, where it can detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.
 
-### Free as in Freedom, for everyone, period.
+### Free as in Freedom, for everyone, period. ![GPLv3](https://lucadellasantina.github.io/ObjectFinder/gplv3.png)
+
 ObjectFinder is licensed under the strong copyleft license GNU General Public License v3.
 This licensing approach ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.
 
