@@ -58,6 +58,7 @@ The semi-automated object recognition process starts with creating a folder stru
  <li>Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.</li>
 
 <h1>System Requirements</h1>
+
 <ul style="list-style-type:none">
   <li>Software:</li>
   <li>MATLAB R2016b+</li>
@@ -66,10 +67,14 @@ The semi-automated object recognition process starts with creating a folder stru
   <li>BitPlane Imaris® 7 (optional)</li>
 </ul>
 
-Hardware:
-CPU: Intel Core i5+ or Xeon clocked at >2GHz
-System Memory (RAM): 16Gb
-Video Card (GPU): NVidia Quadro with 4Gb VRAM
+<ul style="list-style-type:none">
+  <li>Hardware:</li>
+  <li>CPU: Intel Core i5+ or Xeon clocked at >2GHz</li>
+  <li>System Memory (RAM): 16Gb</li>
+  <li>Video Card (GPU): NVidia Quadro with 4Gb VRAM</li>
+</ul>
+
+
 
 This computer configuration will allow you to process a confocal microscope's image stack of typical size (2048x2048x150 voxels) in about 10 minutes.
 
