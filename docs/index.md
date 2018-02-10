@@ -1,10 +1,7 @@
 <table style="width:100%">
-  <th> What is ObjectFinder?<th>
-  <th>
-    <div style="text-align:center">
-      <img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" width="100" height="100"/>
-    </div>
-  </th>
+    <th> What is ObjectFinder?</th>
+  	<th><div style="text-align:center">
+      <img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" width="100" height="100"/></div></th>
 </table>
 
 ObjectFinder is a MATLAB® app that allows you to recognize thousands to millions of small structures within three-dimensional image volumes in a matter of minutes. 
