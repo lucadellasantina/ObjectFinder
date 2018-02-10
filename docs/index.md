@@ -7,8 +7,8 @@ ObjectFinder is specifically developed for neuroscience research, where it can d
 
 ### Free as in Freedom, for everyone, period. 
 
-ObjectFinder is licensed under the strong copyleft license GNU General Public License v3.
-This licensing approach ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.
+ObjectFinder is licensed under [GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.en.html).
+This strong copyleft license ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.
 
 <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/gplv3.png" /></div>
 
