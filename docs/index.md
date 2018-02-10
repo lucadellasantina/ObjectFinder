@@ -1,6 +1,6 @@
 
 <div style="text-align:center"> 
-  <h1>What is ObjectFinder?</h1>
+  <h3>What is ObjectFinder?</h3>
 
 <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" width="96" height="96"/></div>
 
