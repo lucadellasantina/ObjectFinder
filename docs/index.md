@@ -49,6 +49,7 @@ Analysis results can be exported to Excel spreadsheets for further elaboration o
   
 The semi-automated object recognition process starts with creating a folder structure for your experiment with a base directory called after your experiment. Let's assume your experiment folder's name is "MyExperiment".
 
+<div style="text-align:center"> 
 <ol>
   <li>Install ObjectFinder in matlab's "App" tab by clicking "</li>
   <li>Create a subfolder called "MyExperiment/I" where you will place all your original image stacks as 3D .tif files (one file per channel).</li>
@@ -59,6 +60,7 @@ The semi-automated object recognition process starts with creating a folder stru
   <li>Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) and touching the optional mask's border</li>
   <li>If you have Bitplane Imaris® 7 installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects in three dimentions.</li>
  <li>Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.</li>
+  </div>
 
 <h3>System Requirements</h3>
 
