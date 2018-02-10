@@ -8,6 +8,14 @@ ObjectFinder is a MATLAB® app that allows you to recognize thousands to million
 
 ObjectFinder is specifically developed for neuroscience research, where it can detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.
 
+### Free as in Freedom, for everyone, period.
+ObjectFinder is licensed under the strong copyleft license GNU General Public License v3.
+This licensing approach ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.
+
+We strongly believe that software developed for data analysis in scientific research must have these two fundamental features:
+1. Be open source to ensure the highest level of reproducibility of your science.
+1. Be free of charge for everyone, to ensure no cultural divide is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.
+
 ### Tuned for speed
 ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. On a typical workstation with 8-core CPU this means an 8X fold faster speed compared to a classic app!
 
@@ -38,7 +46,7 @@ Software:
 MATLAB R2016b+
 Image Processing Toolbox
 Parallel Computing Toolbox
-BitPlane Imaris® 7
+BitPlane Imaris® 7 (optional)
 
 Hardware:
 CPU: Intel Core i5+ or Xeon clocked at >2GHz
@@ -48,4 +56,4 @@ Video Card (GPU): NVidia Quadro with 4Gb VRAM
 This computer configuration will allow you to process a typical confocal microscope's image stack (2048x2048x150 voxels) in about 10 minutes.
 
 ### Credits
-ObjectFinder is developed by Luca Della Santina at the University of California San Francisco. It builds on ideas originally developed in the [Wong Lab](http://wonglab.biostr.washington.edu/) at the University of Washington.
+ObjectFinder is developed by Luca Della Santina at the University of California San Francisco. It builds on ideas initially developed in the [Wong Lab](http://wonglab.biostr.washington.edu/) at the University of Washington.
