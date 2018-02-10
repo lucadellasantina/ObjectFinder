@@ -64,7 +64,7 @@ The semi-automated object recognition process starts with creating a folder stru
 
 Software:
 <ul style="list-style-type:none">
-  <li>MATLAB R2016b+</li>
+  <li>MATLAB R2016b</li>
   <li>Image Processing Toolbox</li>
   <li>Parallel Computing Toolbox</li>
   <li>BitPlane Imaris® 7 (optional)</li>
