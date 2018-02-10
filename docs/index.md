@@ -1,8 +1,10 @@
 <table style="width:100%">
+  <col width='100'>
+  <col width='450'>
   <tr>
-    <th> What is ObjectFinder?</th>
   	<th><div style="text-align:center">
       <img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" width="100" height="100"/></div></th>
+        <th> What is ObjectFinder?</th>
   </tr>
 </table>
 
