@@ -1,7 +1,7 @@
 
 ## ObjectFinder
 
-[app_icon_big.png]({{site.baseurl}}/docs/app_icon_big.png)
+[app_icon_big.png]({{site.baseurl}}/app_icon_big.png)
 
 ##  Recognize 3D structures in image stacks
 
