@@ -18,7 +18,7 @@ We strongly believe that software developed for data analysis in scientific rese
 
 ### Tuned for speed!
 
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/speed.png" width="150" height="150"/></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/speed.png" width="100" height="100"/></div>
 
 ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!
 
