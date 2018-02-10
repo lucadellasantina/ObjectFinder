@@ -2,11 +2,11 @@
 ## ObjectFinder
 
 ![app_icon_big.png](https://lucadellasantina.github.io/ObjectFinder/docs/app_icon_big.png)
-##  Recognize 3D structures in MATLAB®
+##  Recognize 3D structures in image stacks
 
 
 ### What is ObjectFinder?
-Symphony is a MATLAB program that allows recognition of small structures within three-dimensional image stacks. It is especially suited for neuroscience research, where it can be used to detect fluorescently-labeled synapses in image stacks acquired using confocal or super-resolution microscopes.
+Symphony is a MATLAB® program that allows recognition of small structures within three-dimensional image stacks. It is especially suited for neuroscience research, where it can be used to detect fluorescently-labeled synapses in image stacks acquired using confocal or super-resolution microscopes.
 
 ### Tuned for speed
 ObjectFinder takes full advances of your computer's CPU by fully implementing multi-threaded search inside the 3D volume. On a computer with 8 cores this is an 8X fold speed bump!
@@ -37,5 +37,3 @@ BitPlane Imaris® 7.2.3
 
 ### Credits
 ObjectFinder is developed by Luca Della Santina. Its built on ideas originally developed in the [Wong Lab](http://wonglab.biostr.washington.edu/) at the University of Washington.
-
-
