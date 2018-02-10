@@ -15,8 +15,10 @@ This strong copyleft license ensures you will always have the right to obtain Ob
 
 We strongly believe that software developed for data analysis in scientific research must:
 
-1) Be open source, to ensure the highest level of reproducibility of your science.
-2) Be free of charge for everyone, to ensure no divide of opportunities is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.
+<ul>
+  <li>Be open source, to ensure the highest level of reproducibility of your science.</li>
+  <li>Be free of charge for everyone, to ensure no divide of opportunities is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.</li>
+</ul>
 
 <h1>Tuned for speed!</h1>
 
