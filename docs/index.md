@@ -20,7 +20,7 @@ We strongly believe that software developed for data analysis in scientific rese
   <li>Be free of charge for everyone, to ensure no divide of opportunities is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.</li>
 </ul>
 
-<h1>Tuned for speed!</h1>
+<h2>Tuned for speed!</h2>
 
 ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. 
 
