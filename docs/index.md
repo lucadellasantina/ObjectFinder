@@ -29,9 +29,9 @@ For a typical workstation with an 8-core CPU this means an 8X fold faster speed 
 
   <h3>Multiplatform architecture</h3>
 
-Whether your workstation relies on Microsoft Windows, macOS or Linux, ObjectFinder can run on your computer since it relies only on core Matlab functions.
+Whether your workstation relies on Microsoft Windows, macOS or Linux, ObjectFinder can run on your computer since it relies only on core Matlab functions./n
 
-Having a single codebase for all platforms makes developing new features as well as fixing bugs faster.
+Having a single codebase for all platforms makes developing new features as well as fixing bugs a much faster and enjoyable journey.
 
   <h3>Seamlessly integrates with Bitplane Imaris®</h3>
   
