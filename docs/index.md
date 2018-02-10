@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" />></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" /></div>
 
 ### What is ObjectFinder?
 ObjectFinder is a MATLAB® app that allows you to recognize thousands to millions of small structures within three-dimensional image volumes in a matter of minutes. 
@@ -10,7 +10,7 @@ ObjectFinder is specifically developed for neuroscience research, where it can d
 ObjectFinder is licensed under the strong copyleft license GNU General Public License v3.
 This licensing approach ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.
 
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/gplv3.png" />></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/gplv3.png" /></div>
 
 We strongly believe that software developed for data analysis in scientific research must have these two fundamental features:
 * Be open source to ensure the highest level of reproducibility of your science.
