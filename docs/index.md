@@ -32,10 +32,19 @@ The semi-automated object recognition process starts with creating a folder stru
 8. Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.
 
 ### System Requirements
+Software:
 MATLAB R2016b+
 Image Processing Toolbox
 Parallel Computing Toolbox
-BitPlane Imaris® 7.2.3
+BitPlane Imaris® 7
+
+Hardware:
+CPU: Intel Core i5+ or Xeon clocked at >2GHz
+System Memory (RAM): 16Gb
+Video Card Memory (VRAM): 4Gb
+
+This computer configuration will allow to process a typical confocal microscope image stack (2048x2048x150 voxels) in about 5-10 minutes.
+
 
 ### Credits
-ObjectFinder is developed by Luca Della Santina. Its built on ideas originally developed in the [Wong Lab](http://wonglab.biostr.washington.edu/) at the University of Washington.
+ObjectFinder is developed by Luca Della Santina at the University of California San Francisco. It is built on ideas originally developed in the [Wong Lab](http://wonglab.biostr.washington.edu/) at the University of Washington.
