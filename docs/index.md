@@ -3,8 +3,6 @@
 
 <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" />></div>
 
-##  Recognize 3D structures in image stacks
-
 ### What is ObjectFinder?
 ObjectFinder is a MATLAB® app that allows you to recognize thousands to millions of small structures within three-dimensional image volumes in a matter of minutes. 
 
