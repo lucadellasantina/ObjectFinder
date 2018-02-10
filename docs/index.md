@@ -11,9 +11,7 @@ ObjectFinder is specifically developed for neuroscience research, where it can d
 
 ObjectFinder is licensed under [GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.en.html).
 This strong copyleft license ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.
-
 <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/gplv3.png" /></div>
-
 We strongly believe that software developed for data analysis in scientific research must:
 
 * Be open source, to ensure the highest level of reproducibility of your science.
@@ -22,9 +20,7 @@ We strongly believe that software developed for data analysis in scientific rese
 ### Tuned for speed!
 
 ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. 
-
 <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/speed.png" width="100" height="100"/></div>
-
 For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!
 
 ### Multiplatform architecture
