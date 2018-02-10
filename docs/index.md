@@ -78,5 +78,6 @@ The semi-automated object recognition process starts with creating a folder stru
 This computer configuration will allow you to process a confocal microscope's image stack of typical size (2048x2048x150 voxels) in about 10 minutes.
 
 <h1>Credits</h1>
+
 ObjectFinder is developed and maintained by Luca Della Santina at the University of California San Francisco. It builds on ideas initially developed in the <a href="http://wonglab.biostr.washington.edu/">Wong Lab</a>[Wong Lab](http://wonglab.biostr.washington.edu/) at the University of Washington.
 </div>
