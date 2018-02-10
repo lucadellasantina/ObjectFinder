@@ -8,7 +8,7 @@ ObjectFinder is a MATLAB® app that allows you to recognize thousands small stru
 
 We developed for neuroscience research purposes, where ObjectFinder is able to detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.
 
-<h1>Free, as in Freedom, for everyone.</h1>
+<h1>Free, as in freedom, for everyone.</h1>
 
 ObjectFinder is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.</a>
 This strong copyleft license ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.
@@ -61,7 +61,7 @@ The semi-automated object recognition process starts with creating a folder stru
 <h1>System Requirements</h1>
 
 <ul style="list-style-type:none">
-  <li>Software:</li>
+  <i>Software:</i>
   <li>MATLAB R2016b+</li>
   <li>Image Processing Toolbox</li>
   <li>Parallel Computing Toolbox</li>
@@ -69,13 +69,11 @@ The semi-automated object recognition process starts with creating a folder stru
 </ul>
 
 <ul style="list-style-type:none">
-  <li>Hardware:</li>
+  <i>Hardware:</i>
   <li>CPU: Intel Core i5+ or Xeon clocked at >2GHz</li>
   <li>System Memory (RAM): 16Gb</li>
   <li>Video Card (GPU): NVidia Quadro with 4Gb VRAM</li>
 </ul>
-
-
 
 This computer configuration will allow you to process a confocal microscope's image stack of typical size (2048x2048x150 voxels) in about 10 minutes.
 
