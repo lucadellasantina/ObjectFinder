@@ -72,7 +72,7 @@ Software:
 
 Hardware:
 <ul style="list-style-type:none">
-  <li>Processur (CPU): Intel Core i7 or Xeon >2GHz</li>
+  <li>Processor (CPU): Intel Core i7 or Xeon >2GHz</li>
   <li>System Memory (RAM): 16Gb</li>
   <li>Video Card (GPU): NVidia Quadro with 4Gb VRAM</li>
 </ul>
