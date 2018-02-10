@@ -72,7 +72,7 @@ The semi-automated object recognition process starts with creating a folder stru
 
 <i>Hardware:</i>
 <ul style="list-style-type:none">
-  <li>CPU: Intel Core i5+ or Xeon clocked at >2GHz</li>
+  <li>Processur (CPU): Intel Core i7 or Xeon >2GHz</li>
   <li>System Memory (RAM): 16Gb</li>
   <li>Video Card (GPU): NVidia Quadro with 4Gb VRAM</li>
 </ul>
