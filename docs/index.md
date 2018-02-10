@@ -17,6 +17,9 @@ We strongly believe that software developed for data analysis in scientific rese
 * Be free of charge for everyone, to ensure no cultural divide is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.
 
 ### Tuned for speed!
+
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/gplv3.png" /></div>
+
 ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!
 
 ### Seamlessly integrates with Bitplane Imaris®
