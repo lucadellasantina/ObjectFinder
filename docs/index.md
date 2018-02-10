@@ -62,7 +62,8 @@ The semi-automated object recognition process starts with creating a folder stru
   <li>If you have Bitplane Imaris® 7 installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects in three dimentions.</li>
  <li>Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.</li>
 
-<h3>System Requirements</h3>
+
+<div style="text-align:left"> <h3>System Requirements</h3>
 
 Software:
 <ul style="list-style-type:none">
@@ -81,6 +82,6 @@ Hardware:
 
 This computer configuration will allow you to process a confocal microscope's image stack of typical size (2048x2048x150 voxels) in about 10 minutes.
 
-<h3>Credits</h3>
+<div style="text-align:left"> <h3>Credits</h3>
 
 ObjectFinder is developed and maintained by Luca Della Santina at the University of California San Francisco. It builds on ideas initially developed in the <a href="http://wonglab.biostr.washington.edu">Wong Lab</a> at the University of Washington.
