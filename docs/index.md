@@ -4,7 +4,7 @@
 
 <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" width="96" height="96"/></div>
 
-ObjectFinder is a MATLAB® app that allows you to recognize thousands of small structures, such as synapses in neuronal tissue, within a three-dimensional image volume. 
+ObjectFinder is a MATLAB® app that allows you to recognize thousands of small structures, such as synapses in neuronal tissue, within a three-dimensional image volume. <br>
 
 ObjectFinder was originally developed for neuroscience research purposes, where it is able to detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.
 
