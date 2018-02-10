@@ -60,16 +60,16 @@ The semi-automated object recognition process starts with creating a folder stru
 
 <h1>System Requirements</h1>
 
+<b>Software:</b>
 <ul style="list-style-type:none">
-  <b>Software:</b>
   <li>MATLAB R2016b+</li>
   <li>Image Processing Toolbox</li>
   <li>Parallel Computing Toolbox</li>
   <li>BitPlane Imaris® 7 (optional)</li>
 </ul>
 
+<b>Hardware:</b>
 <ul style="list-style-type:none">
-  <b>Hardware:</b>
   <li>CPU: Intel Core i5+ or Xeon clocked at >2GHz</li>
   <li>System Memory (RAM): 16Gb</li>
   <li>Video Card (GPU): NVidia Quadro with 4Gb VRAM</li>
