@@ -46,15 +46,16 @@ Analysis results can be exported to Excel spreadsheets for further elaboration o
 <h1>How do I use ObjectFinder to find structures in my image?</h1>
 The semi-automated object recognition process starts with creating a folder structure for your experiment with a base directory called after your experiment. Let's assume your experiment folder's name is "MyExperiment".
 
-1. Install ObjectFinder in matlab's "App" tab by clicking "
-2. Create a subfolder called "MyExperiment/I" where you will place all your original image stacks as 3D .tif files (one file per channel).
-3. Start ObjectFinder from your MATLAB® Apps list.
-4. Click the folder icon to select your experiment folder "MyExperiment"
-5. Click "Load Images", the available images will be displayed as x-y projection and you will be asked to 6ell ObjectFinder which image contains the structures to recognize. Optionally, you can also specify which image contains a binary mask to limit the search.
-7. Click "Search Objects" to start the automatic search of objects. Tip: enable the local cluster of cores in MATLAB® (bottom-left icon in your matlab main screen) to go at maximum speed taking full advantage of ObjectFinder's multithreaded search.
-8. Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) and touching the optional mask's border.
-9. If you have Bitplane Imaris® 7 installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects in three dimentions.
-10. Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.
+<ol>
+  <li>Install ObjectFinder in matlab's "App" tab by clicking "</li>
+  <li>Create a subfolder called "MyExperiment/I" where you will place all your original image stacks as 3D .tif files (one file per channel).</li>
+  <li>Start ObjectFinder from your MATLAB® Apps list.</li>
+  <li>Click the folder icon to select your experiment folder "MyExperiment"</li>
+  <li>Click "Load Images", the available images will be displayed as x-y projection and you will be asked to 6ell ObjectFinder which image contains the structures to recognize. Optionally, you can also specify which image contains a binary mask to limit the search.</li>
+  <li>Click "Search Objects" to start the automatic search of objects. Tip: enable the local cluster of cores in MATLAB® (bottom-left icon in your matlab main screen) to go at maximum speed taking full advantage of ObjectFinder's multithreaded search.</li>
+  <li>Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) and touching the optional mask's border</li>
+  <li>If you have Bitplane Imaris® 7 installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects in three dimentions.</li>
+ <li>Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.</li>
 
 <h1>System Requirements</h1>
 Software: /n 
