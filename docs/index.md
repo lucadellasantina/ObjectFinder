@@ -13,17 +13,17 @@ This licensing approach ensures you will always have the right to obtain ObjectF
 <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/gplv3.png" /></div>
 
 We strongly believe that software developed for data analysis in scientific research must have these two fundamental features:
-* Be open source to ensure the highest level of reproducibility of your science.
+* Be open source, to ensure the highest level of reproducibility of your science.
 * Be free of charge for everyone, to ensure no cultural divide is built between scientists who can and those who cannot afford expensive software packages to produce meaningful scientific discoveries with their research.
 
-### Tuned for speed
-ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. On a typical workstation with 8-core CPU this means an 8X fold faster speed compared to a classic app!
+### Tuned for speed!
+ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!
 
 ### Seamlessly integrates with Bitplane Imaris®
-ObjectFinder can display detected objects in Imaris® to take full advantage of its 3D rendering capabilities. You can visually add, remove or filter objects by visual inspection against the original 3D image.
+ObjectFinder can display detected objects in Imaris® to take full advantage of Imaris advanced 3D rendering capabilities. You can visually add, remove or filter objects by visual inspection against the original signal and export them back to ObjectFinder for further processing.
 
-### Create publication-quality figures
-Using the "Plot" feature of ObjectFinder, you will be able to generate publication-quality figures of objects density, neuronal skeletons and synaptic distribution along neurites.
+### Create publication quality figures
+Using the Plot tab in ObjectFinder, you will be able to generate publication-quality figures of objects density, neuronal skeletons and synaptic distribution along neurites to visually enrich your numeric results when preparing a manuscript.
 
 ### Export results to Microsoft Excel®
 Analysis results can be exported to Excel spreadsheets for further elaboration or plotting using your favorite data analysis application.
@@ -53,7 +53,7 @@ CPU: Intel Core i5+ or Xeon clocked at >2GHz
 System Memory (RAM): 16Gb
 Video Card (GPU): NVidia Quadro with 4Gb VRAM
 
-This computer configuration will allow you to process a typical confocal microscope's image stack (2048x2048x150 voxels) in about 10 minutes.
+This computer configuration will allow you to process a confocal microscope's image stack of typical size (2048x2048x150 voxels) in about 10 minutes.
 
 ### Credits
 ObjectFinder is developed and maintained by Luca Della Santina at the University of California San Francisco. It builds on ideas initially developed in the [Wong Lab](http://wonglab.biostr.washington.edu/) at the University of Washington.
