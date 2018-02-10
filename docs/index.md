@@ -82,4 +82,3 @@ This computer configuration will allow you to process a confocal microscope's im
 <h3>Credits</h3>
 
 ObjectFinder is developed and maintained by Luca Della Santina at the University of California San Francisco. It builds on ideas initially developed in the <a href="http://wonglab.biostr.washington.edu">Wong Lab</a> at the University of Washington.
-</div>
