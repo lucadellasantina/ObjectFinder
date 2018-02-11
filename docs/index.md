@@ -53,7 +53,7 @@ The semi-automated object recognition process starts with creating a folder stru
 <ol>
   <li>Install ObjectFinder in matlab's "App" tab by clicking "</li>
   <li>Start ObjectFinder from your MATLAB® Apps list.</li>
-  <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/Screenshot_ObjectFinder.png" width="100%"/></div>  
+  <div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/Screenshot_MatlabApps.png" width="100%"/></div>  
   <li>Create a subfolder called "MyExperiment/I" where you will place all your original image stacks as 3D .tif files (one file per channel).</li>  
   <li>Click the folder icon to select your experiment folder "MyExperiment"</li>
   <li>Click "Load Images", the available images will be displayed as x-y projection and you will be asked to 6ell ObjectFinder which image contains the structures to recognize. Optionally, you can also specify which image contains a binary mask to limit the search.</li>
