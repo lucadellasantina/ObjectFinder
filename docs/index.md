@@ -43,6 +43,9 @@ ObjectFinder can display detected objects in Imaris® to take full advantage of 
   
 Using the Plot tab in ObjectFinder, you will be able to generate publication-quality figures of objects density, neuronal skeletons and synaptic distribution along neurites to visually enrich your numeric results when preparing a manuscript.
 
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/Screenshot_heatmap.png"/></div>
+
+
   <h3>Export results to Microsoft Excel®</h3>
 
 Analysis results can be exported to Excel spreadsheets for further elaboration or plotting using your favorite data analysis application.
