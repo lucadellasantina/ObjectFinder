@@ -27,7 +27,7 @@ Be free of charge for everyone, to ensure no divide of opportunities is built be
 
 ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume. 
 
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/speed.png" width="100" height="100"/></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/speed.png" width="80" height="80"/></div>
 
 For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!
 
