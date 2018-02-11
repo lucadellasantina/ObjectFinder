@@ -47,7 +47,7 @@ ObjectFinder can display detected objects in Imaris® to take full advantage of 
 
 Analysis results can be exported to Excel spreadsheets for further elaboration or plotting using your favorite data analysis application.
 
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/Screenshot_excel.png" width="100%"/></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/Screenshot_export_excel.png" width="100%"/></div>
 
   <h3>How do I use ObjectFinder with my image?</h3>
   
