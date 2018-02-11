@@ -6,7 +6,7 @@
 
 ObjectFinder is a MATLAB® app that allows you to recognize thousands of small structures, such as synapses in neuronal tissue, within a three-dimensional image volume. <br>
 
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/Screenshot_heatmap.png" width="322"/></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/Screenshot_heatmap.png" width="50%"/></div>
 
 ObjectFinder was originally developed for neuroscience research purposes, where it is able to detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.
 
@@ -33,7 +33,7 @@ For a typical workstation with an 8-core CPU this means an 8X fold faster speed 
 
 Whether your workstation relies on Microsoft Windows, macOS or Linux, ObjectFinder can run on your computer since it relies only on core Matlab functions.<br>
 
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/logo_platforms.png" width="50%"/></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/logo_platforms.png" width="75%"/></div>
 
 Having a single codebase for all platforms makes developing new features as well as fixing bugs a much faster and enjoyable journey.
 
