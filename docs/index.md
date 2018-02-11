@@ -2,7 +2,7 @@
 <div style="text-align:center"> 
   <h3>What is ObjectFinder?</h3>
 
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png" width="96" height="96"/></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/app_icon_big.png"/></div>
 
 ObjectFinder is a MATLAB® app that allows you to recognize thousands of small structures, such as synapses in neuronal tissue, within a three-dimensional image volume. <br>
 
