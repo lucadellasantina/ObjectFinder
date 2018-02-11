@@ -31,7 +31,7 @@ For a typical workstation with an 8-core CPU this means an 8X fold faster speed 
 
 Whether your workstation relies on Microsoft Windows, macOS or Linux, ObjectFinder can run on your computer since it relies only on core Matlab functions.<br>
 
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/logo_platforms.png"/></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/logo_platforms.png" width="50%"/></div>
 
 Having a single codebase for all platforms makes developing new features as well as fixing bugs a much faster and enjoyable journey.
 
