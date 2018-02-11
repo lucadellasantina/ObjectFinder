@@ -38,8 +38,8 @@ else
 end
 
 %% if testing from matlab (comment when running from Imaris)
-% vImarisApplication = actxserver('Imaris.Application');
-% vImarisApplication.mVisible = true;
+%vImarisApplication = actxserver('Imaris.Application');
+%vImarisApplication.mVisible = true;
 
 %% the user has to create a scene with some spots and surface
 
@@ -58,20 +58,21 @@ for vChildIndex = 1:vSurpassScene.GetNumberOfChildren
     end
 end
 
-%% choose Filament to send to matlab
+%% Choose which Filaments object to export
 vFilamentsCnt = length(vFilaments);
 for n= 1:vFilamentsCnt
     vFilamentsName{n} = vFilaments{n}.mName;
 end
 cellstr = cell2struct(vFilamentsName,{'names'},vFilamentsCnt+2);
 str = {cellstr.names};
-[vAnswer_yes,~] = listdlg('ListSize',[200 160], ... 
-    'PromptString','Choose Filament:',...
-    'SelectionMode','single',...
-    'ListString',str);
 
-aFilament = vFilaments{vAnswer_yes};
-%[aXYZ,aRad,aEdges]=aFilament.Get; %indexes of this method don't match actual indexes in imaris sometimes (must be an imaris bug LDS)
+if vFilamentsCnt == 1
+    aFilament = vFilaments{1};
+else
+    [vAnswer_yes,~] = listdlg('ListSize',[200 160], 'PromptString','Choose Filament:', 'SelectionMode','single','ListString',str);
+    aFilament = vFilaments{vAnswer_yes};
+end
+
 aXYZ = aFilament.GetPositionsXYZ;
 aRad = aFilament.GetRadii;
 aEdges = aFilament.GetEdges;

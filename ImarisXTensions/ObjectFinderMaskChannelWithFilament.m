@@ -63,23 +63,24 @@ cnt = 0;
 for vChildIndex = 1:vSurpassScene.GetNumberOfChildren
     if vImarisApplication.mFactory.IsFilament(vSurpassScene.GetChild(vChildIndex - 1))
         cnt = cnt+1;
-        vFilament{cnt} = vSurpassScene.GetChild(vChildIndex - 1);
+        vFilaments{cnt} = vSurpassScene.GetChild(vChildIndex - 1);
     end
 end
 
 %% choose the correct Filament
-vFilamentCnt = length(vFilament);
-for n= 1:vFilamentCnt
-    vFilamentName{n} = vFilament{n}.mName;
+vFilamentsCnt = length(vFilaments);
+for n= 1:vFilamentsCnt
+    vFilamentsName{n} = vFilaments{n}.mName;
 end
-cellstr = cell2struct(vFilamentName,{'names'},vFilamentCnt+2);
+cellstr = cell2struct(vFilamentsName,{'names'},vFilamentsCnt+2);
 str = {cellstr.names};
-[vAnswer_fil,~] = listdlg('ListSize',[200 160], ...
-    'PromptString','Choose the Filament:',...
-    'SelectionMode','single',...
-    'ListString',str);
 
-vFilament = vFilament{vAnswer_fil};
+if vFilamentsCnt == 1
+    vFilament = vFilaments{1};
+else
+    [vAnswer_yes,~] = listdlg('ListSize',[200 160], 'PromptString','Choose Filament:', 'SelectionMode','single','ListString',str);
+    vFilament = vFilaments{vAnswer_yes};
+end
 
 %% get the dataset dimensions
 vSizeX=vImarisApplication.mDataSet.mSizeX;

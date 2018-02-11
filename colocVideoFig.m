@@ -1,3 +1,19 @@
+%% ObjectFinder - Recognize 3D structures in image stacks
+%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
 function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 	colocVideoFig(num_frames, redraw_func, play_fps, big_scroll, ...
 	key_func, size_video, varargin) %HO added size_video as 6th input argument 2/17/2011
@@ -65,13 +81,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 %     end
 %
 %   João Filipe Henriques, 2010
-%
-% 2/13/2011 HO copied the program and added size_video as 6th input argument
-% which defines the window size of the video within the figure. Then HO added
-% line 112 and modified line 113 to make some space in the figure based on
-% the size_video input to allow adding gui buttons and annotations.
-% Modified program was saved as HOvideofig.m, and original videofig was
-% saved as Originalvideofig.m.
+
 	
 	%default parameter values
 	if nargin < 3 || isempty(play_fps), play_fps = 25; end  %play speed (frames per second)

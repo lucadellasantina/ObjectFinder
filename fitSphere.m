@@ -1,3 +1,19 @@
+%% ObjectFinder - Recognize 3D structures in image stacks
+%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
 function[Dots]=fitSphere(Dots, debug)
 % HO 6/25/2010 flipped the division to calculate Round.Long, Round.Oblong
 % and Round.Compact so that less spherical or less smooth ugly dots get
@@ -95,7 +111,7 @@ for i = 1:Dots.Num
  
     Cent = Dots.Pos(i,:);     % Retrieve position of the dot's center
     Vox  = Dots.Vox(i).Pos;   % Retrieve position of each voxel of this dot
-    Dist = dist(Vox,Cent);    % Calculate distance of each voxel from center
+    Dist = dist2(Vox,Cent);    % Calculate distance of each voxel from center
     MeanD = max(1,mean(Dist));% Calculate average distance from center
     VoxN=Vox/MeanD;           % Normalize each voxel position by MeanD
     
@@ -117,7 +133,7 @@ for i = 1:Dots.Num
     % the nubmer of voxels in 6-connectivity neighbors that are
     % outside the punctum)
     for v = 1:size(Dots.Vox(i).Pos,1)
-        Conn=dist(Dots.Vox(i).Pos, Dots.Vox(i).Pos(v,:));
+        Conn=dist2(Dots.Vox(i).Pos, Dots.Vox(i).Pos(v,:));
         Dots.Vox(i).Faces(v)=6-sum(Conn==1);
     end
     %Dots.Round.histFaces(i,:)=hist(Dots.Vox(i).Faces,0:1:6); %histogram doesn't do anything HO 7/6/2010
@@ -136,4 +152,15 @@ for i = 1:Dots.Num
     Dots.Round.Compact(i)=RoundFaces(Dots.Vol(i))/Dots.Round.meanFaces(i);
 end
 fprintf('DONE\n');
+end
+
+function[d]=dist2(A,B)
+%finds distance between two vectors in form A (n,3,n) and B (1,3)
+A2=zeros(size(A,1),3,size(A,3));
+B2=zeros(size(B,1),3);
+A2(:,1:size(A,2),:)=A;
+B2(:,1:size(B,2))=B;
+A=A2;
+B=B2;
+d=sqrt((A(:,1,:)-B(1)).^2 + (A(:,2,:)-B(2)).^2 + (A(:,3,:)-B(3)).^2);
 end

@@ -1,5 +1,20 @@
-%% Colocalization - Manual analysis
+%% ObjectFinder - Recognize 3D structures in image stacks
+%  Copyright (C) 2016,2017,2018 Luca Della Santina
 %
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
+% *Colocalization - Manual analysis*
 % *This scripts allows to analyze whether each object found by ObjectFinder
 % is co-localized to another signal of interest (loaded as image stack)
 % The user is asked to review each object and judge whether is co-localized
@@ -13,7 +28,7 @@
 % Version 1.3                                2017-11-02 Luca Della Santina
 %
 % + Automatic recognition of colocalizing channel name from .tif FileName
-
+%
 % Version 1.2                                2017-10-15 Luca Della Santina
 %
 % % Fixed problem saving Colo.mat as file was too big (use -v7.3 save flag)

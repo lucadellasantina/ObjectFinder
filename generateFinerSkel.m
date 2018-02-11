@@ -1,9 +1,24 @@
+%% ObjectFinder - Recognize 3D structures in image stacks
+%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
 function SkelFiner = generateFinerSkel(Skel, maxFinerEdgeLength, debug)
 %This program takes in Skel.mat, and make finer Skel to fill the voxel gaps
 %with the skel to skel distance at least maxFinerEdgeLength. None of the
 %edges will be longer than maxFinerEdgeLength. The result is returned as
 %SkelFiner.mat with its format same as Skel.mat.
-% HO 7/1/2011.
 
 SkelFinerXYZ = Skel.FilStats.aXYZ; % Keep the original skel IDs
 SkelFinerEdges = [];

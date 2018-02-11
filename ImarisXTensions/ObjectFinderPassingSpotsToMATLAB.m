@@ -49,8 +49,8 @@ end
 %% Start Imaris from matlab and make it visible (comment before saving)
 %   vImarisApplication=actxserver('Imaris.Application');
 %    vImarisApplication.mVisible=true;
-  
-%% the user has to create a scene 
+
+%% the user has to create a scene
 vSurpassScene = vImarisApplication.mSurpassScene;
 if isequal(vSurpassScene, [])
     msgbox('Please create a Surpass scene!');
@@ -73,7 +73,7 @@ for n= 1:vSpotsCnt
 end
 cellstr = cell2struct(vSpotsName,{'names'},vSpotsCnt+2);
 str = {cellstr.names};
-[vAnswer_iPass,~] = listdlg('ListSize',[200 160], ... 
+[vAnswer_iPass,~] = listdlg('ListSize',[200 160], ...
     'PromptString','Choose "final" spots:',...
     'SelectionMode','single',...
     'ListString',str);
@@ -85,70 +85,57 @@ vYesSpotsXYZ = double(vYesSpotsXYZ);% has to be double because 2048*2048*69 is l
 %% load directory of passing spots
 TPN = uigetdir;
 TPN = [TPN filesep];
-load([TPN 'Dots.mat']);
-load([TPN 'find' filesep 'SG.mat']);
-load([TPN 'Settings.mat']);
-xyum = Settings.ImInfo.xyum; 
+load([TPN 'Dots.mat'], 'Dots');
+load([TPN 'Filter.mat'], 'Filter');
+load([TPN 'Settings.mat'], 'Settings');
+xyum = Settings.ImInfo.xyum;
 zum = Settings.ImInfo.zum;
 
-%% find the passing Dots identities 
-    %iPassSpotsXYZ = [ceil(vYesSpotsXYZ(:,2)./xyum),ceil(vYesSpotsXYZ(:,1)./xyum),ceil(vYesSpotsXYZ(:,3)./zum)];%swap x and y for matlab conversion and convert to matrix values %HO changed round to ceil 6/16/2011.
-    iPassSpotsXYZ = [ceil(vYesSpotsXYZ(:,1)./xyum),ceil(vYesSpotsXYZ(:,2)./xyum),ceil(vYesSpotsXYZ(:,3)./zum)];%x y looks fine for me. HO 6/16/2011.
-    iPassSpotsXYZ(iPassSpotsXYZ<1) = 1; % boarder gaurd for rounding conversion errors (matrix ind cannot be 0 or greater than Dots.ImSize(1,2)) 
-    iPassSpotsX = iPassSpotsXYZ(:,1);
-    iPassSpotsY = iPassSpotsXYZ(:,2);
-    iPassSpotsZ = iPassSpotsXYZ(:,3);
-    iPassSpotsX(iPassSpotsX>max(Dots.ImSize(2))) = max(Dots.ImSize(2)); % boarder gaurd for max X.
-    iPassSpotsY(iPassSpotsY>max(Dots.ImSize(1))) = max(Dots.ImSize(1)); % boarder gaurd for max Y.
-    iPassSpotsZ(iPassSpotsZ>max(Dots.ImSize(3))) = max(Dots.ImSize(3)); % boarder gaurd for max Z.
-    iPassSpotsXYZ = [iPassSpotsX iPassSpotsY iPassSpotsZ];
-    clear iPassSpotsX iPassSpotsY iPassSpotsZ;
-    iPassSpotsXYZ = double(iPassSpotsXYZ); 
-    %iPassSpotsInd = sub2ind([Dots.ImSize], iPassSpotsXYZ(:,1),iPassSpotsXYZ(:,2),iPassSpotsXYZ(:,3));
-    iPassSpotsInd = sub2ind([Dots.ImSize], iPassSpotsXYZ(:,2),iPassSpotsXYZ(:,1),iPassSpotsXYZ(:,3)); %Now use YXZ (row, column, z) format to convert to index HO 6/16/2011
-%     GroupedVoxIDMap = zeros(Dots.ImSize); % create matrix with ID of dot assigned to each voxel of dot
-%     for i=1:Grouped.Num
-%         GroupedVoxIDMap(Grouped.Vox(i).Ind)=i;
-%     end
-    DotsVoxIDMap = zeros(Dots.ImSize); % create matrix with ID of dot assigned to each voxel of dot
-    for i=1:Dots.Num
-        DotsVoxIDMap(Dots.Vox(i).Ind)=i;
+%% find the passing Dots identities
+%iPassSpotsXYZ = [ceil(vYesSpotsXYZ(:,2)./xyum),ceil(vYesSpotsXYZ(:,1)./xyum),ceil(vYesSpotsXYZ(:,3)./zum)];%swap x and y for matlab conversion and convert to matrix values %HO changed round to ceil 6/16/2011.
+iPassSpotsXYZ = [ceil(vYesSpotsXYZ(:,1)./xyum),ceil(vYesSpotsXYZ(:,2)./xyum),ceil(vYesSpotsXYZ(:,3)./zum)];%x y looks fine for me. HO 6/16/2011.
+iPassSpotsXYZ(iPassSpotsXYZ<1) = 1; % boarder gaurd for rounding conversion errors (matrix ind cannot be 0 or greater than Dots.ImSize(1,2))
+iPassSpotsX = iPassSpotsXYZ(:,1);
+iPassSpotsY = iPassSpotsXYZ(:,2);
+iPassSpotsZ = iPassSpotsXYZ(:,3);
+iPassSpotsX(iPassSpotsX>max(Dots.ImSize(2))) = max(Dots.ImSize(2)); % boarder gaurd for max X.
+iPassSpotsY(iPassSpotsY>max(Dots.ImSize(1))) = max(Dots.ImSize(1)); % boarder gaurd for max Y.
+iPassSpotsZ(iPassSpotsZ>max(Dots.ImSize(3))) = max(Dots.ImSize(3)); % boarder gaurd for max Z.
+iPassSpotsXYZ = [iPassSpotsX iPassSpotsY iPassSpotsZ];
+clear iPassSpotsX iPassSpotsY iPassSpotsZ;
+iPassSpotsXYZ = double(iPassSpotsXYZ);
+%iPassSpotsInd = sub2ind([Dots.ImSize], iPassSpotsXYZ(:,1),iPassSpotsXYZ(:,2),iPassSpotsXYZ(:,3));
+iPassSpotsInd = sub2ind([Dots.ImSize], iPassSpotsXYZ(:,2),iPassSpotsXYZ(:,1),iPassSpotsXYZ(:,3)); %Now use YXZ (row, column, z) format to convert to index HO 6/16/2011
+DotsVoxIDMap = zeros(Dots.ImSize); % create matrix with ID of dot assigned to each voxel of dot
+for i=1:Dots.Num
+    DotsVoxIDMap(Dots.Vox(i).Ind)=i;
+end
+
+DotsfoundID = DotsVoxIDMap(iPassSpotsInd);
+DotsmissedID = find(DotsfoundID==0); % get index of missed IDs to search for positions
+for j = 1:length(DotsmissedID) %find the closest dot to the missing dots
+    for k = Dots.Num:-1:1
+        xyDistUm = hypot(vYesSpotsXYZ(DotsmissedID(j),2)-Dots.Pos(k,1).*xyum,vYesSpotsXYZ(DotsmissedID(j),1)-Dots.Pos(k,2).*xyum); %vYesSpotsXYZ from imaris is transposed over the xy axis so Dots and vYes.. have switched XY
+        xyzDistUm(k) = hypot(xyDistUm, vYesSpotsXYZ(DotsmissedID(j),3)-Dots.Pos(k,3).*zum);
     end
+    minDistUm = find(xyzDistUm==min(xyzDistUm));
     
-%     GroupedfoundID = GroupedVoxIDMap(iPassSpotsInd);
-    
-    DotsfoundID = DotsVoxIDMap(iPassSpotsInd);
-    DotsmissedID = find(DotsfoundID==0); % get index of missed IDs to search for positions
-    for j = 1:length(DotsmissedID) %find the closest dot to the missing dots
-        for k = Dots.Num:-1:1
-            xyDistUm = hypot(vYesSpotsXYZ(DotsmissedID(j),2)-Dots.Pos(k,1).*xyum,vYesSpotsXYZ(DotsmissedID(j),1)-Dots.Pos(k,2).*xyum); %vYesSpotsXYZ from imaris is transposed over the xy axis so Dots and vYes.. have switched XY
-            xyzDistUm(k) = hypot(xyDistUm, vYesSpotsXYZ(DotsmissedID(j),3)-Dots.Pos(k,3).*zum);
-        end
-        minDistUm = find(xyzDistUm==min(xyzDistUm));
-        
-        %Luca: added additional check for newly created dots,
-        %      they must be assigned to a existing dot only if that is
-        %      closer than 1 micron to the position specified in Imaris
-        if minDistUm > 4
-            fprintf('Imaris spot with no dot closer than 4um found.\n');
-            DotsfoundID(DotsmissedID(j)) = -1;
-        else
-            DotsfoundID(DotsmissedID(j)) = minDistUm;
-        end
+    %Luca: added additional check for newly created dots,
+    %      they must be assigned to a existing dot only if that is
+    %      closer than 1 micron to the position specified in Imaris
+    if minDistUm > 4
+        fprintf('Imaris spot with no dot closer than 4um found.\n');
+        DotsfoundID(DotsmissedID(j)) = -1;
+    else
+        DotsfoundID(DotsmissedID(j)) = minDistUm;
     end
-    DotsfoundID = DotsfoundID(DotsfoundID>=0); %Luca: Exclude Imaris dots that found no matching in matlab dots
-    foundID = [];
-%     for i=1:length(GroupedfoundID);
-%         if GroupedfoundID(i)~=0;
-%             foundID = [foundID Grouped.ids{GroupedfoundID(i)}];
-%         end
-%     end
-    
-    foundID = [foundID DotsfoundID];
-    Hit3D = unique(foundID);
-    
-    SG.passI = false(Dots.Num,1);% setup SG.passI variable (Imaris passing)
-    SG.passI(Hit3D) = true; 
-    save([TPN 'find/SG.mat'],'SG');
-disp('Passing spots exported successfully!');    
+end
+
+DotsfoundID = DotsfoundID(DotsfoundID>=0); %Luca: Exclude Imaris dots that found no matching in matlab dots
+Hit3D = unique(DotsfoundID);
+
+Filter.passF = false(Dots.Num,1);% setup SG.passI variable (Imaris passing)
+Filter.passF(Hit3D) = true;
+save([TPN 'Filter.mat'],'Filter');
+disp('Passing spots exported successfully!');
 end

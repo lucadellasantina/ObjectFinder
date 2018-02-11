@@ -1,13 +1,24 @@
-function[Grouped] = groupFacingObjects(Dots, SG, Settings)
-%% Collect information from dots that passed SG thresholding
-colormap colorcube
+%% ObjectFinder - Recognize 3D structures in image stacks
+%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
+function[Grouped] = groupFacingObjects(Settings, Dots, Filter)
+% Collect information from dots that passed thresholding
+%colormap colorcube;
 TPN = Settings.TPN;
-if isfield(SG,'passI')
-    Pass = SG.passI; % Use dots passing Imaris manual selection
-else
-    Pass = SG.passF; % If not available PassI use dots passing SG threshold
-end
-
+Pass = Filter.passF; % If not available PassI use dots passing SG threshold
 IDs=find(Pass);
 ImSize=Dots.ImSize;
 nearby = round(1/Settings.ImInfo.xyum);%10;  %Distance at which faces are looked at %look up to 1um nearby, changed from 10 to 1/Settings.ImInfo.xyum to deal with images with different resolution HO 6/28/2010
@@ -17,7 +28,7 @@ maxContact = 0.3; % maximum faces/volume to be independent dot
 fprintf('Grouping objects facing each other ... ');
 Dists = zeros(length(IDs),length(IDs));
 for i = 1: length(IDs)
-   Dists(i,:) = dist(Dots.Pos(IDs,:),Dots.Pos(IDs(i),:)); %[i,j] element in Dists will be the distance between i-th dot and j-th dot in a unit of voxel number.  
+   Dists(i,:) = dist2(Dots.Pos(IDs,:),Dots.Pos(IDs(i),:)); %[i,j] element in Dists will be the distance between i-th dot and j-th dot in a unit of voxel number.  
 end
 [x, y] = find((Dists > 0) & (Dists < nearby)); % pick pair of dots whose distance is between 0 and nearby.
 
@@ -110,7 +121,7 @@ end
 Grouped.ImInfo = Settings.ImInfo;
 Grouped.Num = length(groups); %6/29/2010 HO
 fprintf('DONE\n');
-disp(['Total valid objects after grouping: ' num2str(length(groups))]);
+disp(['Number of objects validated after grouping: ' num2str(length(groups))]);
 
 %% Draw gouped dots 
 maxSum=zeros(ImSize(1),ImSize(2)); %Dots.ImSize to Grouped.ImSize 6/29/2010 HO
@@ -129,9 +140,17 @@ MaxC=maxID1+(maxSum>1)*1000;
 MaxC(:,:,2)=maxID2+(maxSum>1)*1000;
 MaxC(:,:,3)=maxID3+(maxSum>1)*1000;
 MaxC=uint8(MaxC);
-image(MaxC),pause(.01)
-GroupI=MaxC;
 
-imwrite(GroupI,[TPN 'find' filesep 'GroupI.tif'],'Compression','none')
-image(GroupI),pause(.01)
+imwrite(MaxC,[TPN 'images' filesep 'Grouped.tif'],'Compression','none');
+end
+
+function[d]=dist2(A,B)
+%finds distance between two vectors in form A (n,3,n) and B (1,3)
+A2=zeros(size(A,1),3,size(A,3));
+B2=zeros(size(B,1),3);
+A2(:,1:size(A,2),:)=A;
+B2(:,1:size(B,2))=B;
+A=A2;
+B=B2;
+d=sqrt((A(:,1,:)-B(1)).^2 + (A(:,2,:)-B(2)).^2 + (A(:,3,:)-B(3)).^2);
 end

@@ -1,4 +1,20 @@
-function [dotDensity] = calcDotDensityAlongZ(Grouped)
+%% ObjectFinder - Recognize 3D structures in image stacks
+%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
+function [dotDensity] = calcDotDensityAlongZ(Grouped, showPlot)
 %% Accumulate passing dots coordinates (xyz) into dPosPassF
 dotDensity.zStart = 1;                    % Analyze the entire volume
 dotDensity.zEnd = Grouped.ImInfo.zNumVox; % Analyze the entire volume
@@ -16,35 +32,37 @@ dotDensity.densityPerc = tmpDensityPerc;
 clear tmp* i passingIDs PassDotIDs ans Dots SG;
 
 %% Plot dot density distribution as a function of Volume depth.
-tmpH = figure('Name', 'Grouped distribution along Z');
-set(tmpH, 'Position', [100 200 1200 500]);
-set(gcf, 'DefaultAxesFontName', 'Arial', 'DefaultAxesFontSize', 12);
-set(gcf, 'DefaultTextFontName', 'Arial', 'DefaultTextFontSize', 12);
-
-subplot(1,2,1);
-hold on;
-tmpY = dotDensity.densityPerc;
-tmpX = 1:100;
-plot(tmpX, tmpY, 'k', 'MarkerSize', 8);
-
-box off;
-set(gca, 'color', 'none',  'TickDir','out');
-ylabel('Number of objects');
-xlabel(['Volume depth percentage (bin size = ' num2str(Grouped.ImInfo.zum*dotDensity.binSize) ' um)']);
-
-subplot(1,2,2);
-hold on;
-sizeBin = Grouped.ImInfo.xyum*Grouped.ImInfo.xNumVox...
-               *Grouped.ImInfo.xyum*Grouped.ImInfo.yNumVox...
-               *Grouped.ImInfo.zum*dotDensity.binSize;
-tmpY = dotDensity.densityPerc / sizeBin;
-tmpX = 1:100;
-plot(tmpX, tmpY, 'k', 'MarkerSize', 8);
-
-box off;
-set(gca, 'color', 'none',  'TickDir','out');
-ylabel('Density (objects / um^3)');
-xlabel('Volume depth percentage');
-
-clear tmp* plot_variance sizeBin;
+if showPlot
+    tmpH = figure('Name', 'Grouped distribution along Z');
+    set(tmpH, 'Position', [100 200 1200 500]);
+    set(gcf, 'DefaultAxesFontName', 'Arial', 'DefaultAxesFontSize', 12);
+    set(gcf, 'DefaultTextFontName', 'Arial', 'DefaultTextFontSize', 12);
+    
+    subplot(1,2,1);
+    hold on;
+    tmpY = dotDensity.densityPerc;
+    tmpX = 1:100;
+    plot(tmpX, tmpY, 'k', 'MarkerSize', 8);
+    
+    box off;
+    set(gca, 'color', 'none',  'TickDir','out');
+    ylabel('Number of objects');
+    xlabel(['Volume depth percentage (bin size = ' num2str(Grouped.ImInfo.zum*dotDensity.binSize) ' um)']);
+    
+    subplot(1,2,2);
+    hold on;
+    sizeBin = Grouped.ImInfo.xyum*Grouped.ImInfo.xNumVox...
+        *Grouped.ImInfo.xyum*Grouped.ImInfo.yNumVox...
+        *Grouped.ImInfo.zum*dotDensity.binSize;
+    tmpY = dotDensity.densityPerc / sizeBin;
+    tmpX = 1:100;
+    plot(tmpX, tmpY, 'k', 'MarkerSize', 8);
+    
+    box off;
+    set(gca, 'color', 'none',  'TickDir','out');
+    ylabel('Density (objects / um^3)');
+    xlabel('Volume depth percentage');
+    
+    clear tmp* plot_variance sizeBin;
+end
 end

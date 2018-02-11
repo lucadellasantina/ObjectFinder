@@ -1,4 +1,20 @@
-%% Pass objects detected by the ObjectFinder to Imaris version 7.2.3
+%% ObjectFinder - Recognize 3D structures in image stacks
+%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%
+%  This program is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
+% *Pass objects detected by the ObjectFinder to Imaris version 7.2.3*
 %
 % send dots found with dotfinder to Imaris
 % imaris spots will be displayed as passing and nonpassing dots. 
@@ -30,27 +46,9 @@ if isempty(vImarisApplication.GetCurrentFileName)
 end
 
 %% Aquire Matlab Dot information  
-xyum = Settings.ImInfo.xyum; 
-zum = Settings.ImInfo.zum;
-
-% get the passing IDS
-Iprompt = {'SG.passF:','SG.passI:','All objects'};
-Inum_lines = 1;
-if isfield(SG, 'passI')
-    Idef = {'0','1','0'};
-else
-    Idef = {'1','0','0'};
-end
-Answer = inputdlg(Iprompt,'Select objects to transfer',Inum_lines ,Idef);
-if isempty(Answer), return, end
-
-if str2double(cell2mat(Answer(1)))==1
-    passingIDs = SG.passF';
-elseif str2double(cell2mat(Answer(2)))==1
-    passingIDs = SG.passI';
-else
-    passingIDs = ones(1, Dots.Num);
-end
+xyum = Settings.ImInfo.xyum; % image calibration
+zum = Settings.ImInfo.zum;   % image calibration
+passingIDs = SG.passF';      % Passing objects' IDs
 
 % Changing passingIDs from passF/passI form (0 or 1 in each element) 
 % to list of dot IDs (1 to total number of dots, as expected by Imaris)
