@@ -6,6 +6,8 @@
 
 ObjectFinder is a MATLAB® app that allows you to recognize thousands of small structures, such as synapses in neuronal tissue, within a three-dimensional image volume. <br>
 
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/Screenshot_heatmap.png"/></div>
+
 ObjectFinder was originally developed for neuroscience research purposes, where it is able to detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.
 
   <h3>Free as in freedom</h3>
@@ -38,13 +40,6 @@ Having a single codebase for all platforms makes developing new features as well
   <h3>Seamlessly integrates with Bitplane Imaris®</h3>
   
 ObjectFinder can display detected objects in Imaris® to take full advantage of Imaris advanced 3D rendering capabilities. You can visually add, remove or filter objects by visual inspection against the original signal and export them back to ObjectFinder for further processing.
-
-  <h3>Create publication quality figures</h3>
-  
-Using the Plot tab in ObjectFinder, you will be able to generate publication-quality figures of objects density, neuronal skeletons and synaptic distribution along neurites to visually enrich your numeric results when preparing a manuscript.
-
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/Screenshot_heatmap.png"/></div>
-
 
   <h3>Export results to Microsoft Excel®</h3>
 
