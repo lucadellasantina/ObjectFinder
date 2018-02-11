@@ -14,7 +14,7 @@ ObjectFinder was originally developed for neuroscience research purposes, where 
 
 ObjectFinder is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.</a>
 This strong copyleft license ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.
-<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/gplv3.png"/></div>
+<div style="text-align:center"><img src ="https://lucadellasantina.github.io/ObjectFinder/logo_open_source.png"/><img src ="https://lucadellasantina.github.io/ObjectFinder/logo_gplv3.png"/></div>
 
 We strongly believe that software developed for data analysis in scientific research must:<br>
 
@@ -84,4 +84,4 @@ This computer configuration will allow you to process a confocal microscope's im
 
 <div style="text-align:left"> <h3>Credits</h3>
 
-ObjectFinder is developed and maintained by Luca Della Santina at the University of California San Francisco. It builds on ideas initially developed in the <a href="http://wonglab.biostr.washington.edu">Wong Lab</a> at the University of Washington.
+ObjectFinder is developed and maintained by Luca Della Santina at the University of California, San Francisco. It builds on ideas initially developed in the <a href="http://wonglab.biostr.washington.edu">Wong Lab</a> at the University of Washington in Seattle.
