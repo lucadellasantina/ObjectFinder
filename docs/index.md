@@ -50,7 +50,7 @@ Using the Plot tab in ObjectFinder, you will be able to generate publication-qua
 
 Analysis results can be exported to Excel spreadsheets for further elaboration or plotting using your favorite data analysis application.
 
-  <h3>How do I use ObjectFinder to find structures in my image?</h3>
+  <h3>How do I use ObjectFinder with my image?</h3>
   
 The semi-automated object recognition process starts with creating a folder structure for your experiment with a base directory called after your experiment. Let's assume your experiment folder's name is "MyExperiment".
 
