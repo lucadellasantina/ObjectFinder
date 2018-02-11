@@ -77,10 +77,10 @@ Software:
   <li>BitPlane Imaris® 7 (optional)</li>
 </ul>
 
-Hardware:
+Hardware (recommended):
 <ul style="list-style-type:none">
-  <li>Processor (CPU): Intel Core i7 or Xeon >2GHz</li>
-  <li>System Memory (RAM): 16Gb</li>
+  <li>Processor (CPU): Intel Xeon >2GHz</li>
+  <li>System Memory (RAM): 32Gb</li>
   <li>Video Card (GPU): NVidia Quadro with 4Gb VRAM</li>
 </ul>
 
