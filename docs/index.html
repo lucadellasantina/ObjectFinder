@@ -5,14 +5,14 @@
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="description" content="Slate is a responsive theme for GitHub Pages" />
+    <meta name="description" content="ObjectFinder : Recognize 3D structures in image stacks" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,700italic,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300italic,700,700italic' rel='stylesheet' type='text/css'>
 
-    <title>Slate : A responsive theme for GitHub Pages</title>
+    <title>ObjectFinder : 3D object recognition in image volumes</title>
   </head>
 
   <body>
@@ -20,17 +20,16 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <a id="forkme_banner" href="repository_url}}">View on GitHub</a>
+          <a id="forkme_banner" href="https://github.com/lucadellasantina/ObjectFinder">View on GitHub</a>
 
-          <h1 id="project_title">Slate</h1>
-          <h2 id="project_tagline">A responsive theme for GitHub Pages</h2>
+          <h2 id="project_title">ObjectFinder</h2>
+          <h2 id="project_tagline">3D object recognition in image volumes</h2>
         </header>
     </div>
 
     <section class="outer">
         <div class="downloads inner">
-          <a class="zip_download_link" href="#">Download .zip</a>
-          <a class="tar_download_link" href="#">Download .tar.gz</a>
+          <a class="https://github.com/lucadellasantina/ObjectFinder/releases/download/v4.0/ObjectFinder.mlappinstall" href="#">Download v4.0</a>
         </div>
     </section>
 
@@ -38,150 +37,94 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
+        <div style="text-align:center"><h2>What is ObjectFinder?</h2><img src ="images/app_icon_big.png"/></div>
+        <p>
+        ObjectFinder is a MATLAB® app that allows you to recognize thousands of small structures, such as synapses in neuronal tissue, within a three-dimensional image volume. </p>
 
-        <h1>A simple, legible layout.</h1>
-        <p>Slate is a simple theme that I created for the <a href="http://pages.github.com">GitHub Pages automatic generator</a>. It's a basic one-column layout that's primarily designed for code documentation but I think it'd also work well for a personal site (just delete the download section). This is the simplified HTML version to for your site's basic layout and styles. Clone these files and replace this content to get the ball rolling.</p>
+        <p>ObjectFinder was originally developed for neuroscience research purposes, where it is able to detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.</p>
 
-        <h1>Headline 1</h1>
+        <div style="text-align:center"><img src ="images/Screenshot_heatmap.png" width="60%"/></div>
 
-        <p>Lorem ipsizzle funky fresh i'm in the shizzle boom shackalack, consectetizzle adipiscing my shizz. Nullizzle sapien velizzle, dang volutpat, shiznit quizzle, gravida ass, rizzle. Pot get down get down tortor. Sed erizzle. Black go to hizzle dolizzle dapibizzle turpis fo shizzle my nizzle yo. Maurizzle pellentesque nibh et check it out. Bow wow wow check it out tortizzle. Pellentesque for sure rhoncizzle bow wow wow. In owned habitasse brizzle dictumst. Nizzle dapibizzle. Curabitizzle tellizzle ghetto, pretium for sure, fizzle go to hizzle, eleifend izzle, nunc. Dope suscipizzle. Integizzle boom shackalack velit ass purus.</p>
+        <div style="text-align:center"><h2>Free as in freedom</h2></div>
 
-        <h2>Headline 2</h2>
+        <p>ObjectFinder is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.</a>
+        This strong copyleft license ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.</p>
+        <div style="text-align:center"><img src ="images/logo_gplv3.png"/></div>
 
-        <p>Lorem ipsizzle funky fresh i'm in the shizzle boom shackalack, consectetizzle adipiscing my shizz. Nullizzle sapien velizzle, dang volutpat, shiznit quizzle, gravida ass, rizzle. Pot get down get down tortor. Sed erizzle. Black go to hizzle dolizzle dapibizzle turpis fo shizzle my nizzle yo. Maurizzle pellentesque nibh et check it out. Bow wow wow check it out tortizzle. Pellentesque for sure rhoncizzle bow wow wow. In owned habitasse brizzle dictumst. Nizzle dapibizzle. Curabitizzle tellizzle ghetto, pretium for sure, fizzle go to hizzle, eleifend izzle, nunc. Dope suscipizzle. Integizzle boom shackalack velit ass purus.</p>
+        <p>We strongly believe that software developed for data analysis in scientific research must be open source, to ensure the highest level of reproducibility of your science.</p>
 
-        <h3>Headline 3</h3>
+        <div style="text-align:center"><img src ="images/logo_open_source.png" width="100"/></div>
 
-        <p>Lorem ipsizzle funky fresh i'm in the shizzle boom shackalack, consectetizzle adipiscing my shizz. Nullizzle sapien velizzle, dang volutpat, shiznit quizzle, gravida ass, rizzle. Pot get down get down tortor. Sed erizzle. Black go to hizzle dolizzle dapibizzle turpis fo shizzle my nizzle yo. Maurizzle pellentesque nibh et check it out. Bow wow wow check it out tortizzle. Pellentesque for sure rhoncizzle bow wow wow. In owned habitasse brizzle dictumst. Nizzle dapibizzle. Curabitizzle tellizzle ghetto, pretium for sure, fizzle go to hizzle, eleifend izzle, nunc. Dope suscipizzle. Integizzle boom shackalack velit ass purus.</p>
+        <div style="text-align:center"><h2>Tuned for speed!</h2></div>
 
-        <h4>Headline 4</h4>
+        ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume.
 
-        <p>Lorem ipsizzle funky fresh i'm in the shizzle boom shackalack, consectetizzle adipiscing my shizz. Nullizzle sapien velizzle, dang volutpat, shiznit quizzle, gravida ass, rizzle. Pot get down get down tortor. Sed erizzle. Black go to hizzle dolizzle dapibizzle turpis fo shizzle my nizzle yo. Maurizzle pellentesque nibh et check it out. Bow wow wow check it out tortizzle. Pellentesque for sure rhoncizzle bow wow wow. In owned habitasse brizzle dictumst. Nizzle dapibizzle. Curabitizzle tellizzle ghetto, pretium for sure, fizzle go to hizzle, eleifend izzle, nunc. Dope suscipizzle. Integizzle boom shackalack velit ass purus.</p>
+        <div style="text-align:center"><img src ="images/speed.png" width="80" height="80"/></div>
 
-        <h5>Headline 5</h5>
+        For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!
 
-        <p>Lorem ipsizzle funky fresh i'm in the shizzle boom shackalack, consectetizzle adipiscing my shizz. Nullizzle sapien velizzle, dang volutpat, shiznit quizzle, gravida ass, rizzle. Pot get down get down tortor. Sed erizzle. Black go to hizzle dolizzle dapibizzle turpis fo shizzle my nizzle yo. Maurizzle pellentesque nibh et check it out. Bow wow wow check it out tortizzle. Pellentesque for sure rhoncizzle bow wow wow. In owned habitasse brizzle dictumst. Nizzle dapibizzle. Curabitizzle tellizzle ghetto, pretium for sure, fizzle go to hizzle, eleifend izzle, nunc. Dope suscipizzle. Integizzle boom shackalack velit ass purus.</p>
+        <div style="text-align:center"><h2>Multiplatform architecture</h2></div>
 
-        <h6>Headline 6</h6>
+        Whether your workstation relies on Microsoft Windows, macOS or Linux, ObjectFinder can run on your computer since it relies only on core Matlab functions.<br>
 
-        <p>Lorem ipsizzle funky fresh i'm in the shizzle boom shackalack, consectetizzle adipiscing my shizz. Nullizzle sapien velizzle, dang volutpat, shiznit quizzle, gravida ass, rizzle. Pot get down get down tortor. Sed erizzle. Black go to hizzle dolizzle dapibizzle turpis fo shizzle my nizzle yo. Maurizzle pellentesque nibh et check it out. Bow wow wow check it out tortizzle. Pellentesque for sure rhoncizzle bow wow wow. In owned habitasse brizzle dictumst. Nizzle dapibizzle. Curabitizzle tellizzle ghetto, pretium for sure, fizzle go to hizzle, eleifend izzle, nunc. Dope suscipizzle. Integizzle boom shackalack velit ass purus.</p>
+        <div style="text-align:center"><img src ="images/logo_platforms.png" width="75%"/></div>
 
-        <p>Roses are <em>emphasized</em></br>
-        Violets are <strong>strong</strong></p>
+        Having a single codebase for all platforms makes developing new features as well as fixing bugs a much faster and enjoyable journey.
 
-        <h3>We all like making lists</h3>
+        <div style="text-align:center"><h2>Seamlessly integrates with Bitplane Imaris®</h2></div>
 
-        <ul>
-          <li>Red Apples</li>
-          <li>Purple Grapes</li>
-          <li>Green Kiwifruits</li>
+        ObjectFinder can display detected objects in Imaris® to take full advantage of Imaris advanced 3D rendering capabilities. You can visually add, remove or filter objects by visual inspection against the original signal and export them back to ObjectFinder for further processing.
+
+        <div style="text-align:center"><h2>Export results to Microsoft Excel®</h2></div>
+
+        Analysis results can be exported to Excel spreadsheets for further elaboration or plotting using your favorite data analysis application.
+
+        <div style="text-align:center"><img src ="images/Screenshot_export_excel.png" width="100%"/></div>
+
+        <div style="text-align:center"><h2>How do I use ObjectFinder with my image?</h2></div>
+
+        The semi-automated object recognition process starts with creating a folder structure for your experiment with a base directory called after your experiment. Let's assume your experiment folder's name is "MyExperiment".
+
+        <div style="text-align:left">
+        <ol>
+          <li>Install ObjectFinder using MATLAB "Install App" button</li>
+          <li>Start ObjectFinder from your Apps list.</li>
+          <div style="text-align:center"><img src ="images/Screenshot_MatlabApps.png" width="100%"/></div>
+          <li>Create a subfolder called "MyExperiment/I" where you will place all your original image stacks as 3D .tif files (one file per channel).</li>
+          <li>Click the folder icon to select your experiment folder "MyExperiment"</li>
+          <li>Click "Load Images", the available images will be displayed as x-y projection and you will be asked to tell ObjectFinder which image contains the structures to recognize. Optionally, you can also specify which image contains a binary mask to limit the search.</li>
+          <li>Click "Search Objects" to start the automatic search of objects. Tip: enable the local cluster of cores in MATLAB® (bottom-left icon in your matlab main screen) to go at maximum speed taking full advantage of ObjectFinder's multithreaded search.</li>
+          <li>Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) and touching the optional mask's border</li>
+          <li>If you have Bitplane Imaris® 7 installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects in three dimentions.</li>
+         <li>Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.</li>
+
+
+         <div style="text-align:center"><h2>System Requirements</h2></div>
+
+        Software:
+        <ul style="list-style-type:none">
+          <li>MATLAB R2016b</li>
+          <li>Image Processing Toolbox</li>
+          <li>Parallel Computing Toolbox</li>
+          <li>BitPlane Imaris® 7 (optional)</li>
         </ul>
 
-        <p>Let's get crazy:</p>
+        Hardware (recommended):
+        <ul style="list-style-type:none">
+          <li>Processor (CPU): Intel Xeon >2GHz</li>
+          <li>System Memory (RAM): 32Gb</li>
+          <li>Video Card (GPU): NVidia Quadro with 4Gb VRAM</li>
+        </ul>
 
-        <ol>
-          <li>
-            <p>This is a list item with two paragraphs. Lorem ipsum dolor
-            sit amet, consectetuer adipiscing elit. Aliquam hendrerit
-            mi posuere lectus.</p>
-
-            <p>Vestibulum enim wisi, viverra nec, fringilla in, laoreet
-            vitae, risus. Donec sit amet nisl. Aliquam semper ipsum
-            sit amet velit.</p>
-          </li>
-          <li><p>Suspendisse id sem consectetuer libero luctus adipiscing.</p></li>
-        </ol>
-
-        <p>What about some code <strong>in</strong> a list? That's insane, right?</p>
-
-        <ol>
-          <li>
-            <p>In Ruby you can map like this:</p>
-              <code>['a', 'b'].map { |x| x.uppercase }</code>
-          </li>
-          <li>
-            <p>In Rails, you can do a shortcut:</p>
-              <code>['a', 'b'].map(&amp;:uppercase)</code>
-          </li>
-        </ol>
-
-        <p>Some people seem to like definition lists</p>
-
-        <dl>
-        <dt>Lower cost</dt>
-          <dd>The new version of this product costs significantly less than the previous one!</dd>
-          <dt>Easier to use</dt>
-          <dd>We've changed the product so that it's much easier to use!</dd>
-        </dl>
-
-        <h3>I am a robot</h3>
-
-        <p>Maybe you want to print <code>robot</code> to the console 1000 times. Why not?</p>
-<pre>
-def robot_invasion
-puts("robot " * 1000)
-end
-</pre>
-
-<p>How about we throw some angle braces and ampersands in there?</p>
-
-<pre><code>&lt;div class="footer"&gt;
-&amp;copy; 2013 Zorg Industries
-&lt;/div&gt;
-</code></pre>
-
-        <h3>If you need to blame someone, the best way to do so is by quoting them:</h3>
-
-        <blockquote>
-        <p>I, at any rate, am convinced that He does not throw dice.</p>
-        </blockquote>
-
-        <p>Or perhaps someone a little less eloquent:</p>
-
-        <blockquote>
-        <p>I wish you'd have given me this written question ahead of time so I
-        could plan for it... I'm sure something will pop into my head here in
-        the midst of this press conference, with all the pressure of trying to
-        come up with answer, but it hadn't yet...</p>
-
-        <p>I don't want to sound like
-        I have made no mistakes. I'm confident I have. I just haven't - you
-        just put me under the spot here, and maybe I'm not as quick on my feet
-        as I should be in coming up with one.</p>
-        </blockquote>
-
-        <h2>An octocat appears!</h2>
-        <img alt="an octocat!" src="http://octodex.github.com/images/octocat-de-los-muertos.jpg" />
-        <p>My favorite octocat, illustrated by <a href="https://github.com/cameronmcefee">@cameronmceffee</a>.</p>
-
-        <h2>Table for two</h2>
-
-        <table>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Rank</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>Tom Preston-Werner</td>
-          <td>Awesome</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Albert Einstein</td>
-          <td>Nearly as awesome</td>
-        </tr>
-        </table>
-
+        <p>This computer configuration will allow you to process a confocal microscope's image stack of typical size (2048x2048x150 voxels) in about 10 minutes.</p>
       </section>
     </div>
 
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p class="copyright">Slate theme maintained by <a href="https://github.com/jasoncostello">Jason Costello</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p class="copyright">ObjectFinder is developed and maintained by <a href="https://github.com/lucadellasantina">Luca Della Santina</a>.</p>
+        <p class="copyright">It builds on ideas initially developed in the <a href="http://wonglab.biostr.washington.edu">Wong Lab</a> at the University of Washington in Seattle.</p>
       </footer>
     </div>
 
