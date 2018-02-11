@@ -29,7 +29,7 @@
 
     <section class="outer">
         <div class="downloads inner">
-          <a class="zip_download_link" href="https://github.com/lucadellasantina/ObjectFinder/releases/download/v4.0/ObjectFinder.mlappinstall">Download v4.0</a>
+          <a class="zip_download_link" href="https://github.com/lucadellasantina/ObjectFinder/releases/download/v4.0/ObjectFinder.mlappinstall">Download ObjectFinder v4.0</a>
         </div>
     </section>
 
@@ -57,15 +57,15 @@
 
         <div style="text-align:center"><h2>Tuned for speed!</h2></div>
 
-        ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume.
+        <p>ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume.</p>
 
         <div style="text-align:center"><img src ="images/speed.png" width="80" height="80"/></div>
 
-        For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!
+        <p>For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!</p>
 
         <div style="text-align:center"><h2>Multiplatform architecture</h2></div>
 
-        Whether your workstation relies on Microsoft Windows, macOS or Linux, ObjectFinder can run on your computer since it relies only on core Matlab functions.<br>
+        <p>Whether your workstation relies on Microsoft Windows, macOS or Linux, ObjectFinder can run on your computer since it relies only on core Matlab functions.</p>
 
         <div style="text-align:center"><img src ="images/logo_platforms.png" width="75%"/></div>
 
@@ -83,21 +83,21 @@
 
         <div style="text-align:center"><h2>How do I use ObjectFinder with my image?</h2></div>
 
-        The semi-automated object recognition process starts with creating a folder structure for your experiment with a base directory called after your experiment. Let's assume your experiment folder's name is "MyExperiment".
+        The object recognition process starts with you creating a folder structure for your experiment. Let's assume your experiment folder's name is called "MyExperiment".
 
         <div style="text-align:left">
         <ol>
+          <li>Download latest ObjectFinder verston at the top of this page</li>
           <li>Install ObjectFinder using MATLAB "Install App" button</li>
           <li>Start ObjectFinder from your Apps list.</li>
           <div style="text-align:center"><img src ="images/Screenshot_MatlabApps.png" width="100%"/></div>
-          <li>Create a subfolder called "MyExperiment/I" where you will place all your original image stacks as 3D .tif files (one file per channel).</li>
-          <li>Click the folder icon to select your experiment folder "MyExperiment"</li>
-          <li>Click "Load Images", the available images will be displayed as x-y projection and you will be asked to tell ObjectFinder which image contains the structures to recognize. Optionally, you can also specify which image contains a binary mask to limit the search.</li>
-          <li>Click "Search Objects" to start the automatic search of objects. Tip: enable the local cluster of cores in MATLAB® (bottom-left icon in your matlab main screen) to go at maximum speed taking full advantage of ObjectFinder's multithreaded search.</li>
-          <li>Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) and touching the optional mask's border</li>
-          <li>If you have Bitplane Imaris® 7 installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects in three dimentions.</li>
+          <li>place there all your original image stacks inside the folder "MyExperiment/I/" saved as 3D .tif files (one file per channel).</li>
+          <li>Select "MyExperiment" as the current working folder using the first home folder icon.</li>
+          <li>Click "Load Images", all available images will be previewed and you will be asked to instruct ObjectFinder on which image contains the structures to recognize. Optionally, you can also specify which a 3D binary mask to limit the search.</li>
+          <li>Click "Search Objects" to start the automatic search of objects.</li>
+          <li>Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) or touching the search mask's border</li>
+          <li>If you have Imaris® installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects.</li>
          <li>Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.</li>
-
 
          <div style="text-align:center"><h2>System Requirements</h2></div>
 
