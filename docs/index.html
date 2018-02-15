@@ -71,9 +71,13 @@
 
         Having a single codebase for all platforms makes developing new features as well as fixing bugs a much faster and enjoyable journey.
 
-        <div style="text-align:center"><h2>Seamlessly integrates with Bitplane Imaris®</h2></div>
+        <div style="text-align:center"><h2>Seamlessly integrated with Bitplane Imaris®</h2></div>
 
-        ObjectFinder can display detected objects in Imaris® to take full advantage of Imaris advanced 3D rendering capabilities. You can visually add, remove or filter objects by visual inspection against the original signal and export them back to ObjectFinder for further processing.
+        ObjectFinder can display detected objects in Imaris® to take full advantage of Imaris advanced 3D rendering capabilities. 
+
+        <div style="text-align:center"><img src ="images/Screenshot_imaris.png" width="100%"/></div>
+
+        <p>You can visually add, remove or filter objects by visual inspection against the original signal and export them back to ObjectFinder for further processing.</p>
 
         <div style="text-align:center"><h2>Export results to Microsoft Excel®</h2></div>
 
@@ -81,16 +85,19 @@
 
         <div style="text-align:center"><img src ="images/Screenshot_export_excel.png" width="100%"/></div>
 
-        <div style="text-align:center"><h2>How do I use ObjectFinder with my image?</h2></div>
-
-        The object recognition process starts with you creating a folder structure for your experiment. Let's assume your experiment folder's name is called "MyExperiment".
+        <div style="text-align:center"><h2>How do I install and use ObjectFinder?</h2></div>
 
         <div style="text-align:left">
         <ol>
-          <li>Download latest ObjectFinder verston at the top of this page</li>
-          <li>Install ObjectFinder using MATLAB "Install App" button</li>
+          <li>Download latest ObjectFinder version from the top of this page</li>
+          <li>Install ObjectFinder using MATLAB's "Install App" button</li>
           <li>Start ObjectFinder from your Apps list.</li>
           <div style="text-align:center"><img src ="images/Screenshot_MatlabApps.png" width="100%"/></div>
+       </ol>
+
+       <p>The object recognition process starts with you creating a folder structure for your experiment. Let's assume your experiment folder's name is called "MyExperiment".</p>
+
+       <ol>
           <li>place there all your original image stacks inside the folder "MyExperiment/I/" saved as 3D .tif files (one file per channel).</li>
           <li>Select "MyExperiment" as the current working folder using the first home folder icon.</li>
           <li>Click "Load Images", all available images will be previewed and you will be asked to instruct ObjectFinder on which image contains the structures to recognize. Optionally, you can also specify which a 3D binary mask to limit the search.</li>
@@ -98,6 +105,7 @@
           <li>Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) or touching the search mask's border</li>
           <li>If you have Imaris® installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects.</li>
          <li>Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.</li>
+      </ol>
 
          <div style="text-align:center"><h2>System Requirements</h2></div>
 
@@ -116,7 +124,7 @@
           <li>Video Card (GPU): NVidia Quadro with 4Gb VRAM</li>
         </ul>
 
-        <p>This computer configuration will allow you to process a confocal microscope's image stack of typical size (2048x2048x150 voxels) in about 10 minutes.</p>
+        <p>This computer configuration will allow you to process a confocal microscope's image stack of 2048x2048x150 voxels in about 10 minutes.</p>
       </section>
     </div>
 
