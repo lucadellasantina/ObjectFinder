@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2214484436" file="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3211718516" file="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -14,7 +14,7 @@
     <param.description>ObjectFinder allows to detect objects of arbitrary shape in a 3D image stack and calculate properties of each individual objects as well as their distribution within the volume. 
 This software is primarily developed for neuroscience research applications such as recognition of fluorescently-labelled synapses. 3D image stacks (TIF format) are generated using confocal or super-resolution microscopes.</param.description>
     <param.screenshot>${PROJECT_ROOT}/ObjectFinder_resources/Screenshot_small.png</param.screenshot>
-    <param.version>4.0</param.version>
+    <param.version>4.1</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Image Processing Toolbox</item>
@@ -62,7 +62,7 @@ This software is primarily developed for neuroscience research applications such
       <file>${PROJECT_ROOT}/findObjects.m</file>
       <file>${PROJECT_ROOT}/fitSphere.m</file>
       <file>${PROJECT_ROOT}/generateFinerSkel.m</file>
-      <file>${PROJECT_ROOT}/groupFacingObjects.m</file>
+      <file>${PROJECT_ROOT}/getFilteredObjects.m</file>
       <file>${PROJECT_ROOT}/saveastiff.m</file>
       <file>${PROJECT_ROOT}/shollAnalysis.m</file>
       <file>${PROJECT_ROOT}/txtBar.m</file>

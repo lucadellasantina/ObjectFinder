@@ -1,7 +1,9 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
 %  Copyright (C) 2016,2017,2018 Luca Della Santina
 %
-%  This program is free software: you can redistribute it and/or modify
+%  This file is part of ObjectFinder
+%
+%  ObjectFinder is free software: you can redistribute it and/or modify
 %  it under the terms of the GNU General Public License as published by
 %  the Free Software Foundation, either version 3 of the License, or
 %  (at your option) any later version.
@@ -18,50 +20,6 @@
 % (i.e. labeling of synaptic structures) with the final goal of segmenting 
 % each individual object and computing its indivudual properties.*
 %
-% The basic steps implemented by this semi-automate approach involve:
-%
-% * Load image stacks of the volume to inspect and supplemental labelings
-%   (A mask is optionally provided to limit the search volume)
-%
-% <<LoadImages.png>>
-%
-% * Select options to restrict the search of candidate objects
-%
-% <<Preferences.png>>
-%
-%
-% * Candidate objects are detected automatically using an iterative 
-%   thresholding method followed by watershed segmentation. This process
-%   is optimized for taking advantage of multi-core processors or
-%   processing remote clusters by multi-threading operations.
-%
-% <<IterativeThreshold.png>>
-%
-% * The user is requested to filter candidate objects according to one 
-%   or more parameters, by setting a threshold (usually using ITmax)
-% * The user refine the selection by 3D visual inspection using Imaris
-%
-% <<PunctaIdentification.png>>
-%
-% * Object distribution and density is calculated in the volume or across
-%   the cell skeleton.
-% * If no skeleton is present, object density is plotted against Z depth
-%
-% The main search loop follows the logic described in:
-%
-%  Developmental patterning of glutamatergic synapses onto 
-%  retinal ganglion cells.
-%  Morgan JL, Schubert T, Wong RO. Neural Dev. (2008) 26;3:8.
-%
-% Originally written for the detection of postsynaptic PSD95 puncta on
-% dendrites of gene-gun labelled retinal ganglion cells
-%
-% *Dependencies:*  
-%
-% * Imaris 7.2.3
-% * Image Processing Toolbox
-% * Parallel Computing Toolbox
-%
 
 % Preliminary check of valid current working directory structure
 if ~isdir([pwd filesep 'I'])
@@ -71,7 +29,7 @@ if ~isdir([pwd filesep 'I'])
 end
 
 % Get the current working folder as base directory for the analysis
-disp('---- ObjectFinder 4.0 beta analysis ----');
+disp('---- ObjectFinder 4.1 analysis ----');
 Settings.TPN = [pwd filesep]; 
 if exist([Settings.TPN 'Settings.mat'], 'file'), load([Settings.TPN 'Settings.mat']); end
 save([Settings.TPN 'Settings.mat'], 'Settings');
@@ -216,14 +174,9 @@ clear tmpOptions
 %% In Imaris select ItMax as filter, and export objects back to matlab.
 exportObjectsToImaris(Settings, Dots, Filter); % Transfer objects to Imaris
 
-%% Group objects that are facing each other and recalculate properties
+%% If a skeleton is present then calculate properties of the individual cell
 load([Settings.TPN 'Settings.mat']);
 load([Settings.TPN 'Filter.mat']); % Reload to synch imaris-selectied
-Grouped = groupFacingObjects(Settings, Dots, Filter);
-Grouped = fitSphere(Grouped, Settings.debug); 
-save([Settings.TPN 'Grouped.mat'],'Grouped');
-
-%% If a skeleton is present then calculate properties of the individual cell
 if exist([Settings.TPN 'Skel.mat'], 'file')
     load([Settings.TPN 'Skel.mat'])
     load([Settings.TPN 'Settings.mat'])
@@ -233,21 +186,28 @@ if exist([Settings.TPN 'Skel.mat'], 'file')
     Skel = calcSkelPathLength(Skel, Settings.debug);
     save([Settings.TPN 'SkelFiner.mat'], 'Skel');
 
-    Grouped = distDotsToCellBody(Grouped, Skel, Settings);
-    Grouped = distDotsToSkel(Grouped, Skel, Settings);
-    save([Settings.TPN 'Grouped.mat'],'Grouped');
+    Dots = distDotsToCellBody(Dots, Skel, Settings);
+    Dots = distDotsToSkel(Dots, Skel, Settings);
+    save([Settings.TPN 'Dots.mat'],'Dots');
 
-    Density = calcDensity(Settings, Grouped, Skel, true); % Generate heatmaps of object density
-    calcPathLengthStats(Settings, Grouped, Skel, true); % Plot distribution along dendrites
+    Density = calcDensity(Settings, getFilteredObjects(Dots, Filter), Skel, true); % Generate heatmaps of object density
+    calcPathLengthStats(Settings, getFilteredObjects(Dots, Filter), Skel, true); % Plot distribution along dendrites
 else
     % Compute and plot object distribution as function of volume depth
-    Density = calcDotDensityAlongZ(Grouped, true);
+    Density = calcDotDensityAlongZ(Settings, getFilteredObjects(Dots, Filter), true);
 end
     save([Settings.TPN 'Density'], 'Density') %fixed to save only Settings (9/2/09 HO)
 
 disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
+% _*Version 4.1*               created on 2018-02-24 by Luca Della Santina_
+%
+%  + Plot Sholl analysis on Skel
+%  + getFilteredObjects returns the validated objects according to Filter
+%  + Added License text in the GUI's About tab
+%  + Added visual log on GUI during detection phase
+%  - Removed need for grouped.mat, all Objects are store in Dots.mat
 %
 % _*Version 4.0*               created on 2018-02-08 by Luca Della Santina_
 %
@@ -302,13 +262,10 @@ disp('---- ObjectFinder analysis done! ----');
 %
 % _*TODO*_
 %
-%  Calculate Sholl analysis on Skel as part of the standard analysis
 %  Allow processing of 12/16-bit images
 %  Make heatmaps plots with finer convolution disk (too coarse right now)
-%  Add automatic detection of neurite peak for monostratified cells
 %  Resolve minDotsize vs minFnalDotSize (current minDotSize fixed at 3px)
 %  Implement stepping=1 through gmode instead (current stepping of 2)
-%  Check LDSCAsampleCollect and LDSCAsampleUse calculate density differently
 %  When searching one signal (i.e. ctbp2 in IPL stack) prompt user several 
 %  sample fields to choose an appropriate ITmax threshold
 %  findObjects() Post is broadcasted to every worker, slice Igm better 

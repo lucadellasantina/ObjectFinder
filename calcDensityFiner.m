@@ -16,15 +16,15 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function Density = calcDensity(Settings, Dots, Skel, showPlot)
+function Density = calcDensityFiner(Settings, Dots, Skel, showPlot)
 %% Mids are the middle point of each skeleton's segment
-AllSegCut = cat(2, Skel.SegStats.Seg(:,2,:), ...
-                   Skel.SegStats.Seg(:,1,:), ...
-                   Skel.SegStats.Seg(:,3,:));
+AllSegCut = cat(2, Skel.SegStats.Seg(:,2,:)./Settings.ImInfo.xyum, ...
+                   Skel.SegStats.Seg(:,1,:)./Settings.ImInfo.xyum, ...
+                   Skel.SegStats.Seg(:,3,:)./Settings.ImInfo.zum);
 
 DPos=round(Dots.Pos);
-DPos(:,1:2)=DPos(:,1:2)*Settings.ImInfo.xyum; 
-DPos(:,3)=DPos(:,3)*Settings.ImInfo.zum;
+%DPos(:,1:2)=DPos(:,1:2)*Settings.ImInfo.xyum; 
+%DPos(:,3)=DPos(:,3)*Settings.ImInfo.zum;
 
 %Extract Dend positions
 Mids=mean(AllSegCut,3); % segment xyz position calculated as mean of two node positions
@@ -34,15 +34,15 @@ Length=sqrt((AllSegCut(:,1,1)-AllSegCut(:,1,2)).^2 ...
 
 Nearest = zeros(size(DPos, 1),1);
 for i = 1:size(DPos,1)
-    Ndist=dist2(Mids,DPos(i,:)); %find dist from dot to all nodes
-    Near=min(Ndist); %find shortest distance
+    Ndist=dist2(Mids,DPos(i,:)); % find dist from dot to all nodes
+    Near=min(Ndist); % find shortest distance
     Nearest(i)=find(Ndist==Near,1); %get node at that distance
 end
 NN=Mids(Nearest,:); %assign that node to NearestNode list for dots
 
 % Image is shrunck so that number of 
-yNumVox=fix(Settings.ImInfo.yNumVox*Settings.ImInfo.xyum)+1; % yNumVox is the rounded um of the image in y direction.
-xNumVox=fix(Settings.ImInfo.xNumVox*Settings.ImInfo.xyum)+1; % xNumVox is the rounded um of the image in y direction.
+yNumVox=Settings.ImInfo.yNumVox; % yNumVox is the rounded um of the image in y direction.
+xNumVox=Settings.ImInfo.xNumVox; % xNumVox is the rounded um of the image in y direction.
 Msize=[yNumVox xNumVox];     % 2048*2048 with 0.103um xy pixel size becomes Settings.ImInfo.yNumVox=Settings.ImInfo.xNumVox=211.
 
 % create Nearest Node list (nearest node for each dot and distance)
@@ -81,10 +81,10 @@ end
 % So, instead of each 1um pixel representing the density of that particular
 % pixel, it represents the average density of dots within the 10um area
 
-AreaS=10; %filter is 10um RADIUS disk (because one pixel is 1um*1um).
-Disk=fspecial('disk',AreaS); %fspecial geneartes averaging filter. It averages the pixel values in the 21*21 circular area.
-DotFilt=imfilter(DotMap,Disk,'same');
-DendFilt=imfilter(DendMap,Disk,'same');
+AreaS=round(10/Settings.ImInfo.xyum); % 10um radius integrating disk
+Disk=fspecial('disk', AreaS); %fspecial geneartes averaging filter. It averages the pixel values in the 21*21 circular area.
+DotFilt=imfilter(DotMap, Disk, 'same');
+DendFilt=imfilter(DendMap, Disk, 'same');
 
 % Find territory
 % This part generates Dendritic territory, which is the convolution of
@@ -98,7 +98,8 @@ DendFilt=imfilter(DendMap,Disk,'same');
 % P/A, mean D/A and mean P/D were calculated by averaging all the pixels
 % WITHIN THE TERRITORY.
 
-Disk2=fspecial('disk',5); % For territory, use 5um RADIUS averaging disk filter.
+AreaS2 = round(5/Settings.ImInfo.xyum); % 5 micron integrating disk
+Disk2=fspecial('disk',AreaS2); % For territory, use 5um RADIUS averaging disk filter.
 Territory=imfilter(DendMap,Disk2,'same');
 DotDist = DotFilt.*Territory;
 DendDist = DendFilt.*Territory;
