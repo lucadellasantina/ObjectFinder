@@ -17,60 +17,22 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 % *Find objects using an iterative thresholding approach*
-% -------------------------------------------------------------------------
-% The object finder searches for individual objects within the volume by
-% first dividing the volume in multiple sub-blocks and then applying the
-% following steps to each search block:
-%
-% Step 1: Iteratively scan the volume to create a scoring map
-% Step 2: Segment objects with multiple scoring peaks using watershed
-% Step 3: Calculate volume, position, scoring and intensity of each object
-% Step 4: Resolve objects laying across multiple search blocks 
-%
-% Tested with object in the approx. shape of ellipsoids (synaptic puncta)
-% 
-% Version 3.0                               2017-11-07  Luca Della Santina
-%
-%  + Multi-threaded computation of Step#1 and Step#2 using parfor
-%  - Removed dependency from mask (D) and TPN
-%  % Removed losing dots if they are left without any more voxel (Step #4)
-%
-% Version 2.0                               2017-08-03  Luca Della Santina
-%
-%  + Split computation in 4 fundamental steps
-%  + Improved ~15% speed by switching from bwlabeln to conncomp+labelmatrix
-%  % Relevant settings are passed to the function as parameters
-%
-% Version 1.0 formerly DotFinder   2010-xx-xx  Haruhisa Okawa/Adam Bleckert
-%                                  2008-xx-xx  Josh Morgan
-%
-% input: TPN: path to working directory
-%        Post: 3D image stack of channel to search for objects
-%        Settings: settings for the dofinding process
-%
-% output: Dots (containing informatio about each recognized object
-%         Settings (containing updated settings informations)
-%
-% dependencies: txtBar.m
-%               image processing toolbox
-%
-% -------------------------------------------------------------------------
 
 function[Dots, Settings]=findObjects(Post, Settings)
 
 % Retrieve parameters to use from Settings
 debug = Settings.debug;
-blockSize = Settings.dotfinder.blockSize;
-blockBuffer = Settings.dotfinder.blockBuffer;
-thresholdStep = Settings.dotfinder.thresholdStep;
-maxDotSize = Settings.dotfinder.maxDotSize;
-minDotSize = Settings.dotfinder.minDotSize;
-itMin = Settings.dotfinder.itMin;
-minFinalDotITMax = Settings.dotfinder.minFinalDotITMax;
-minFinalDotSize = Settings.dotfinder.minFinalDotSize;
-MultiPeakDotSizeCorrectionFactor=Settings.dotfinder.MultiPeakDotSizeCorrectionFactor;
-peakCutoffUpperBound = Settings.dotfinder.peakCutoffUpperBound;
-peakCutoffLowerBound = Settings.dotfinder.peakCutoffLowerBound;
+blockSize = Settings.objfinder.blockSize;
+blockBuffer = Settings.objfinder.blockBuffer;
+thresholdStep = Settings.objfinder.thresholdStep;
+maxDotSize = Settings.objfinder.maxDotSize;
+minDotSize = Settings.objfinder.minDotSize;
+itMin = Settings.objfinder.itMin;
+minFinalDotITMax = Settings.objfinder.minFinalDotITMax;
+minFinalDotSize = Settings.objfinder.minFinalDotSize;
+MultiPeakDotSizeCorrectionFactor=Settings.objfinder.MultiPeakDotSizeCorrectionFactor;
+peakCutoffUpperBound = Settings.objfinder.peakCutoffUpperBound;
+peakCutoffLowerBound = Settings.objfinder.peakCutoffLowerBound;
 
 if debug 
     subplot(2,1,1);
@@ -215,51 +177,55 @@ parfor block = 1:(NumBx*NumBy*NumBz)
     tmpBlocks(block).sizeIgm = [ys, xs, zs];              % Store for later
     tmpBlocks(block).startPos = [yStart, xStart, zStart]; % Store for later
     tmpBlocks(block).endPos = [yEnd, xEnd, zEnd];         % Store for later
-    tmpBlocks(block).nLabels = 0;                    % initialize for later
-    tmpBlocks(block).wsTMLabels = [];                % initialize for later
-    tmpBlocks(block).wsLabelList = [];               % initialize for later
+    tmpBlocks(block).wsTMLabels = Igl;                    % Store for later
+    tmpBlocks(block).wsLabelList = unique(Igl);           % Store for later
+    tmpBlocks(block).nLabels = numel(unique(Igl));         % Store for later 
 end
 
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 2: Find the countour of each dot and split it using watershed if multiple peaks are found within the same dot --
-fprintf('Separate objects with multiple peaks using multi-threaded watershed segmentation... ');
-tic;
 
-parfor block = 1:(NumBx*NumBy*NumBz)
-    ys = tmpBlocks(block).sizeIgm(1);              % retrieve values
-    xs = tmpBlocks(block).sizeIgm(2);              % retrieve values
-    zs = tmpBlocks(block).sizeIgm(3);              % retrieve values
-    thresholdMap = tmpBlocks(block).thresholdMap;  % retrieve values
-    
-    wsThresholdMapBin = uint8(thresholdMap>0);                        % binary map of threshold
-    wsThresholdMapBinOpen = imdilate(wsThresholdMapBin, ones(3,3,3)); % dilate Bin map with a 3x3x3 kernel (dilated perimeter acts like ridges between background and ROIs)
-    wsThresholdMapComp = imcomplement(thresholdMap);                  % complement (invert) image. Required because watershed() separate holes, not mountains. imcomplement creates complement using the entire range of the class, so for uint8, 0 becomes 255 and 255 becomes 0, but for double 0 becomes 1 and 255 becomes -254.
-    wsTMMod = wsThresholdMapComp.*wsThresholdMapBinOpen;              % Force background outside of dilated region to 0, and leaves walls of 255 between puncta and background.
-    wsTMLabels = watershed(wsTMMod, 6);                               % 6 voxel connectivity watershed, this will fill background with 1, ridges with 0 and puncta with 2,3,4,... in double format
-    wsBackgroundLabel = mode(double(wsTMLabels(:)));                  % calculate background level
-    wsTMLabels(wsTMLabels == wsBackgroundLabel) = 0;                  % seems that sometimes Background can get into puncta... so the next line was not good enough to remove all the background labels.
-    wsTMLabels = double(wsTMLabels).*double(wsThresholdMapBin);       % masking out non-puncta voxels, this makes background and dilated voxels to 0. This also prevents trough voxels from being added back somehow with background. HO 6/4/2010
-    wsTMLZeros = find(wsTMLabels == 0 & thresholdMap > 0);            % find zeros of watersheds inside of thresholdmap (add back the zero ridges in thresholdMap to their most similar neighbors)
-    
-    if ~isempty(wsTMLZeros) % if exist zeros in the map
-        [wsTMLZerosY, wsTMLZerosX, wsTMLZerosZ] = ind2sub(size(thresholdMap),wsTMLZeros); %6/4/2010 HO
-        for j = 1:length(wsTMLZeros) % create a dilated matrix to examine neighbor connectivity around the zero position
-            tempZMID =  wsTMLabels(max(1,wsTMLZerosY(j)-1):min(ys,wsTMLZerosY(j)+1), max(1,wsTMLZerosX(j)-1):min(xs,wsTMLZerosX(j)+1), max(1,wsTMLZerosZ(j)-1):min(zs,wsTMLZerosZ(j)+1)); %HO 6/4/2010
-            nZeroID = mode(tempZMID(tempZMID~=0)); % find most common neighbor value (watershed) not including zero
-            wsTMLabels(wsTMLZeros(j)) = nZeroID;   % re-define zero with new watershed ID (this process will act similar to watershed by making new neighboring voxels feed into the decision of subsequent zero voxels)
+if Settings.objfinder.watershed
+    tic;
+    fprintf('Separate objects with multiple peaks using multi-threaded watershed segmentation... ');
+    parfor block = 1:(NumBx*NumBy*NumBz)
+        ys = tmpBlocks(block).sizeIgm(1);              % retrieve values
+        xs = tmpBlocks(block).sizeIgm(2);              % retrieve values
+        zs = tmpBlocks(block).sizeIgm(3);              % retrieve values
+        thresholdMap = tmpBlocks(block).thresholdMap;  % retrieve values
+        
+        wsThresholdMapBin = uint8(thresholdMap>0);                        % binary map of threshold
+        wsThresholdMapBinOpen = imdilate(wsThresholdMapBin, ones(3,3,3)); % dilate Bin map with a 3x3x3 kernel (dilated perimeter acts like ridges between background and ROIs)
+        wsThresholdMapComp = imcomplement(thresholdMap);                  % complement (invert) image. Required because watershed() separate holes, not mountains. imcomplement creates complement using the entire range of the class, so for uint8, 0 becomes 255 and 255 becomes 0, but for double 0 becomes 1 and 255 becomes -254.
+        wsTMMod = wsThresholdMapComp.*wsThresholdMapBinOpen;              % Force background outside of dilated region to 0, and leaves walls of 255 between puncta and background.
+        wsTMLabels = watershed(wsTMMod, 6);                               % 6 voxel connectivity watershed, this will fill background with 1, ridges with 0 and puncta with 2,3,4,... in double format
+        wsBackgroundLabel = mode(double(wsTMLabels(:)));                  % calculate background level
+        wsTMLabels(wsTMLabels == wsBackgroundLabel) = 0;                  % seems that sometimes Background can get into puncta... so the next line was not good enough to remove all the background labels.
+        wsTMLabels = double(wsTMLabels).*double(wsThresholdMapBin);       % masking out non-puncta voxels, this makes background and dilated voxels to 0. This also prevents trough voxels from being added back somehow with background. HO 6/4/2010
+        wsTMLZeros = find(wsTMLabels == 0 & thresholdMap > 0);            % find zeros of watersheds inside of thresholdmap (add back the zero ridges in thresholdMap to their most similar neighbors)
+        
+        if ~isempty(wsTMLZeros) % if exist zeros in the map
+            [wsTMLZerosY, wsTMLZerosX, wsTMLZerosZ] = ind2sub(size(thresholdMap),wsTMLZeros); %6/4/2010 HO
+            for j = 1:length(wsTMLZeros) % create a dilated matrix to examine neighbor connectivity around the zero position
+                tempZMID =  wsTMLabels(max(1,wsTMLZerosY(j)-1):min(ys,wsTMLZerosY(j)+1), max(1,wsTMLZerosX(j)-1):min(xs,wsTMLZerosX(j)+1), max(1,wsTMLZerosZ(j)-1):min(zs,wsTMLZerosZ(j)+1)); %HO 6/4/2010
+                nZeroID = mode(tempZMID(tempZMID~=0)); % find most common neighbor value (watershed) not including zero
+                wsTMLabels(wsTMLZeros(j)) = nZeroID;   % re-define zero with new watershed ID (this process will act similar to watershed by making new neighboring voxels feed into the decision of subsequent zero voxels)
+            end
         end
+        wsTMLabels = uint16(wsTMLabels);
+        wsLabelList = unique(wsTMLabels);
+        wsLabelList(1) = []; % Remove background (now labeled as 0) from list
+        nLabels = length(wsLabelList);
+        
+        tmpBlocks(block).nLabels = nLabels;         % Store for later
+        tmpBlocks(block).wsTMLabels = wsTMLabels;   % Store for later
+        tmpBlocks(block).wsLabelList = wsLabelList; % Store for later
     end
-    wsTMLabels = uint16(wsTMLabels);
-    wsLabelList = unique(wsTMLabels);
-    wsLabelList(1) = []; % Remove background (now labeled as 0) from list
-    nLabels = length(wsLabelList);
-    
-    tmpBlocks(block).nLabels = nLabels;         % Store for later
-    tmpBlocks(block).wsTMLabels = wsTMLabels;   % Store for later
-    tmpBlocks(block).wsLabelList = wsLabelList; % Store for later
+    fprintf(['DONE in ' num2str(toc) ' seconds \n']);
+else
+    fprintf('Separate objects with multiple peaks using multi-threaded watershed segmentation: DISABLED by user\n');    
 end
-fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 3: calculate properties of each dot and store them into Dots struct array --
 tmpDots = struct;
@@ -272,8 +238,8 @@ tmpDot = struct;
 % TODO: move Gmode and Gmax calculation within each block to skip processing completely blocks outside of the mask
 Gmode = double(mode(Post(Post>0)));
 Gmax = double(max(Post(Post>0)));
-Settings.dotfinder.Gmode = Gmode;      % added the saving of Gmode to check if Gmode is not too high. 1/18/2010
-Settings.dotfinder.Gmax = Gmax;        % Gmax for scaling the image if you didnt use the full bitdepth when creating tif stacks for 'I'
+Settings.objfinder.Gmode = Gmode;      % added the saving of Gmode to check if Gmode is not too high. 1/18/2010
+Settings.objfinder.Gmax = Gmax;        % Gmax for scaling the image if you didnt use the full bitdepth when creating tif stacks for 'I'
 
 txtBar('Accumulating properties for each detected object... ');
 tic;

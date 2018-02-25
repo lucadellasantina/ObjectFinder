@@ -118,7 +118,8 @@ for i = 1:Dots.Num
     VoxN=Vox/MeanD;           % Normalize each voxel position by MeanD
     
     if size(Vox,1) > 1        % If the dot has more than one voxel
-        [~, Sc, latent] = princomp(VoxN);
+        %[~, Sc, latent] = princomp(VoxN);
+        [~, Sc, latent] = pca(VoxN);
         Dots.Round.Var(i,:)=latent; % Variance in three component axes.
         Dots.Round.Long(i)=max(.1,latent(2))/latent(1); %ratio of variances between the second longest and longest axes, 1 if perfectly round, <1 if not round
         Dots.Round.Oblong(i)=max(1,abs(max(Sc(:,2))))/max(abs(Sc(:,1))); % Stores distance from center to be the furthest point in the secondary and principal axes, respectively.

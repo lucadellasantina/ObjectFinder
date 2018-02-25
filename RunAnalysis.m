@@ -17,7 +17,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 % *ObjectFinder allows to analyze an image volume containing objects
-% (i.e. labeling of synaptic structures) with the final goal of segmenting 
+% (i.e. labeling of synaptic structures) with the final goal of segmenting
 % each individual object and computing its indivudual properties.*
 %
 
@@ -25,12 +25,12 @@
 if ~isdir([pwd filesep 'I'])
     error(['This folder is not valid for ObjectFinder analysis, '...
            'please change current working directory to one containing '...
-           'images to analyze within an "I" subfolder']); 
+           'images to analyze within an "I" subfolder']);
 end
 
 % Get the current working folder as base directory for the analysis
 disp('---- ObjectFinder 4.1 analysis ----');
-Settings.TPN = [pwd filesep]; 
+Settings.TPN = [pwd filesep];
 if exist([Settings.TPN 'Settings.mat'], 'file'), load([Settings.TPN 'Settings.mat']); end
 save([Settings.TPN 'Settings.mat'], 'Settings');
 if ~isdir([Settings.TPN 'data']), mkdir([Settings.TPN 'data']); end
@@ -67,7 +67,7 @@ txtBar('DONE');
 
 Imax=squeeze(max(Iraw,[],3)); % Create a MIP of each image to display
 figure('units', 'normalized', 'position', [0.05 0.25 0.9 0.4]);
-for i = 1:size(Imax,3)    
+for i = 1:size(Imax,3)
     subplot(1,size(Imax,3),i)
     image(Imax(:,:,i)*(500/double(max(max(Imax(:,:,i))))))
     title(['# ' num2str(i) ': ' tmpFiles(i).name]);
@@ -128,27 +128,29 @@ tmpPrompt = {'x-y diameter of the biggest dot (um, default 1)',...
              'z diameter of the smallest dot (um, normally 0.5)',...
              'Intensity thresholds stepping (default 2)',...
              'Multi-peak correction factor (default 0)',...
-             'Minimum iteration threshold (default 2)'};
+             'Minimum iteration threshold (default 2)',...
+             'Split multi-peak objects using watershed?(1:yes, 2:no)'};
 tmpAns = inputdlg(tmpPrompt, 'ObjectFinder settings', 1,...
-           {'1','2','0.25','0.5','2','0','2'});
+           {'1','2','0.25','0.5','2','0','2','1'});
 
 % Calculate volume of the minimum / maximum dot sizes allowed
 % largest CtBP2 = elipsoid 1um-xy/2um-z diameter = ~330 voxels (.103x.103x0.3 um pixel size)
 MaxDotSize = (4/3*pi*(str2double(tmpAns(1))/2)*(str2double(tmpAns(1))/2)*(str2double(tmpAns(2))/2)) / (Settings.ImInfo.xyum*Settings.ImInfo.xyum*Settings.ImInfo.zum);
 MinDotSize = (4/3*pi*(str2double(tmpAns(3))/2)*(str2double(tmpAns(3))/2)*(str2double(tmpAns(4))/2)) / (Settings.ImInfo.xyum*Settings.ImInfo.xyum*Settings.ImInfo.zum);
 
-Settings.dotfinder.blockBuffer= round(str2double(tmpAns(1))/Settings.ImInfo.xyum);  % Overlapping buffer region between search block should be as big as the biggest dot we want to measure to make sure we are not missing any.
-%Settings.dotfinder.blockSize = 3* Settings.dotfinder.blockBuffer; % Use 3x blockBuffer for maximum speed during multi-threaded operations (best setting for speed)
-Settings.dotfinder.blockSize = 64; % Fixed this value to 64 otherwise computers with 16Gb RAM will run easily out of memory
-Settings.dotfinder.thresholdStep = str2double(tmpAns(5)); % step-size in the iterative search when looping through possible intensity values
-Settings.dotfinder.maxDotSize = MaxDotSize;       % max dot size exclusion criteria for single-peak dot DURING ITERATIVE THRESHOLDING, NOT FINAL.
-Settings.dotfinder.minDotSize= 3;                 % min dot size exclusion criteria DURING ITERATIVE THRESHOLDING, NOT FINAL.
-Settings.dotfinder.MultiPeakDotSizeCorrectionFactor = str2double(tmpAns(6)); % added by HO 2/8/2011, maxDotSize*MultiPeakDotSizeCorrectionFactor will be added for each additional dot joined to the previous dot, see dotfinder. With my PSD95CFP dots, super multipeak dots are rare, so put 0 for this factor.
-Settings.dotfinder.itMin = str2double(tmpAns(7)); % added by HO 2/9/2011 minimum iterative threshold allowed to be analyzed as voxels belonging to any dot...filter to remove value '1' pass thresholds. value '2' is also mostly noise for PSD95 dots, so 3 is the good starting point HO 2/9/2011
-Settings.dotfinder.peakCutoffLowerBound = 0.2;    % set threshold for all dots (0.2) after psychophysical testing with linescan and full 8-bit depth normalization HO 6/4/2010
-Settings.dotfinder.peakCutoffUpperBound = 0.2;    % set threshold for all dots (0.2) after psychophysical testing with linescan and full 8-bit depth normalization HO 6/4/2010
-Settings.dotfinder.minFinalDotITMax = 3;          % minimum ITMax allowed as FINAL dots. Any found dot whose ITMax is below this threshold value is removed from the registration into Dots. 5 will be the best for PSD95. HO 1/5/2010
-Settings.dotfinder.minFinalDotSize = MinDotSize;  % Minimum dot size allowed for FINAL dots.
+Settings.objfinder.blockBuffer= round(str2double(tmpAns(1))/Settings.ImInfo.xyum);  % Overlapping buffer region between search block should be as big as the biggest dot we want to measure to make sure we are not missing any.
+%Settings.objfinder.blockSize = 3* Settings.objfinder.blockBuffer; % Use 3x blockBuffer for maximum speed during multi-threaded operations (best setting for speed)
+Settings.objfinder.blockSize = 64; % Fixed this value to 64 otherwise computers with 16Gb RAM will run easily out of memory
+Settings.objfinder.thresholdStep = str2double(tmpAns(5)); % step-size in the iterative search when looping through possible intensity values
+Settings.objfinder.maxDotSize = MaxDotSize;       % max dot size exclusion criteria for single-peak dot DURING ITERATIVE THRESHOLDING, NOT FINAL.
+Settings.objfinder.minDotSize= 3;                 % min dot size exclusion criteria DURING ITERATIVE THRESHOLDING, NOT FINAL.
+Settings.objfinder.MultiPeakDotSizeCorrectionFactor = str2double(tmpAns(6)); % added by HO 2/8/2011, maxDotSize*MultiPeakDotSizeCorrectionFactor will be added for each additional dot joined to the previous dot, see dotfinder. With my PSD95CFP dots, super multipeak dots are rare, so put 0 for this factor.
+Settings.objfinder.itMin = str2double(tmpAns(7)); % added by HO 2/9/2011 minimum iterative threshold allowed to be analyzed as voxels belonging to any dot...filter to remove value '1' pass thresholds. value '2' is also mostly noise for PSD95 dots, so 3 is the good starting point HO 2/9/2011
+Settings.objfinder.peakCutoffLowerBound = 0.2;    % set threshold for all dots (0.2) after psychophysical testing with linescan and full 8-bit depth normalization HO 6/4/2010
+Settings.objfinder.peakCutoffUpperBound = 0.2;    % set threshold for all dots (0.2) after psychophysical testing with linescan and full 8-bit depth normalization HO 6/4/2010
+Settings.objfinder.minFinalDotITMax = 3;          % minimum ITMax allowed as FINAL dots. Any found dot whose ITMax is below this threshold value is removed from the registration into Dots. 5 will be the best for PSD95. HO 1/5/2010
+Settings.objfinder.minFinalDotSize = MinDotSize;  % Minimum dot size allowed for FINAL dots.
+Settings.objfinder.watershed = str2double(tmpAns(8));
 
 save([Settings.TPN 'Settings.mat'], 'Settings');
 clear BlockBuffer MaxDotSize MinDotSize tmp* h
@@ -160,7 +162,7 @@ save([Settings.TPN 'Dots.mat'],'Dots');
 save([Settings.TPN 'Settings.mat'],'Settings');
 
 %% Create fields about sphericity of objects (Rounding)
-Dots = fitSphere(Dots, Settings.debug); 
+Dots = fitSphere(Dots, Settings.debug);
 save([Settings.TPN 'Dots.mat'],'Dots');
 
 %% Filter objects according to the following post-processing criteria (SG)
@@ -201,10 +203,17 @@ end
 disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
+% _*Version 4.2*               created on 2018-02-25 by Luca Della Santina_%
+%
+%  + Added user control over search algorithm settings via GUI
+%  + Added user control over filter settings via GUI
+%  + Watershed segmentation is now optional in findObjects()
+%  + Replaced princomp with pca for PCA analysis in fitShphere()
+%
 % _*Version 4.1*               created on 2018-02-24 by Luca Della Santina_
 %
 %  + Plot Sholl analysis on Skel
-%  + getFilteredObjects returns the validated objects according to Filter
+%  + getFilteredObjects returns all validated objects according to Filter
 %  + Added License text in the GUI's About tab
 %  + Added visual log on GUI during detection phase
 %  - Removed need for grouped.mat, all Objects are store in Dots.mat
@@ -266,6 +275,6 @@ disp('---- ObjectFinder analysis done! ----');
 %  Make heatmaps plots with finer convolution disk (too coarse right now)
 %  Resolve minDotsize vs minFnalDotSize (current minDotSize fixed at 3px)
 %  Implement stepping=1 through gmode instead (current stepping of 2)
-%  When searching one signal (i.e. ctbp2 in IPL stack) prompt user several 
+%  When searching one signal (i.e. ctbp2 in IPL stack) prompt user several
 %  sample fields to choose an appropriate ITmax threshold
-%  findObjects() Post is broadcasted to every worker, slice Igm better 
+%  findObjects() Post is broadcasted to every worker, slice Igm better
