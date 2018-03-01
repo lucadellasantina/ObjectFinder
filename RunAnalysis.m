@@ -29,7 +29,7 @@ if ~isdir([pwd filesep 'I'])
 end
 
 % Get the current working folder as base directory for the analysis
-disp('---- ObjectFinder 4.1 analysis ----');
+disp('---- ObjectFinder 4.3 analysis ----');
 Settings.TPN = [pwd filesep];
 if exist([Settings.TPN 'Settings.mat'], 'file'), load([Settings.TPN 'Settings.mat']); end
 save([Settings.TPN 'Settings.mat'], 'Settings');
@@ -203,7 +203,12 @@ end
 disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
-% _*Version 4.2*               created on 2018-02-25 by Luca Della Santina_%
+% _*Version 4.3*               created on 2018-03-01 by Luca Della Santina_
+%
+%  % Calculation of sphericity properties is now optional
+%  % Inspect3D catches validated spots from imaris (no need for XTension)
+%
+% _*Version 4.2*               created on 2018-02-25 by Luca Della Santina_
 %
 %  + Added user control over search algorithm settings via GUI
 %  + Added user control over filter settings via GUI
