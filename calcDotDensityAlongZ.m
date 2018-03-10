@@ -26,7 +26,9 @@ tmpDensity=zeros(1, (dotDensity.zEnd - dotDensity.zStart +1));
 tmpDensityPerc=zeros(1, 100);
 for i = dotDensity.zStart: dotDensity.zEnd -1
     tmpDensity(i) = numel(find(Grouped.Pos(:,3) == i));
-    tmpDensityPerc(ceil(i/dotDensity.binSize)) = tmpDensityPerc(ceil(i/dotDensity.binSize)) + tmpDensity(i);
+end
+for i=1:100
+    tmpDensityPerc(i) = tmpDensity(ceil(i*dotDensity.binSize));
 end
 
 dotDensity.density = tmpDensity;

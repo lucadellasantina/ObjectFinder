@@ -29,7 +29,7 @@ if ~isdir([pwd filesep 'I'])
 end
 
 % Get the current working folder as base directory for the analysis
-disp('---- ObjectFinder 4.3 analysis ----');
+disp('---- ObjectFinder 4.4 analysis ----');
 Settings.TPN = [pwd filesep];
 if exist([Settings.TPN 'Settings.mat'], 'file'), load([Settings.TPN 'Settings.mat']); end
 save([Settings.TPN 'Settings.mat'], 'Settings');
@@ -203,6 +203,15 @@ end
 disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
+% _*Version 4.4*               created on 2018-03-10 by Luca Della Santina_
+%
+%  + Custom timer allows to start ObjectFinder at a specific time of day
+%  + 2D inspector allows to pick a visual threshold with volume navigation
+%  % Inspect3D returns error if Imaris cannot be started via COM interface
+%  % Inspect3D optional whether to display validated and rejected objects
+%  % Post, Dend and Mask are loaded at startup if present in working folder
+%  % Fixed error in calculating object density by depth percentage
+%
 % _*Version 4.3*               created on 2018-03-01 by Luca Della Santina_
 %
 %  % Calculation of sphericity properties is now optional
