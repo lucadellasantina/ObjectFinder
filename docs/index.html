@@ -50,24 +50,20 @@
 
         <p>ObjectFinder is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.</a>
         This strong copyleft license ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.</p>
-        <div style="text-align:center"><img src ="images/logo_gplv3.png"/></div>
+        <div style="text-align:center"><img src ="images/logo_gplv3.png"/> <img src ="images/logo_open_source.png" width="100"/></div>
 
         <p>We strongly believe that software developed for data analysis in scientific research must be open source, to ensure the highest level of reproducibility of your science.</p>
-
-        <div style="text-align:center"><img src ="images/logo_open_source.png" width="100"/></div>
 
         <div style="text-align:center"><h2>Tuned for speed!</h2></div>
 
         <p>ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume.</p>
 
         <p>For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!</p>
-
         <div style="text-align:center"><img src ="images/speed.png" width="80" height="80"/></div>
 
         <div style="text-align:center"><h2>Multiplatform architecture</h2></div>
 
         <p>Whether your workstation relies on Microsoft Windows, macOS or Linux, ObjectFinder can run on your computer since it relies only on core Matlab functions.</p>
-
         <div style="text-align:center"><img src ="images/logo_platforms.png" width="75%"/></div>
 
         Having a single codebase for all platforms makes developing new features as well as fixing bugs a much faster and enjoyable journey.
@@ -75,21 +71,17 @@
         <div style="text-align:center"><h2>Seamlessly integrated with Bitplane Imaris®</h2></div>
 
         ObjectFinder can display detected objects in Imaris® to take full advantage of Imaris advanced 3D rendering capabilities.
-
         <div style="text-align:center"><img src ="images/Screenshot_imaris.png" width="100%"/></div>
-
         <p>You can visually add, remove or filter objects by visual inspection against the original signal and export them back to ObjectFinder for further processing.</p>
 
         <div style="text-align:center"><h2>Export results to Microsoft Excel®</h2></div>
 
         Analysis results can be exported to Excel spreadsheets for further elaboration or plotting using your favorite data analysis application.
-
         <div style="text-align:center"><img src ="images/Screenshot_export_excel.png" width="100%"/></div>
 
         <div style="text-align:center"><h2>Works around <i>your</i> schedule</h2></div>
 
         Schedule ObjectFinder to start the automatic object finding process anytime within 24 hours to keep working on your other projects and let your computer work during your quiet hours, day or night.
-
         <div style="text-align:center"><img src ="images/Screenshot_timer.png" width="60%"/></div>
 
         <div style="text-align:center"><h2>How do I install and use ObjectFinder?</h2></div>
@@ -102,17 +94,21 @@
           <div style="text-align:center"><img src ="images/Screenshot_MatlabApps.png" width="100%"/></div>
        </ol>
 
-       <p>The object recognition process starts with you creating a folder structure for your experiment. Let's assume your experiment folder's name is called "MyExperiment".</p>
+       <p>The object recognition process starts with you creating a folder structure for your experiment. Let's assume your experiment folder's name is called "MyExperiment", place all your original image stacks inside the folder "MyExperiment/I/" saved as 3D .tif files (one file per channel).</p>
+       <div style="text-align:center"><img src ="images/Screenshot_folder.png" width="100%"/></div>
+
+       <p>Start Objectfinder and use the main toolbar to perform all the steps of the analysis:</p>
+       <div style="text-align:center"><img src ="images/Screenshot_toolbar.png" width="80%"/></div>
 
        <ol>
-          <li>place there all your original image stacks inside the folder "MyExperiment/I/" saved as 3D .tif files (one file per channel).</li>
           <li>Select "MyExperiment" as the current working folder using the first home folder icon.</li>
-          <li>Click "Load Images", all available images will be previewed and you will be asked to instruct ObjectFinder on which image contains the structures to recognize. Optionally, you can also specify which a 3D binary mask to limit the search.</li>
+          <li>Click "Load Images" to visualize all available images and instruct ObjectFinder on which image contains the structures to recognize. Optionally, you can also specify which a 3D binary mask to limit the search.</li>
+          <div style="text-align:center"><img src ="images/Screenshot_ImageSelection.png" width="100%"/></div>
           <li>Click "Search Objects" to start the automatic search of objects.</li>
-          <li>Click "Filter Objects" to remove candidate objects that are too small (only one plane on Z) or touching the search mask's border</li>
-          <li>If you have Imaris® installed, you can click on "Inspect 3D" in order to visually inspect and refine detected objects.</li>
-         <li>Click "Calc. Density" to finish the detection process and calculate information about object density in the volume.</li>
-      </ol>
+          <li>Click "Filter Objects" to remove candidate objects that do not meet the specified criteria</li>
+          <li>Click on "Inspect 3D" ff you have Imaris® installed to visually inspect and validate objects.</li>
+          <li>Click "Calc. Density" to finish the detection process and calculate density statistics.</li>
+       </ol>
 
          <div style="text-align:center"><h2>System Requirements</h2></div>
 
