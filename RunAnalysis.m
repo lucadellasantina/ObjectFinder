@@ -29,7 +29,7 @@ if ~isdir([pwd filesep 'I'])
 end
 
 % Get the current working folder as base directory for the analysis
-disp('---- ObjectFinder 4.4 analysis ----');
+disp('---- ObjectFinder 4.5 analysis ----');
 Settings.TPN = [pwd filesep];
 if exist([Settings.TPN 'Settings.mat'], 'file'), load([Settings.TPN 'Settings.mat']); end
 save([Settings.TPN 'Settings.mat'], 'Settings');
@@ -203,6 +203,11 @@ end
 disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
+% _*Version 4.5*               created on 2018-03-13 by Luca Della Santina_
+%
+%  + Batch processing mode under the new Automate tab
+%  % filterObjects accepts custom thresholds for ITMax, Vol, MeanBright
+%
 % _*Version 4.4*               created on 2018-03-10 by Luca Della Santina_
 %
 %  + Custom timer allows to start ObjectFinder at a specific time of day

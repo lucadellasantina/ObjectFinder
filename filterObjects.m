@@ -83,6 +83,15 @@ if FilterOpts.xyStableDots
     fprintf('Dots excluded because moving during aquisition: %u\n', numel(xyStableDots) - numel(find(xyStableDots)));
 end
 
+% User-defined thresholds for ITMax, Vol and MeanBright
+if isfield(FilterOpts, 'Thresholds')
+    threshpass = Dots.ITMax >= FilterOpts.Thresholds.ITMax;
+    threshpass = threshpass & (Dots.Vol >= FilterOpts.Thresholds.Vol);
+    threshpass = threshpass & (Dots.MeanBright >= FilterOpts.Thresholds.MeanBright);
+    
+    pass = pass & threshpass; % Exclude objects not passing the thresholds
+end
+
 Filter.passF=pass';
 disp(['Number of objects initially detected: ' num2str(Dots.Num)]);
 disp(['Number of objects validated after filtering: ' num2str(length(find(Filter.passF)))]);

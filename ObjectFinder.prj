@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1769638823" file="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3932001090" file="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -14,7 +14,7 @@
     <param.description>ObjectFinder allows to detect objects of arbitrary shape in a 3D image stack and calculate properties of each individual objects as well as their distribution within the volume. 
 This software is primarily developed for neuroscience research applications such as recognition of fluorescently-labelled synapses. 3D image stacks (TIF format) are generated using confocal or super-resolution microscopes.</param.description>
     <param.screenshot>${PROJECT_ROOT}/ObjectFinder_resources/Screenshot_small.png</param.screenshot>
-    <param.version>4.4</param.version>
+    <param.version>4.5</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Image Processing Toolbox</item>
@@ -45,11 +45,20 @@ This software is primarily developed for neuroscience research applications such
     </fileset.main>
     <fileset.depfun>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-CalcDensity.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-clear.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Filter.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-FindObjects.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-bottom.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-down.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-top.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-up.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-HomeFolder.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Inspect.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-add.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-remove.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-OpenImages.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-stop-hand.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/72px-Batch-process.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_small.png</file>
       <file>${PROJECT_ROOT}/calcDensity.m</file>
       <file>${PROJECT_ROOT}/calcDotDensityAlongZ.m</file>
