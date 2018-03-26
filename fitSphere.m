@@ -16,7 +16,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function[Dots]=fitSphere(Dots, debug)
+function Dots = fitSphere(Dots, Settings)
 % HO 6/25/2010 flipped the division to calculate Round.Long, Round.Oblong
 % and Round.Compact so that less spherical or less smooth ugly dots get
 % lower values, then you can set threshold to take higher values in anaSG.
@@ -101,7 +101,7 @@ for v=1:max(Tvol)
 end
 RoundFaces=interp1(tvol,v2f,1:max(tvol)); 
 
-if debug
+if Settings.debug
     plot(1:max(tvol), RoundFaces, 'o');
     ylabel('Round faces');
     xlabel('tvol = number of voxels within the distance of d/10 from the center voxel');
@@ -119,7 +119,7 @@ for i = 1:Dots.Num
     
     if size(Vox,1) > 1        % If the dot has more than one voxel
         %[~, Sc, latent] = princomp(VoxN);
-        [~, Sc, latent] = pca(VoxN);
+        [~, Sc, latent] = princomp(VoxN); %TODO figure our why pca gives error when used in replacement of princomp
         Dots.Round.Var(i,:)=latent; % Variance in three component axes.
         Dots.Round.Long(i)=max(.1,latent(2))/latent(1); %ratio of variances between the second longest and longest axes, 1 if perfectly round, <1 if not round
         Dots.Round.Oblong(i)=max(1,abs(max(Sc(:,2))))/max(abs(Sc(:,1))); % Stores distance from center to be the furthest point in the secondary and principal axes, respectively.
