@@ -21,8 +21,7 @@
 function Dots = findObjects(Post, Settings)
 
 % Retrieve parameters to use from Settings
-%blockSize = Settings.objfinder.blockSize;
-blockSize = 64;
+blockSize = Settings.objfinder.blockSize;
 blockBuffer = Settings.objfinder.blockBuffer;
 thresholdStep = Settings.objfinder.thresholdStep;
 maxDotSize = Settings.objfinder.maxDotSize;
@@ -223,6 +222,8 @@ tmpDot.Vox.RawBright = 0;
 tmpDot.Vox.IT = 0;
 tmpDot.MeanBright = 0;
 
+%clear tmpDots
+%tmpDots(sum([Blocks.nLabels])) = struct(tmpDot); % Preallocate max number of dots
 tmpDots = struct(tmpDot);
 tmpDotNum = 0;
 
@@ -233,6 +234,8 @@ for block = 1:(NumBx*NumBy*NumBz)
     for i = 1:Blocks(block).nLabels
         peakIndex = find(wsTMLabels==wsLabelList(i) & Blocks(block).peakMap>0); % this line adjusted for watershed HO 6/7/2010
         thresholdPeak = Blocks(block).thresholdMap(peakIndex);
+        
+        % Do not process dots with multiple peaks or with ITMax below threshold
         nPeaks = numel(peakIndex);
         if (nPeaks ~=1) || (thresholdPeak < minFinalDotITMax)
             continue;
@@ -248,7 +251,8 @@ for block = 1:(NumBx*NumBy*NumBz)
             (Blocks(block).sizeIgm(3)-zPeak < blockBuffer && Blocks(block).endPos(3) < size(Post,3))
             continue;
         end
-
+        
+        % Accumulate info only if object size is bigger than minDotSize
         contourIndex = find(wsTMLabels==wsLabelList(i)); % adjusted for watershed
         if numel(contourIndex) >= minDotSize %HO 2/15/2011 added excluding dots that did not reach minDotSize criterion
             [yContour, xContour, zContour] = ind2sub(Blocks(block).sizeIgm, contourIndex);
@@ -262,14 +266,15 @@ for block = 1:(NumBx*NumBy*NumBz)
             tmpDot.Vox.RawBright = Blocks(block).Igm(contourIndex);
             tmpDot.Vox.IT = Blocks(block).thresholdMap(contourIndex);
             tmpDot.MeanBright = mean(Blocks(block).Igm(contourIndex));
+            %tmpDotNum = sum([Blocks(1:block).nLabels]) - Blocks(block).nLabels + i;
             tmpDotNum = tmpDotNum + 1;
-            tmpDots(tmpDotNum) = tmpDot; % LDS figure out why this does not work with parfor
-        end % if dot size bigger than min dot size
-    end  % for all labels
+            tmpDots(tmpDotNum) = tmpDot;
+        end
+    end
 end
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
-%% -- STEP 5: resolve dots spanning across border region of analyzed blocks --
+%% -- STEP 5: resolve empty dots and dots in border between blocks --
 % Some voxels could be shared by multiple dots because of the overlapping
 % search blocks approach in Step#1 and Step#2. This happens for voxels at
 % the border lines of processing blocks. Disambiguate those voxels by
@@ -282,6 +287,13 @@ VoxIDMap = zeros(size(Post)); % Map of the ownerd of each voxel (dot IDs)
 [ys, xs, zs] = size(VoxMap);
 TotalNumOverlapDots = 0;
 TotalNumOverlapVoxs = 0;
+
+% Delete empty dots from previous step
+%for i = numel(tmpDots):-1:1
+%    if isempty(tmpDots(i).Vol) || (tmpDots(i).Vol == 0) 
+%        tmpDots(i) = [];
+%    end
+%end
 
 for i = 1:numel(tmpDots)
     % Mark voxels belonging to this dot as overlapping if in VoxMap those
@@ -345,7 +357,7 @@ for i = numel(tmpDots):-1:1
 end
 
 Dots = struct; % Convert tmpDots into the deprecated "Dots" structure
-for i=1:numel(tmpDots)
+for i = numel(tmpDots):-1:1
     Dots.Pos(i,:) = tmpDots(i).Pos;
     Dots.Vox(i).Pos = tmpDots(i).Vox.Pos;
     Dots.Vox(i).Ind = tmpDots(i).Vox.Ind;
@@ -356,6 +368,7 @@ for i=1:numel(tmpDots)
     Dots.Vox(i).IT = tmpDots(i).Vox.IT;
     Dots.MeanBright(i) = tmpDots(i).MeanBright;
 end
+
 Dots.ImSize = [size(Post,1) size(Post,2) size(Post,3)];
 Dots.Num = numel(Dots.Vox); % Recalculate total number of dots
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);

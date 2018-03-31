@@ -29,7 +29,7 @@ if ~isdir([pwd filesep 'I'])
 end
 
 % Get the current working folder as base directory for the analysis
-disp('---- ObjectFinder 4.6 analysis ----');
+disp('---- ObjectFinder 4.7 analysis ----');
 if exist([pwd filesep 'Settings.mat'], 'file'), load([pwd filesep 'Settings.mat']); end
 Settings.TPN = [pwd filesep];
 save([Settings.TPN 'Settings.mat'], 'Settings');
@@ -138,8 +138,7 @@ MaxDotSize = round((4/3*pi*(str2double(tmpAns(1))/2)*(str2double(tmpAns(1))/2)*(
 MinDotSize = round((4/3*pi*(str2double(tmpAns(3))/2)*(str2double(tmpAns(3))/2)*(str2double(tmpAns(4))/2)) / (Settings.ImInfo.xyum*Settings.ImInfo.xyum*Settings.ImInfo.zum));
 
 Settings.objfinder.blockBuffer= round(str2double(tmpAns(1))/Settings.ImInfo.xyum);  % Overlapping buffer region between search block should be as big as the biggest dot we want to measure to make sure we are not missing any.
-Settings.objfinder.blockSize = 3*Settings.objfinder.blockBuffer; % Use 3x blockBuffer for maximum speed during multi-threaded operations (best setting for speed)
-%Settings.objfinder.blockSize = 64; % Fixed value for computers with <16Gb RAM
+Settings.objfinder.blockSize = max(64, 4*Settings.objfinder.blockBuffer); % Use 3x blockBuffer for maximum speed or 64, whichever bigger (64 works well for computers with 16Gb RAM)
 Settings.objfinder.thresholdStep = str2double(tmpAns(5)); % stepping when iteratively looping through pixel intensities for connected components
 Settings.objfinder.maxDotSize = MaxDotSize;       % max dot size exclusion criteria for single-peak dot DURING ITERATIVE THRESHOLDING, NOT FINAL.
 Settings.objfinder.minDotSize= MinDotSize;        % min dot size exclusion criteria DURING ITERATIVE THRESHOLDING, NOT FINAL.
@@ -204,6 +203,15 @@ end
 disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
+% _*Version 4.7*               created on 2018-03-31 by Luca Della Santina_
+%
+%  + Colocalization analysis tab: manual colocalization
+%  + Colocalization of multiple channels are accumulated into Coloc.mat
+%  % Colocalization shows isolated object overlayed to Coloc. channel
+%  % Fixed titles of colocalization and indpector windows
+%  % Objects filtered using the 2D inspector are correctly passed to Imaris
+%  % 2D Inspector allows "None" as primary threshold to show no highlights
+%
 % _*Version 4.6*               created on 2018-03-26 by Luca Della Santina_
 %
 %  % Reduced findObjects mem usage by passing only block volume to workers 

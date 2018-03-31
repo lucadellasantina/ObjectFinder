@@ -99,12 +99,13 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     f = ceil(num_frames/2); % Current frame
     %Pos = [1,1,0];  % Initial position of interest
     Pos = [ceil(size(ImStk,1)/2), ceil(size(ImStk,2)/2), ceil(size(ImStk,3)/2)];
-    passI = Filter.passF;
+    passI = Filter.passF.*0;
     thresh = ceil(mean(Dots.ITMax));
     thresh2 = 0;
 	
 	% Initialize figure
-	fig_handle = figure('Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
+	fig_handle = figure('Name','Volume inspector','NumberTitle','off',...
+        'Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
 		'WindowButtonDownFcn',@button_down, 'WindowButtonUpFcn',@button_up, ...
 		'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press,...
         'windowscrollWheelFcn', @wheel_scroll, varargin{:});
@@ -131,7 +132,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     % Primary filter parameter controls
     uicontrol('Style','text','Units','normalized','position',[.91,.84,.08,.02],'String','Primary filter parameter');    
     cmbFilterType_handle = uicontrol('Style', 'popup', 'Units','normalized', ...
-            'String', {'ITMax','Volume','Brightness'}, 'Position', [.907,.79,.085,.04],...
+            'String', {'Disabled', 'ITMax','Volume','Brightness'}, 'Position', [.907,.79,.085,.04],...
             'Callback', @cmbFilterType_changed);    
     btnMinus_handle = uicontrol('Style','Pushbutton','Units','normalized','position',[.91,.75,.02,.04],...
         'String','-','CallBack',@btnMinus_clicked);    
@@ -143,7 +144,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     % Secondary filter parameter controls
     uicontrol('Style','text','Units','normalized','position',[.91,.68,.08,.02],'String','Secondary filter parameter');    
     cmbFilterType2_handle = uicontrol('Style', 'popup', 'Units','normalized', ...
-            'String', {'None','ITMax','Volume','Brightness'}, 'Position', [.907,.63,.085,.04],...
+            'String', {'Disabled','ITMax','Volume','Brightness'}, 'Position', [.907,.63,.085,.04],...
             'Callback', @cmbFilterType2_changed);    
     btnMinus2_handle = uicontrol('Style','Pushbutton','Units','normalized','position',[.91,.59,.02,.04],...
         'String','-','Visible','off','CallBack',@btnMinus2_clicked);    
@@ -169,7 +170,10 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 	% Return handles
 	scroll_bar_handles = [scroll_axes_handle; scroll_handle];
 	scroll_func = @scroll;
+    
 	scroll(f);
+    set(cmbFilterType_handle, 'Value', 1);
+    uiwait;
     
     function btnSave_clicked(src, event)
         Filter.passF = passI;
@@ -214,15 +218,29 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 
     function cmbFilterType_changed(src, event)
         switch get(src,'Value')
-            case 1 % ITMax
+            case 1 % None
+                new_thresh = 0;
+                set(txtThresh_handle,'Visible','off');
+                set(btnPlus_handle,'Visible','off');
+                set(btnMinus_handle,'Visible','off');
+            case 2 % ITMax
                 new_thresh = ceil(mean(Dots.ITMax));
-            case 2 % Volume
+                set(txtThresh_handle,'Visible','on');
+                set(btnPlus_handle,'Visible','on');
+                set(btnMinus_handle,'Visible','on');                
+            case 3 % Volume
                 new_thresh = ceil(mean(Dots.Vol));
-            case 3 % Brightness
+                set(txtThresh_handle,'Visible','on');
+                set(btnPlus_handle,'Visible','on');
+                set(btnMinus_handle,'Visible','on');                
+            case 4 % Brightness
                 new_thresh = ceil(mean(Dots.MeanBright));
+                set(txtThresh_handle,'Visible','on');
+                set(btnPlus_handle,'Visible','on');
+                set(btnMinus_handle,'Visible','on');                
         end
-        set(txtThresh_handle,'string',num2str(new_thresh));
         applyFilter(new_thresh, thresh2);
+        set(txtThresh_handle,'string',num2str(new_thresh));        
     end
 
     function cmbFilterType2_changed(src, event)
@@ -259,11 +277,13 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
         
         % Apply primary filter criteria if selected        
         switch get(cmbFilterType_handle,'Value')
-            case 1
+            case 1 % None
+                passI = Filter.passF.*0;
+            case 2 % ITMax
                 passI = Filter.passF & (Dots.ITMax >= new_thresh)';
-            case 2
+            case 3 % Volume
                 passI = Filter.passF & (Dots.Vol >= new_thresh)';
-            case 3
+            case 4 % Brightness
                 passI = Filter.passF & (Dots.MeanBright >= new_thresh)'; 
         end
         
