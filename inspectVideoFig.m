@@ -39,54 +39,51 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     thresh2 = 0;                        % Initialize thresholds
 	
 	% Initialize figure
-	fig_handle = figure('Name','Volume inspector','NumberTitle','off',...
+	fig_handle = figure('Name','Volume inspector (green: raw signal, magenta: detected objects)','NumberTitle','off',...
         'Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
 		'WindowButtonDownFcn',@button_down, 'WindowButtonUpFcn',@button_up, ...
 		'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press,...
         'windowscrollWheelFcn', @wheel_scroll, varargin{:});
 	
 	% Axes and compnent for the custom scroll bar
-	scroll_axes_handle = axes('Parent',fig_handle, 'Position',[0 0 1 0.035], 'Visible','off', 'Units', 'normalized');
+	scroll_axes = axes('Parent',fig_handle, 'Position',[0 0 0.9 0.045], 'Visible','off', 'Units', 'normalized');
 	axis([0 1 0 1]); axis off
 	scroll_bar_width = max(1 / num_frames, 0.01);
-	scroll_handle = patch([0 1 1 0] * scroll_bar_width, [0 0 1 1], [.8 .8 .8], 'Parent',scroll_axes_handle, 'EdgeColor','none', 'ButtonDownFcn', @on_click);
+	scroll_handle = patch([0 1 1 0] * scroll_bar_width, [0 0 1 1], [.8 .8 .8], 'Parent',scroll_axes, 'EdgeColor','none', 'ButtonDownFcn', @on_click);
 
     % User interface conmponents
-    set(gcf,'units', 'normalized', 'position', [0.05 0.1 0.9 0.76]);
-    uicontrol('Style','text','Units','normalized','position',[.08,.035,.28,.02],'String','Image navigator, use scroll wheel to move along Z, click to zoom a region of interest');
-    uicontrol('Style','text','Units','normalized','position',[.52,.035,.28,.02],'String','Zoomed region, green = raw signal, magenta = objects passing current threshold');
-    txtValidObjs        = uicontrol('Style','text','Units','normalized','position',[.91,.93,.08,.02],'String',['Valid Objects: ' num2str(numel(find(passI)))]);
-    uicontrol('Style','text','Units','normalized','position',[.91,.90,.08,.02],'String',['Total Objects: ' num2str(numel(passI))]);
-    chkShowObjects      = uicontrol('Style','checkbox','Units','normalized','position',[.91,.87,.08,.02],'String','Show objects (_)', 'Value',1, 'callback', @chkShowObjects_changed);
+    set(gcf,'units', 'normalized', 'position', [0.05 0.1 0.90 0.76]);
+    pnlSettings     = uipanel(  'Title','Objects'   ,'Units','normalized','Position',[.903,.005,.095,.99]);
+    txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.930,.085,.02],'String',['Valid Objects: ' num2str(numel(find(passI)))]);
+    txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.900,.085,.02],'String',['Total Objects: ' num2str(numel(passI))]);
+    chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.912,.870,.085,.02],'String','Show (spacebar)', 'Value',1     ,'Callback',@chkShowObjects_changed);
+    btnSave         = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.010,.088,.05],'String','Save'                           ,'Callback',@btnSave_clicked);    
     
     % Primary filter parameter controls
-    uicontrol('Style','text','Units','normalized','position',[.91,.84,.08,.02],'String','Primary filter parameter');    
-    cmbFilterType   = uicontrol('Style', 'popup', 'Units','normalized', 'String', {'Disabled', 'ITMax','Volume','Brightness'}, 'Position', [.907,.79,.055,.04],'Callback', @cmbFilterType_changed);  
-    cmbFilterDir    = uicontrol('Style', 'popup', 'Units','normalized', 'String', {'>=', '<='}, 'Visible', 'off', 'Position', [.965,.79,.025,.04], 'callback', @cmbFilterDir_changed);            
-    btnMinus        = uicontrol('Style','Pushbutton','Units','normalized','position',[.91,.75,.02,.04],'String','-','Visible','off','CallBack',@btnMinus_clicked);    
-    txtThresh       = uicontrol('Style','edit','Units','normalized','Position',[.93 .75 .036 .04],'Visible', 'off', 'CallBack',@txtThresh_changed,'String',num2str(thresh));
-    btnPlus         = uicontrol('Style','Pushbutton','Units','normalized','position',[.967,.75,.02,.04],'String','+','Visible', 'off', 'CallBack',@btnPlus_clicked);    
+    txtFilter       = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.800,.085,.02],'String','Primary filter type');    
+    cmbFilterType   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.750,.060,.04],'String', {'Disabled', 'ITMax','Volume','Brightness'},'Callback', @cmbFilterType_changed);  
+    cmbFilterDir    = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.750,.025,.04],'String', {'>=', '<='}, 'Visible', 'off'  ,'callback',@cmbFilterDir_changed);            
+    btnMinus        = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.715,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus_clicked);    
+    txtThresh       = uicontrol('Style','edit'      ,'Units','normalized','Position',[.932,.715,.036,.04],'String',num2str(thresh),'Visible', 'off' ,'CallBack',@txtThresh_changed);
+    btnPlus         = uicontrol('Style','Pushbutton','Units','normalized','position',[.970,.715,.025,.04],'String','+','Visible', 'off'             ,'CallBack',@btnPlus_clicked);    
 
     % Secondary filter parameter controls
-    uicontrol('Style','text','Units','normalized','position',[.91,.68,.08,.02],'String','Secondary filter parameter');    
-    cmbFilterType2  = uicontrol('Style', 'popup', 'Units','normalized', 'String', {'Disabled','ITMax','Volume','Brightness'}, 'Position', [.907,.63,.055,.04],'Callback', @cmbFilterType2_changed);
-    cmbFilter2Dir   = uicontrol('Style', 'popup', 'Units','normalized','String', {'>=', '<='}, 'Visible', 'off', 'Position', [.965,.63,.025,.04],'callback',@cmbFilterDir_changed);                 
-    btnMinus2       = uicontrol('Style','Pushbutton','Units','normalized','position',[.91,.59,.02,.04],'String','-','Visible','off','CallBack',@btnMinus2_clicked);    
-    txtThresh2      = uicontrol('Style','edit','Units','normalized','Position',[.93 .59 .036 .04], 'Visible','off','CallBack',@txtThresh2_changed,'String',num2str(thresh2));
-    btnPlus2        = uicontrol('Style','Pushbutton','Units','normalized','position',[.967,.59,.02,.04],'String','+','Visible','off','CallBack',@btnPlus2_clicked);    
+    txtFilter2      = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.680,.085,.02],'String','Secondary filter type');    
+    cmbFilterType2  = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.630,.060,.04],'String',{'Disabled','ITMax','Volume','Brightness'},'Callback', @cmbFilterType2_changed);
+    cmbFilter2Dir   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.630,.025,.04],'String',{'>=', '<='}, 'Visible', 'off'   ,'callback',@cmbFilterDir_changed);                 
+    btnMinus2       = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.595,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus2_clicked);    
+    txtThresh2      = uicontrol('Style','edit'      ,'Units','normalized','Position',[.932,.595,.036,.04],'String',num2str(thresh2),'Visible','off' ,'CallBack',@txtThresh2_changed);
+    btnPlus2        = uicontrol('Style','Pushbutton','Units','normalized','position',[.970,.595,.025,.04],'String','+','Visible','off'              ,'CallBack',@btnPlus2_clicked);    
     
-    uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.13,.085,.05],'String','Save','Callback',@btnSave_clicked);    
-    uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.07,.085,.05],'String','Close','Callback','close');
     	
 	% Main drawing axes for video display
     if size_video(2) < 0.03; size_video(2) = 0.03; end % bottom 0.03 must be used for scroll bar HO 2/17/2011
 	axes_handle = axes('Position',size_video); %[0 0.03 1 0.97] to size_video (6th input argument) to allow space for buttons and annotations 2/13/2011 HO
 	
 	% Return handles
-	scroll_bar_handles = [scroll_axes_handle; scroll_handle];
+	scroll_bar_handles = [scroll_axes; scroll_handle];
 	scroll_func = @scroll;    
 	scroll(f);
-    set(cmbFilterType, 'Value', 1);
     uiwait;
     
     function cmbFilterDir_changed(~,~)
@@ -339,7 +336,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             set(fig_handle, 'Units', 'normalized');
             click_point = get(fig_handle, 'CurrentPoint');
             set(fig_handle, 'Units', 'pixels');
-            x = click_point(1);
+            x = click_point(1) / 0.9; % scroll bar with is 0.9 of window
             
             % get corresponding frame number
             new_f = floor(1 + x * num_frames);
@@ -379,10 +376,6 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 		%set to the right axes and call the custom redraw function
 		set(fig_handle, 'CurrentAxes', axes_handle);
 		redraw_func(f, chkShowObjects.Value, Pos, passI);
-		
-		%used to be "drawnow", but when called rapidly and the CPU is busy
-		%it didn't let Matlab process events properly (ie, close figure).
-		%pause(0.001)
 	end
 	
 	% Convenience functions for argument checks

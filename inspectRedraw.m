@@ -59,6 +59,7 @@ if size(Post, 4) == 3 % RGB 3-D matrix (4th dimention is R, G, B)
         end
         PostCut(fxpad+1:fxpad+fxmax-fxmin+1, fypad+1:fypad+fymax-fymin+1,1) = f(fxmin:fxmax, fymin:fymax, 1);
         
+        % Draw the right panel containing a zoomed version of selected area 
         if ShowObjects
             PostCutResized(:,:,1) = imresize(PostVoxMapCut(:,:,1),[size(Post,1), size(Post,2)], 'nearest');
             PostCutResized(:,:,2) = imresize(PostCut(:,:,1),[size(Post,1), size(Post,2)], 'nearest');
@@ -69,7 +70,15 @@ if size(Post, 4) == 3 % RGB 3-D matrix (4th dimention is R, G, B)
             PostCutResized(:,:,3) = PostCutResized(:,:,1);
         end
         
-        f(fxmin:fxmax, fymin:fymax, 2) = f(fxmin:fxmax, fymin:fymax, 2)+20; % draw a green selection rectangle
+        % Separate left and right panel visually with a vertical line
+        PostCutResized(1:end    , 1:3      , 1:3) = 75;
+        
+        % Draw a rectangle over the selected area (left panel)
+        f(fxmin:fxmax  , fymin:fymax  , 2)   = f(fxmin:fxmax, fymin:fymax, 2)+20; % green filling
+        f(fxmin:fxmax  , fymin:fymin+3, 1:3) = 75; % grey border
+        f(fxmin:fxmax  , fymax-3:fymax, 1:3) = 75; % grey border
+        f(fxmin:fxmin+3, fymin:fymax  , 1:3) = 75; % grey border
+        f(fxmax-3:fxmax, fymin:fymax  , 1:3) = 75; % grey border
         
     end
     

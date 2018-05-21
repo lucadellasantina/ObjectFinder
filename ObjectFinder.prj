@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2841238121" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2526538178" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -11,16 +11,16 @@
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_16.png</file>
     </param.icons>
     <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.
-Copyright 2017-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summary>
+Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summary>
     <param.description />
-    <param.screenshot>/tmp/tp9b50fb5f_1bb5_4679_9ea6_b25e5a227289.png</param.screenshot>
+    <param.screenshot>/tmp/tpd303317e_3603_4747_b610_768307311423.png</param.screenshot>
     <param.version>4.8</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
     <param.platforms />
     <param.output>/home/luca/Dropbox/MATLAB scripts/ObjectFinder</param.output>
-    <param.guid>c0d55310-ee71-4bf4-b627-0d540622ca51</param.guid>
+    <param.guid>912cbc5e-7b98-4c7b-a172-fdd315f64c21</param.guid>
     <unset>
       <param.company />
       <param.description />
@@ -31,7 +31,7 @@ Copyright 2017-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <param.output />
     </unset>
     <fileset.main>
-      <file>${PROJECT_ROOT}/ObjectFinderR2018a.mlapp</file>
+      <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-clear.png</file>
