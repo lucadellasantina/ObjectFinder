@@ -29,7 +29,7 @@ if ~isdir([pwd filesep 'I'])
 end
 
 % Get the current working folder as base directory for the analysis
-disp('---- ObjectFinder 4.7 analysis ----');
+disp('---- ObjectFinder 4.7.1 analysis ----');
 if exist([pwd filesep 'Settings.mat'], 'file'), load([pwd filesep 'Settings.mat']); end
 Settings.TPN = [pwd filesep];
 save([Settings.TPN 'Settings.mat'], 'Settings');
@@ -203,6 +203,19 @@ end
 disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
+% _*Version 4.8*               created on 2018-05-10 by Luca Della Santina_
+%
+%   + Bigger button sizes (better for HiDPI screens)
+%   + Inspector type selection (Stack inspector vs Imaris 7)
+%   + 2D inspector allows switching show objects via checkbox (or spacebar)
+%   + 2D inspector allows filtering direction >= or <= than set threshold
+%   % Update folder path in saved Settings.mat upon home folder selection
+%   % try statement catches errors pushing custom statistics to imaris
+%   % Removed need for Settings.TPN, just use current working directory
+%   % New GUI required MATLAB R2018a
+%   % 2D inspector saves filter thresholds chosen by user into Filter.mat
+%   - 2D inspector cliking on zoomed region does not blank out zoomed view
+%
 % _*Version 4.7*               created on 2018-03-31 by Luca Della Santina_
 %
 %  + Colocalization analysis tab: manual colocalization

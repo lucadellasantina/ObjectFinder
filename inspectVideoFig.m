@@ -16,71 +16,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-%VIDEOFIG Figure with horizontal scrollbar and play capabilities.
-%   VIDEOFIG(NUM_FRAMES, @REDRAW_FUNC)
-%   Creates a figure with a horizontal scrollbar and shortcuts to scroll
-%   automatically. The scroll range is 1 to NUM_FRAMES. The function
-%   REDRAW_FUNC(F) is called to redraw at scroll position F (for example,
-%   REDRAW_FUNC can show the frame F of a video).
-%   This can be used not only to play and analyze standard videos, but it
-%   also lets you place any custom Matlab plots and graphics on top.
-%
-%   The keyboard shortcuts are:
-%     Enter (Return) -- play/pause video (25 frames-per-second default).
-%     Backspace -- play/pause video 5 times slower.
-%     Right/left arrow keys -- advance/go back one frame.
-%     Page down/page up -- advance/go back 30 frames.
-%     Home/end -- go to first/last frame of video.
-%
-%   Advanced usage
-%   --------------
-%   VIDEOFIG(NUM_FRAMES, @REDRAW_FUNC, FPS, BIG_SCROLL)
-%   Also specifies the speed of the play function (frames-per-second) and
-%   the frame step of page up/page down (or empty for defaults).
-%
-%   VIDEOFIG(NUM_FRAMES, @REDRAW_FUNC, FPS, BIG_SCROLL, @KEY_FUNC)
-%   Also calls KEY_FUNC(KEY) with any keys that weren't processed, so you
-%   can add more shortcut keys (or empty for none).
-%
-%   VIDEOFIG(NUM_FRAMES, @REDRAW_FUNC, FPS, BIG_SCROLL, @KEY_FUNC, ...)
-%   Passes any additional arguments to the native FIGURE function (for
-%   example: 'Name', 'Video figure title').
-%
-%   [FIG_HANDLE, AX_HANDLE, OTHER_HANDLES, SCROLL] = VIDEOFIG(...)
-%   Returns the handles of the figure, drawing axes and other handles (of
-%   the scrollbar's graphics), respectively. SCROLL(F) can be called to
-%   scroll to frame F, or with no arguments to just redraw the figure.
-%
-%   Example 1
-%   ---------
-%   Place this in a file called "redraw.m":
-%     function redraw(frame)
-%         imshow(['AT3_1m4_' num2str(frame, '%02.0f') '.tif'])
-%     end
-%
-%   Then from a script or the command line, call:
-%     videofig(10, @redraw);
-%     redraw(1)
-%
-%   The images "AT3_1m4_01.tif" ... "AT3_1m4_10.tif" are part of the Image
-%   Processing Toolbox and there's no need to download them elsewhere.
-%
-%   Example 2
-%   ---------
-%   Change the redraw function to visualize the contour of a single cell:
-%     function redraw(frame)
-%         im = imread(['AT3_1m4_' num2str(frame, '%02.0f') '.tif']);
-%         slice = im(210:310, 210:340);
-%         [ys, xs] = find(slice < 50 | slice > 100);
-%         pos = 210 + median([xs, ys]);
-%         siz = 3.5 * std([xs, ys]);
-%         imshow(im), hold on
-%         rectangle('Position',[pos - siz/2, siz], 'EdgeColor','g', 'Curvature',[1, 1])
-%         hold off
-%     end
-%
-%   João Filipe Henriques, 2010
-%
+
 function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 	inspectVideoFig(num_frames, redraw_func, big_scroll, key_func, ImStk, Dots, Filter, varargin)
 
@@ -88,20 +24,19 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 	if nargin < 3 || isempty(big_scroll), big_scroll = 30; end  %page-up and page-down advance, in frames
 	if nargin < 4, key_func = []; end
     
-	% Check arguments
+	% Check that arguments match the expected types 
 	check_int_scalar(num_frames);
 	check_callback(redraw_func);
 	check_int_scalar(big_scroll);
 	check_callback(key_func);
 
     size_video = [0 0 0.90 1];
-	click = 0;      % Initialize click status
-    f = ceil(num_frames/2); % Current frame
-    %Pos = [1,1,0];  % Initial position of interest
-    Pos = [ceil(size(ImStk,1)/2), ceil(size(ImStk,2)/2), ceil(size(ImStk,3)/2)];
-    passI = Filter.passF.*0;
-    thresh = ceil(mean(Dots.ITMax));
-    thresh2 = 0;
+	click   = 0;                        % Initialize click status
+    f       = ceil(num_frames/2);       % Current frame
+    Pos     = [ceil(size(ImStk,1)/2), ceil(size(ImStk,2)/2), ceil(size(ImStk,3)/2)]; % Initial position is middle of the stack
+    passI   = Filter.passF;             % Initialize temporary filter
+    thresh  = 0;                        % Initialize thresholds
+    thresh2 = 0;                        % Initialize thresholds
 	
 	% Initialize figure
 	fig_handle = figure('Name','Volume inspector','NumberTitle','off',...
@@ -110,164 +45,160 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 		'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press,...
         'windowscrollWheelFcn', @wheel_scroll, varargin{:});
 	
-	% Axes for scroll bar
-	scroll_axes_handle = axes('Parent',fig_handle, 'Position',[0 0 1 0.035], ...
-		'Visible','off', 'Units', 'normalized');
-	axis([0 1 0 1]);
-	axis off
-	
-	% Scroll bar
+	% Axes and compnent for the custom scroll bar
+	scroll_axes_handle = axes('Parent',fig_handle, 'Position',[0 0 1 0.035], 'Visible','off', 'Units', 'normalized');
+	axis([0 1 0 1]); axis off
 	scroll_bar_width = max(1 / num_frames, 0.01);
-	scroll_handle = patch([0 1 1 0] * scroll_bar_width, [0 0 1 1], [.8 .8 .8], ...
-		'Parent',scroll_axes_handle, 'EdgeColor','none', 'ButtonDownFcn', @on_click);
+	scroll_handle = patch([0 1 1 0] * scroll_bar_width, [0 0 1 1], [.8 .8 .8], 'Parent',scroll_axes_handle, 'EdgeColor','none', 'ButtonDownFcn', @on_click);
 
     % User interface conmponents
     set(gcf,'units', 'normalized', 'position', [0.05 0.1 0.9 0.76]);
     uicontrol('Style','text','Units','normalized','position',[.08,.035,.28,.02],'String','Image navigator, use scroll wheel to move along Z, click to zoom a region of interest');
     uicontrol('Style','text','Units','normalized','position',[.52,.035,.28,.02],'String','Zoomed region, green = raw signal, magenta = objects passing current threshold');
-
-    txtValidObjs_handle = uicontrol('Style','text','Units','normalized','position',[.91,.93,.08,.02],'String',['Valid Objects: ' num2str(numel(find(passI)))]);
-    txtTotalObjs_handle = uicontrol('Style','text','Units','normalized','position',[.91,.90,.08,.02],'String',['Total Objects: ' num2str(numel(Dots.Vox))]);
+    txtValidObjs        = uicontrol('Style','text','Units','normalized','position',[.91,.93,.08,.02],'String',['Valid Objects: ' num2str(numel(find(passI)))]);
+    uicontrol('Style','text','Units','normalized','position',[.91,.90,.08,.02],'String',['Total Objects: ' num2str(numel(passI))]);
+    chkShowObjects      = uicontrol('Style','checkbox','Units','normalized','position',[.91,.87,.08,.02],'String','Show objects (_)', 'Value',1, 'callback', @chkShowObjects_changed);
     
     % Primary filter parameter controls
     uicontrol('Style','text','Units','normalized','position',[.91,.84,.08,.02],'String','Primary filter parameter');    
-    cmbFilterType_handle = uicontrol('Style', 'popup', 'Units','normalized', ...
-            'String', {'Disabled', 'ITMax','Volume','Brightness'}, 'Position', [.907,.79,.085,.04],...
-            'Callback', @cmbFilterType_changed);    
-    btnMinus_handle = uicontrol('Style','Pushbutton','Units','normalized','position',[.91,.75,.02,.04],...
-        'String','-','CallBack',@btnMinus_clicked);    
-    txtThresh_handle = uicontrol('Style','edit','Units','normalized','Position',[.93 .75 .036 .04],... 
-             'CallBack',@txtThresh_changed,'String',num2str(thresh));
-    btnPlus_handle = uicontrol('Style','Pushbutton','Units','normalized','position',[.967,.75,.02,.04],...
-        'String','+','CallBack',@btnPlus_clicked);    
+    cmbFilterType   = uicontrol('Style', 'popup', 'Units','normalized', 'String', {'Disabled', 'ITMax','Volume','Brightness'}, 'Position', [.907,.79,.055,.04],'Callback', @cmbFilterType_changed);  
+    cmbFilterDir    = uicontrol('Style', 'popup', 'Units','normalized', 'String', {'>=', '<='}, 'Visible', 'off', 'Position', [.965,.79,.025,.04], 'callback', @cmbFilterDir_changed);            
+    btnMinus        = uicontrol('Style','Pushbutton','Units','normalized','position',[.91,.75,.02,.04],'String','-','Visible','off','CallBack',@btnMinus_clicked);    
+    txtThresh       = uicontrol('Style','edit','Units','normalized','Position',[.93 .75 .036 .04],'Visible', 'off', 'CallBack',@txtThresh_changed,'String',num2str(thresh));
+    btnPlus         = uicontrol('Style','Pushbutton','Units','normalized','position',[.967,.75,.02,.04],'String','+','Visible', 'off', 'CallBack',@btnPlus_clicked);    
 
     % Secondary filter parameter controls
     uicontrol('Style','text','Units','normalized','position',[.91,.68,.08,.02],'String','Secondary filter parameter');    
-    cmbFilterType2_handle = uicontrol('Style', 'popup', 'Units','normalized', ...
-            'String', {'Disabled','ITMax','Volume','Brightness'}, 'Position', [.907,.63,.085,.04],...
-            'Callback', @cmbFilterType2_changed);    
-    btnMinus2_handle = uicontrol('Style','Pushbutton','Units','normalized','position',[.91,.59,.02,.04],...
-        'String','-','Visible','off','CallBack',@btnMinus2_clicked);    
-    txtThresh2_handle = uicontrol('Style','edit','Units','normalized','Position',[.93 .59 .036 .04],... 
-        'Visible','off','CallBack',@txtThresh2_changed,'String',num2str(thresh2));
-    btnPlus2_handle = uicontrol('Style','Pushbutton','Units','normalized','position',[.967,.59,.02,.04],...
-        'String','+','Visible','off','CallBack',@btnPlus2_clicked);    
+    cmbFilterType2  = uicontrol('Style', 'popup', 'Units','normalized', 'String', {'Disabled','ITMax','Volume','Brightness'}, 'Position', [.907,.63,.055,.04],'Callback', @cmbFilterType2_changed);
+    cmbFilter2Dir   = uicontrol('Style', 'popup', 'Units','normalized','String', {'>=', '<='}, 'Visible', 'off', 'Position', [.965,.63,.025,.04],'callback',@cmbFilterDir_changed);                 
+    btnMinus2       = uicontrol('Style','Pushbutton','Units','normalized','position',[.91,.59,.02,.04],'String','-','Visible','off','CallBack',@btnMinus2_clicked);    
+    txtThresh2      = uicontrol('Style','edit','Units','normalized','Position',[.93 .59 .036 .04], 'Visible','off','CallBack',@txtThresh2_changed,'String',num2str(thresh2));
+    btnPlus2        = uicontrol('Style','Pushbutton','Units','normalized','position',[.967,.59,.02,.04],'String','+','Visible','off','CallBack',@btnPlus2_clicked);    
     
-    
-    uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.13,.085,.05],...
-        'String','Save','Callback',@btnSave_clicked);    
-    uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.07,.085,.05],...
-        'String','Close','Callback','close');
-
-    
-	% Timer to play video
-	play_timer = timer('TimerFcn',@play_timer_callback, 'ExecutionMode','fixedRate');
-	
+    uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.13,.085,.05],'String','Save','Callback',@btnSave_clicked);    
+    uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.07,.085,.05],'String','Close','Callback','close');
+    	
 	% Main drawing axes for video display
-    if size_video(2) < 0.03; size_video(2) = 0.03; end; %bottom 0.03 must be used for scroll bar HO 2/17/2011
+    if size_video(2) < 0.03; size_video(2) = 0.03; end % bottom 0.03 must be used for scroll bar HO 2/17/2011
 	axes_handle = axes('Position',size_video); %[0 0.03 1 0.97] to size_video (6th input argument) to allow space for buttons and annotations 2/13/2011 HO
 	
 	% Return handles
 	scroll_bar_handles = [scroll_axes_handle; scroll_handle];
-	scroll_func = @scroll;
-    
+	scroll_func = @scroll;    
 	scroll(f);
-    set(cmbFilterType_handle, 'Value', 1);
+    set(cmbFilterType, 'Value', 1);
     uiwait;
     
-    function btnSave_clicked(src, event)
+    function cmbFilterDir_changed(~,~)
+        applyFilter(thresh, thresh2);
+    end
+    function chkShowObjects_changed(~,~)
+        scroll(f);
+    end
+    function btnSave_clicked(~, ~)
         Filter.passF = passI;
         save([pwd filesep 'Filter.mat'], 'Filter');
     end
 
-    function btnPlus_clicked(src, event)
+    function btnPlus_clicked(~, ~)
         new_thresh = thresh + 1;
-        set(txtThresh_handle,'string',num2str(new_thresh));
+        set(txtThresh,'string',num2str(new_thresh));
         applyFilter(new_thresh, thresh2);
     end
 
-    function btnMinus_clicked(src, event)
+    function btnMinus_clicked(~, ~)
         new_thresh = max(thresh - 1, 0);
-        set(txtThresh_handle,'string',num2str(new_thresh));
+        set(txtThresh,'string',num2str(new_thresh));
         applyFilter(new_thresh, thresh2);
     end
 
-    function txtThresh_changed(src, event)
+    function txtThresh_changed(src, ~)
         thresh_str = get(src,'String');
-        new_thresh = str2num(thresh_str);
+        new_thresh = str2double(thresh_str);
         applyFilter(new_thresh, thresh2);
     end
 
-    function btnPlus2_clicked(src, event)
+    function btnPlus2_clicked(~, ~)
         new_thresh2 = thresh2 + 1;
-        set(txtThresh2_handle,'string',num2str(new_thresh2));
+        set(txtThresh2,'string',num2str(new_thresh2));
         applyFilter(thresh, new_thresh2);
     end
 
-    function btnMinus2_clicked(src, event)
+    function btnMinus2_clicked(~, ~)
         new_thresh2 = max(thresh2 - 1, 0);
-        set(txtThresh2_handle,'string',num2str(new_thresh2));
+        set(txtThresh2,'string',num2str(new_thresh2));
         applyFilter(thresh, new_thresh2);
     end
 
-    function txtThresh2_changed(src, event)
+    function txtThresh2_changed(src, ~)
         thresh_str = get(src,'String');
-        new_thresh2 = str2num(thresh_str);
+        new_thresh2 = str2double(thresh_str);
         applyFilter(thresh, new_thresh2);
     end
 
-    function cmbFilterType_changed(src, event)
+    function cmbFilterType_changed(src, ~)
         switch get(src,'Value')
             case 1 % None
                 new_thresh = 0;
-                set(txtThresh_handle,'Visible','off');
-                set(btnPlus_handle,'Visible','off');
-                set(btnMinus_handle,'Visible','off');
+                set(cmbFilterDir,'Visible','off');
+                set(txtThresh,'Visible','off');
+                set(btnPlus,'Visible','off');
+                set(btnMinus,'Visible','off');
             case 2 % ITMax
-                new_thresh = ceil(mean(Dots.ITMax));
-                set(txtThresh_handle,'Visible','on');
-                set(btnPlus_handle,'Visible','on');
-                set(btnMinus_handle,'Visible','on');                
+                %new_thresh = ceil(mean(Dots.ITMax)); % mean value
+                new_thresh = Filter.FilterOpts.Thresholds.ITMax;
+                set(cmbFilterDir,'Visible','on');
+                set(txtThresh,'Visible','on');
+                set(btnPlus,'Visible','on');
+                set(btnMinus,'Visible','on');                
             case 3 % Volume
-                new_thresh = ceil(mean(Dots.Vol));
-                set(txtThresh_handle,'Visible','on');
-                set(btnPlus_handle,'Visible','on');
-                set(btnMinus_handle,'Visible','on');                
+                %new_thresh = ceil(mean(Dots.Vol)); % mean value
+                new_thresh = Filter.FilterOpts.Thresholds.Vol;
+                set(cmbFilterDir,'Visible','on');
+                set(txtThresh,'Visible','on');
+                set(btnPlus,'Visible','on');
+                set(btnMinus,'Visible','on');                
             case 4 % Brightness
-                new_thresh = ceil(mean(Dots.MeanBright));
-                set(txtThresh_handle,'Visible','on');
-                set(btnPlus_handle,'Visible','on');
-                set(btnMinus_handle,'Visible','on');                
+                %new_thresh = ceil(mean(Dots.MeanBright)); % mean value
+                new_thresh = Filter.FilterOpts.Thresholds.MeanBright;
+                set(cmbFilterDir,'Visible','on');
+                set(txtThresh,'Visible','on');
+                set(btnPlus,'Visible','on');
+                set(btnMinus,'Visible','on');                
         end
         applyFilter(new_thresh, thresh2);
-        set(txtThresh_handle,'string',num2str(new_thresh));        
+        set(txtThresh,'string',num2str(new_thresh));        
     end
 
-    function cmbFilterType2_changed(src, event)
+    function cmbFilterType2_changed(src, ~)
         switch get(src,'Value')
             case 1 % None
                 new_thresh2 = 0;
-                set(txtThresh2_handle,'Visible','off');
-                set(btnPlus2_handle,'Visible','off');
-                set(btnMinus2_handle,'Visible','off');
+                set(cmbFilter2Dir,'Visible','off');
+                set(txtThresh2,'Visible','off');
+                set(btnPlus2,'Visible','off');
+                set(btnMinus2,'Visible','off');
             case 2 % ITMax
-                new_thresh2 = ceil(mean(Dots.ITMax));
-                set(txtThresh2_handle,'Visible','on');
-                set(btnPlus2_handle,'Visible','on');
-                set(btnMinus2_handle,'Visible','on');                
+                new_thresh2 = Filter.FilterOpts.Thresholds.ITMax;
+                set(cmbFilter2Dir,'Visible','on');
+                set(txtThresh2,'Visible','on');
+                set(btnPlus2,'Visible','on');
+                set(btnMinus2,'Visible','on');                
             case 3 % Volume
-                new_thresh2 = ceil(mean(Dots.Vol));
-                set(txtThresh2_handle,'Visible','on');
-                set(btnPlus2_handle,'Visible','on');
-                set(btnMinus2_handle,'Visible','on');                
+                new_thresh2 = Filter.FilterOpts.Thresholds.Vol;
+                set(cmbFilter2Dir,'Visible','on');
+                set(txtThresh2,'Visible','on');
+                set(btnPlus2,'Visible','on');
+                set(btnMinus2,'Visible','on');                
             case 4 % Brightness
-                new_thresh2 = ceil(mean(Dots.MeanBright));
-                set(txtThresh2_handle,'Visible','on');
-                set(btnPlus2_handle,'Visible','on');
-                set(btnMinus2_handle,'Visible','on');                
+                new_thresh2 = Filter.FilterOpts.Thresholds.MeanBright;
+                set(cmbFilter2Dir,'Visible','on');
+                set(txtThresh2,'Visible','on');
+                set(btnPlus2,'Visible','on');
+                set(btnMinus2,'Visible','on');                
         end
         applyFilter(thresh, new_thresh2);
-        set(txtThresh2_handle,'string',num2str(new_thresh2));        
+        set(txtThresh2,'string',num2str(new_thresh2));        
     end
 
 
@@ -276,30 +207,67 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
         thresh2 = new_thresh2;
         
         % Apply primary filter criteria if selected        
-        switch get(cmbFilterType_handle,'Value')
+        switch get(cmbFilterType,'Value')
             case 1 % None
-                passI = Filter.passF.*0;
+                passI = Filter.passF;
             case 2 % ITMax
-                passI = Filter.passF & (Dots.ITMax >= new_thresh)';
+                if cmbFilterDir.Value == 1
+                    passI = Filter.passF & (Dots.ITMax >= new_thresh)';
+                else
+                    passI = Filter.passF & (Dots.ITMax <= new_thresh)';
+                end
+                Filter.FilterOpts.Thresholds.ITMaxDir   = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.ITMax      = new_thresh;
             case 3 % Volume
-                passI = Filter.passF & (Dots.Vol >= new_thresh)';
+                if cmbFilterDir.Value == 1
+                    passI = Filter.passF & (Dots.Vol >= new_thresh)';
+                else
+                    passI = Filter.passF & (Dots.Vol <= new_thresh)';
+                end
+                Filter.FilterOpts.Thresholds.VolDir     = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.Vol        = new_thresh;
             case 4 % Brightness
-                passI = Filter.passF & (Dots.MeanBright >= new_thresh)'; 
+                if cmbFilterDir.Value == 1
+                    passI = Filter.passF & (Dots.MeanBright >= new_thresh)';
+                else    
+                    passI = Filter.passF & (Dots.MeanBright <= new_thresh)';
+                end
+                Filter.FilterOpts.Thresholds.MeanBrightDir  = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.MeanBright     = new_thresh;
         end
         
         % Apply secondary filter criteria if selected
-        switch get(cmbFilterType2_handle,'Value')
+        switch get(cmbFilterType2,'Value')
             case 2 % ITMax
-                passI = passI & (Dots.Vol >= new_thresh2)';
+                if cmbFilter2Dir.Value == 1
+                    passI = passI & (Dots.Vol >= new_thresh2)';
+                else
+                    passI = passI & (Dots.Vol <= new_thresh2)';
+                end
+                Filter.FilterOpts.Thresholds.ITMaxDir = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds.ITMax    = new_thresh2;
             case 3 % Volume
-                passI = passI & (Dots.MeanBright >= new_thresh2)'; 
+                if cmbFilter2Dir.Value == 1
+                    passI = passI & (Dots.MeanBright >= new_thresh2)';
+                else
+                    passI = passI & (Dots.MeanBright <= new_thresh2)';
+                end
+                Filter.FilterOpts.Thresholds.VolDir = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds.Vol    = new_thresh2;
             case 4 % Brighness
-                passI = passI & (Dots.MeanBright >= new_thresh2)';                 
+                if cmbFilter2Dir.Value == 1
+                    passI = passI & (Dots.MeanBright >= new_thresh2)';
+                else    
+                    passI = passI & (Dots.MeanBright <= new_thresh2)';
+                end
+                Filter.FilterOpts.Thresholds.MeanBrightDir  = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds.MeanBright     = new_thresh2;
         end      
         
-        set(txtValidObjs_handle,'string',['Valid Objects: ' num2str(numel(find(passI)))]);
+        set(txtValidObjs,'string',['Valid Objects: ' num2str(numel(find(passI)))]);
         scroll(f);
     end
+
     function wheel_scroll(~, event)
           if event.VerticalScrollCount < 0              
               %position = get(scroll_handle, 'XData');
@@ -310,48 +278,51 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
           end
     end
     
-	function key_press(src, event)  %#ok, unused arguments
-		switch event.Key  % Process shortcut keys
-		case 'leftarrow'
-			scroll(f - 1);
-		case 'rightarrow'
-			scroll(f + 1);
-		case 'pageup'
-			if f - big_scroll < 1  %scrolling before frame 1, stop at frame 1
-				scroll(1);
-			else
-				scroll(f - big_scroll);
-			end
-		case 'pagedown'
-			if f + big_scroll > num_frames  %scrolling after last frame
-				scroll(num_frames);
-			else
-				scroll(f + big_scroll);
-			end
-		case 'home'
-			scroll(1);
-		case 'end'
-			scroll(num_frames);
-		case 'return'
-			%play(1/play_fps)
-		case 'backspace'
-			%play(5/play_fps)
-		otherwise
-			if ~isempty(key_func)
-				key_func(event.Key);  % call custom key handler
-			end
-		end
-	end
-	
+    function key_press(~, event)
+        switch event.Key  % Process shortcut keys
+            case 'space'
+                chkShowObjects.Value = ~chkShowObjects.Value;
+                chkShowObjects_changed();
+            case 'leftarrow'
+                scroll(f - 1);
+            case 'rightarrow'
+                scroll(f + 1);
+            case 'pageup'
+                if f - big_scroll < 1  %scrolling before frame 1, stop at frame 1
+                    scroll(1);
+                else
+                    scroll(f - big_scroll);
+                end
+            case 'pagedown'
+                if f + big_scroll > num_frames  %scrolling after last frame
+                    scroll(num_frames);
+                else
+                    scroll(f + big_scroll);
+                end
+            case 'home'
+                scroll(1);
+            case 'end'
+                scroll(num_frames);
+            case 'return'
+                %play(1/play_fps)
+            case 'backspace'
+                %play(5/play_fps)
+            otherwise
+                if ~isempty(key_func)
+                    key_func(event.Key);  % call custom key handler
+                end
+        end
+    end
+
 	%mouse handler
 	function button_down(src, event)  %#ok, unused arguments
 		set(src,'Units','norm')
 		click_pos = get(src, 'CurrentPoint');
         if click_pos(2) <= 0.035
-            click = 1;
+            click = 1; % click happened on the scroll bar
             on_click([],[]);
         else
-            click = 2;
+            click = 2; % click happened somewhere else
             on_click([],[]);
         end
 	end
@@ -363,14 +334,14 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 	function on_click(src, event)  %#ok, unused arguments
 		if click == 0, return; end
 		
-        if click == 1
-            %get x-coordinate of click
+        if click == 1 
+            % User clicked the scroll bar, get x-coordinate of click
             set(fig_handle, 'Units', 'normalized');
             click_point = get(fig_handle, 'CurrentPoint');
             set(fig_handle, 'Units', 'pixels');
             x = click_point(1);
             
-            %get corresponding frame number
+            % get corresponding frame number
             new_f = floor(1 + x * num_frames);
             
             if new_f < 1 || new_f > num_frames, return; end  %outside valid range
@@ -382,27 +353,15 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             % Get XY-coordinate of click in pixels
             set(fig_handle, 'Units', 'pixels');
             click_point = get(gca, 'CurrentPoint');
-            Pos = [ceil(click_point(1,1:2)),f];
-            scroll(f);
+            PosX = ceil(click_point(1,1));
+            %PosY = ceil(click_point(1,2));
+            if PosX <= size(ImStk,1)
+                Pos = [ceil(click_point(1,1:2)),f];
+                scroll(f);
+            else
+                % TODO something if clicked in the zoomed region
+            end
         end
-	end
-
-	function play(period)
-		% Toggle between stoping and starting the "play video" timer
-		if strcmp(get(play_timer,'Running'), 'off')
-			set(play_timer, 'Period', period);
-			start(play_timer);
-		else
-			stop(play_timer);
-		end
-	end
-	function play_timer_callback(src, event)  %#ok
-		% Executed at each timer period, when playing the video
-		if f < num_frames
-			scroll(f + 1);
-		elseif strcmp(get(play_timer,'Running'), 'on')
-			stop(play_timer);  %stop the timer if the end is reached
-		end
 	end
 
 	function scroll(new_f)
@@ -419,7 +378,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 		set(scroll_handle, 'XData', scroll_x + [0 1 1 0] * scroll_bar_width);
 		%set to the right axes and call the custom redraw function
 		set(fig_handle, 'CurrentAxes', axes_handle);
-		redraw_func(f, Pos, passI);
+		redraw_func(f, chkShowObjects.Value, Pos, passI);
 		
 		%used to be "drawnow", but when called rapidly and the CPU is busy
 		%it didn't let Matlab process events properly (ie, close figure).

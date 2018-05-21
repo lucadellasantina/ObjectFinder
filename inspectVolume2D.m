@@ -22,6 +22,6 @@ CutNumVox = [256, 256, size(Post, 3)]; % Magnify a zoom region of this size
 ImStk = cat(4, Post, Post, Post); % Create an RGB version of Post
 
 % Visualize volume as video frames
-redraw_func = @(frm, Pos, Filter) inspectRedraw(frm, Pos, ImStk, 'gray(256)', CutNumVox, Dots, Filter);
+redraw_func = @(frm, ShowObjects, Pos, Filter) inspectRedraw(frm, ShowObjects, Pos, ImStk, 'gray(256)', CutNumVox, Dots, Filter);
 inspectVideoFig(size(ImStk,3), redraw_func, [], [], ImStk, Dots, Filter);
 end

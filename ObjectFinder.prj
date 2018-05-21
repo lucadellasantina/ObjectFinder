@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="321628023" file="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2841238121" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -10,40 +10,30 @@
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_24.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_16.png</file>
     </param.icons>
-    <param.summary>Recognize 3D structures in image volumes</param.summary>
-    <param.description>ObjectFinder allows you to recognize a large number of small structures, such as synapses in neuronal tissue, within a volumetric image stack.</param.description>
-    <param.screenshot>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_big.png</param.screenshot>
-    <param.version>4.7</param.version>
-    <param.products.name>
-      <item>MATLAB</item>
-      <item>Image Processing Toolbox</item>
-      <item>Parallel Computing Toolbox</item>
-    </param.products.name>
-    <param.products.id>
-      <item>1</item>
-      <item>17</item>
-      <item>80</item>
-    </param.products.id>
-    <param.products.version>
-      <item>9.1</item>
-      <item>9.5</item>
-      <item>6.9</item>
-    </param.products.version>
+    <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.
+Copyright 2017-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summary>
+    <param.description />
+    <param.screenshot>/tmp/tp9b50fb5f_1bb5_4679_9ea6_b25e5a227289.png</param.screenshot>
+    <param.version>4.8</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
     <param.platforms />
-    <param.output>/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder</param.output>
-    <param.guid>3b3a2823-3687-45e3-bc50-4acf2d68567c</param.guid>
+    <param.output>/home/luca/Dropbox/MATLAB scripts/ObjectFinder</param.output>
+    <param.guid>c0d55310-ee71-4bf4-b627-0d540622ca51</param.guid>
     <unset>
-      <param.authnamewatermark />
-      <param.email />
       <param.company />
+      <param.description />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
       <param.platforms />
       <param.output />
     </unset>
     <fileset.main>
-      <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
+      <file>${PROJECT_ROOT}/ObjectFinderR2018a.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-CalcDensity.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-clear.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Filter.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-FindObjects.png</file>
@@ -54,10 +44,10 @@
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-top.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-up.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-HomeFolder.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Image_upload.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Inspect.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-add.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-remove.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-OpenImages.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-View-refresh.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-stop-hand.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/72px-Batch-process.png</file>
@@ -87,20 +77,21 @@
     </fileset.depfun>
     <fileset.resources>
       <file>${PROJECT_ROOT}/ImarisXTensions</file>
-      <file>${PROJECT_ROOT}/License.txt</file>
     </fileset.resources>
     <fileset.package />
     <build-deliverables>
-      <file location="/Users/lucadellasantina/Dropbox/MATLAB scripts" name="ObjectFinder" optional="false">/Users/lucadellasantina/Dropbox/MATLAB scripts/ObjectFinder</file>
+      <file location="/home/luca/Dropbox/MATLAB scripts" name="ObjectFinder" optional="false">/home/luca/Dropbox/MATLAB scripts/ObjectFinder</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>/Applications/MATLAB_R2016b.app</root>
+      <root>/home/luca/MATLAB/R2018a</root>
       <toolboxes>
         <toolbox name="fixedpoint" />
         <toolbox name="matlabcoder" />
         <toolbox name="matlabhdlcoder" />
         <toolbox name="embeddedcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="polyspacebugfinder" />
       </toolboxes>
       <toolbox>
         <fixedpoint>
@@ -122,20 +113,30 @@
           <enabled>true</enabled>
         </embeddedcoder>
       </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <polyspacebugfinder>
+          <enabled>true</enabled>
+        </polyspacebugfinder>
+      </toolbox>
     </matlab>
     <platform>
       <unix>true</unix>
-      <mac>true</mac>
+      <mac>false</mac>
       <windows>false</windows>
       <win2k>false</win2k>
       <winxp>false</winxp>
       <vista>false</vista>
-      <linux>false</linux>
+      <linux>true</linux>
       <solaris>false</solaris>
-      <osver>10.13.4</osver>
+      <osver>4.15.0-20-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
-      <arch>maci64</arch>
+      <arch>glnxa64</arch>
       <matlab>true</matlab>
     </platform>
   </configuration>

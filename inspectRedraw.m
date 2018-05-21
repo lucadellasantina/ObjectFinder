@@ -16,7 +16,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function inspectRedraw(frameNum, Pos, Post, colmap, NaviRectSize, Dots, Filter)
+function inspectRedraw(frameNum, ShowObjects, Pos, Post, colmap, NaviRectSize, Dots, Filter)
 % Check if Post is RGB or gray, and read frameNum
 if size(Post, 4) == 3 % RGB 3-D matrix (4th dimention is R, G, B)
     f = squeeze(Post(:,:,frameNum,:));
@@ -59,9 +59,15 @@ if size(Post, 4) == 3 % RGB 3-D matrix (4th dimention is R, G, B)
         end
         PostCut(fxpad+1:fxpad+fxmax-fxmin+1, fypad+1:fypad+fymax-fymin+1,1) = f(fxmin:fxmax, fymin:fymax, 1);
         
-        PostCutResized(:,:,1) = imresize(PostVoxMapCut(:,:,1),[size(Post,1), size(Post,2)], 'nearest');
-        PostCutResized(:,:,2) = imresize(PostCut(:,:,1),[size(Post,1), size(Post,2)], 'nearest');
-        PostCutResized(:,:,3) = PostCutResized(:,:,1);
+        if ShowObjects
+            PostCutResized(:,:,1) = imresize(PostVoxMapCut(:,:,1),[size(Post,1), size(Post,2)], 'nearest');
+            PostCutResized(:,:,2) = imresize(PostCut(:,:,1),[size(Post,1), size(Post,2)], 'nearest');
+            PostCutResized(:,:,3) = PostCutResized(:,:,1);
+        else
+            PostCutResized(:,:,2) = imresize(PostCut(:,:,1),[size(Post,1), size(Post,2)], 'nearest');
+            PostCutResized(:,:,1) = PostCutResized(:,:,1).*0;
+            PostCutResized(:,:,3) = PostCutResized(:,:,1);
+        end
         
         f(fxmin:fxmax, fymin:fymax, 2) = f(fxmin:fxmax, fymin:fymax, 2)+20; % draw a green selection rectangle
         
