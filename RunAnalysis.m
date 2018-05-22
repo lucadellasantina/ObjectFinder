@@ -29,7 +29,7 @@ if ~isdir([pwd filesep 'I'])
 end
 
 % Get the current working folder as base directory for the analysis
-disp('---- ObjectFinder 4.7.1 analysis ----');
+disp('---- ObjectFinder 4.9 analysis ----');
 if exist([pwd filesep 'Settings.mat'], 'file'), load([pwd filesep 'Settings.mat']); end
 Settings.TPN = [pwd filesep];
 save([Settings.TPN 'Settings.mat'], 'Settings');
@@ -203,7 +203,15 @@ end
 disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
-% _*Version 4.8*               created on 2018-05-10 by Luca Della Santina_
+%
+% _*Version 4.9*               created on 2018-05-22 by Luca Della Santina_
+%
+%   + Inspect2D allows to select individual objects in the zoomed region
+%   + Inspect2D allows to toggle validation status of selected object
+%   + Inspect2D right-clicking zoomed region panel centers the view there
+%   % Inspect2D left-clicking obhect highlights it in blue
+
+% _*Version 4.8*               created on 2018-05-20 by Luca Della Santina_
 %
 %   + Bigger button sizes (better for HiDPI screens)
 %   + Inspector type selection (Stack inspector vs Imaris 7)

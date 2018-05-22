@@ -34,33 +34,35 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 	click   = 0;                        % Initialize click status
     f       = ceil(num_frames/2);       % Current frame
     Pos     = [ceil(size(ImStk,1)/2), ceil(size(ImStk,2)/2), ceil(size(ImStk,3)/2)]; % Initial position is middle of the stack
+    PosZoom = [-1, -1, -1];             % Initial position in zoomed area
     passI   = Filter.passF;             % Initialize temporary filter
     thresh  = 0;                        % Initialize thresholds
     thresh2 = 0;                        % Initialize thresholds
+    SelObjID= 0;                        % Initialize selected object ID#
 	
-	% Initialize figure
+	% Initialize GUI
 	fig_handle = figure('Name','Volume inspector (green: raw signal, magenta: detected objects)','NumberTitle','off',...
         'Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
 		'WindowButtonDownFcn',@button_down, 'WindowButtonUpFcn',@button_up, ...
 		'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press,...
         'windowscrollWheelFcn', @wheel_scroll, varargin{:});
 	
-	% Axes and compnent for the custom scroll bar
+	% Add custom scroll bar
 	scroll_axes = axes('Parent',fig_handle, 'Position',[0 0 0.9 0.045], 'Visible','off', 'Units', 'normalized');
 	axis([0 1 0 1]); axis off
 	scroll_bar_width = max(1 / num_frames, 0.01);
 	scroll_handle = patch([0 1 1 0] * scroll_bar_width, [0 0 1 1], [.8 .8 .8], 'Parent',scroll_axes, 'EdgeColor','none', 'ButtonDownFcn', @on_click);
 
-    % User interface conmponents
+    % Add GUI conmponents
     set(gcf,'units', 'normalized', 'position', [0.05 0.1 0.90 0.76]);
-    pnlSettings     = uipanel(  'Title','Objects'   ,'Units','normalized','Position',[.903,.005,.095,.99]);
+    pnlSettings     = uipanel(  'Title','Objects'   ,'Units','normalized','Position',[.903,.005,.095,.99]); %#ok, unused variable
     txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.930,.085,.02],'String',['Valid Objects: ' num2str(numel(find(passI)))]);
-    txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.900,.085,.02],'String',['Total Objects: ' num2str(numel(passI))]);
+    txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.900,.085,.02],'String',['Total Objects: ' num2str(numel(passI))]); %#ok, unused variable
     chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.912,.870,.085,.02],'String','Show (spacebar)', 'Value',1     ,'Callback',@chkShowObjects_changed);
-    btnSave         = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.010,.088,.05],'String','Save'                           ,'Callback',@btnSave_clicked);    
+    btnSave         = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.010,.088,.05],'String','Save'                           ,'Callback',@btnSave_clicked); %#ok, unused variable    
     
     % Primary filter parameter controls
-    txtFilter       = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.800,.085,.02],'String','Primary filter type');    
+    txtFilter       = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.800,.085,.02],'String','Primary filter type'); %#ok, unused variable   
     cmbFilterType   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.750,.060,.04],'String', {'Disabled', 'ITMax','Volume','Brightness'},'Callback', @cmbFilterType_changed);  
     cmbFilterDir    = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.750,.025,.04],'String', {'>=', '<='}, 'Visible', 'off'  ,'callback',@cmbFilterDir_changed);            
     btnMinus        = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.715,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus_clicked);    
@@ -68,17 +70,25 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     btnPlus         = uicontrol('Style','Pushbutton','Units','normalized','position',[.970,.715,.025,.04],'String','+','Visible', 'off'             ,'CallBack',@btnPlus_clicked);    
 
     % Secondary filter parameter controls
-    txtFilter2      = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.680,.085,.02],'String','Secondary filter type');    
+    txtFilter2      = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.680,.085,.02],'String','Secondary filter type'); %#ok, unused variable   
     cmbFilterType2  = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.630,.060,.04],'String',{'Disabled','ITMax','Volume','Brightness'},'Callback', @cmbFilterType2_changed);
     cmbFilter2Dir   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.630,.025,.04],'String',{'>=', '<='}, 'Visible', 'off'   ,'callback',@cmbFilterDir_changed);                 
     btnMinus2       = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.595,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus2_clicked);    
     txtThresh2      = uicontrol('Style','edit'      ,'Units','normalized','Position',[.932,.595,.036,.04],'String',num2str(thresh2),'Visible','off' ,'CallBack',@txtThresh2_changed);
     btnPlus2        = uicontrol('Style','Pushbutton','Units','normalized','position',[.970,.595,.025,.04],'String','+','Visible','off'              ,'CallBack',@btnPlus2_clicked);    
+
+    % Selected object info
+    txtSelObj       = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.560,.085,.02],'String','Selected Object info'); %#ok, unused variable
+    txtSelObjID     = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.530,.085,.02],'String','ID# :');
+    txtSelObjITMax  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.500,.085,.02],'String','ITMax : ');
+    txtSelObjVol    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.470,.085,.02],'String','Volume : ');
+    txtSelObjBright = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.440,.085,.02],'String','Brightness : ');
+    txtSelObjValid  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.410,.085,.02],'String','Validated : ');    
+    btnToggleValid  = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.360,.088,.04],'String','Change Validation (v)'          ,'Callback',@btnToggleValid_clicked); %#ok, unused variable
     
-    	
 	% Main drawing axes for video display
-    if size_video(2) < 0.03; size_video(2) = 0.03; end % bottom 0.03 must be used for scroll bar HO 2/17/2011
-	axes_handle = axes('Position',size_video); %[0 0.03 1 0.97] to size_video (6th input argument) to allow space for buttons and annotations 2/13/2011 HO
+    if size_video(2) < 0.03; size_video(2) = 0.03; end % bottom 0.03 will be used for scroll bar HO 2/17/2011
+	axes_handle = axes('Position',size_video);
 	
 	% Return handles
 	scroll_bar_handles = [scroll_axes; scroll_handle];
@@ -86,54 +96,64 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 	scroll(f);
     uiwait;
     
-    function cmbFilterDir_changed(~,~)
+    function btnToggleValid_clicked(src,event) %#ok, unused arguments 
+        if SelObjID
+            disp('changing selection status');
+            passI(SelObjID) = ~passI(SelObjID);
+            scroll(f);    
+        end
+    end
+
+    function cmbFilterDir_changed(src,event) %#ok, unused arguments
         applyFilter(thresh, thresh2);
     end
-    function chkShowObjects_changed(~,~)
+
+    function chkShowObjects_changed(src,event) %#ok, unused arguments
         scroll(f);
     end
-    function btnSave_clicked(~, ~)
+
+    function btnSave_clicked(src, event) %#ok, unused arguments
         Filter.passF = passI;
         save([pwd filesep 'Filter.mat'], 'Filter');
     end
 
-    function btnPlus_clicked(~, ~)
+    function btnPlus_clicked(src, event) %#ok, unused arguments
         new_thresh = thresh + 1;
         set(txtThresh,'string',num2str(new_thresh));
         applyFilter(new_thresh, thresh2);
     end
 
-    function btnMinus_clicked(~, ~)
+    function btnMinus_clicked(src, event) %#ok, unused arguments
         new_thresh = max(thresh - 1, 0);
         set(txtThresh,'string',num2str(new_thresh));
         applyFilter(new_thresh, thresh2);
     end
 
-    function txtThresh_changed(src, ~)
+    function txtThresh_changed(src, event) %#ok, unused arguments
         thresh_str = get(src,'String');
         new_thresh = str2double(thresh_str);
         applyFilter(new_thresh, thresh2);
     end
 
-    function btnPlus2_clicked(~, ~)
+    function btnPlus2_clicked(src, event) %#ok, unused arguments
         new_thresh2 = thresh2 + 1;
         set(txtThresh2,'string',num2str(new_thresh2));
         applyFilter(thresh, new_thresh2);
     end
 
-    function btnMinus2_clicked(~, ~)
+    function btnMinus2_clicked(src, event) %#ok, unused arguments
         new_thresh2 = max(thresh2 - 1, 0);
         set(txtThresh2,'string',num2str(new_thresh2));
         applyFilter(thresh, new_thresh2);
     end
 
-    function txtThresh2_changed(src, ~)
+    function txtThresh2_changed(src, event) %#ok, unused arguments
         thresh_str = get(src,'String');
         new_thresh2 = str2double(thresh_str);
         applyFilter(thresh, new_thresh2);
     end
 
-    function cmbFilterType_changed(src, ~)
+    function cmbFilterType_changed(src, event) %#ok, unused arguments
         switch get(src,'Value')
             case 1 % None
                 new_thresh = 0;
@@ -167,7 +187,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
         set(txtThresh,'string',num2str(new_thresh));        
     end
 
-    function cmbFilterType2_changed(src, ~)
+    function cmbFilterType2_changed(src, event) %#ok, unused arguments
         switch get(src,'Value')
             case 1 % None
                 new_thresh2 = 0;
@@ -197,7 +217,6 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
         applyFilter(thresh, new_thresh2);
         set(txtThresh2,'string',num2str(new_thresh2));        
     end
-
 
     function applyFilter(new_thresh, new_thresh2)
         thresh = new_thresh;
@@ -265,7 +284,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
         scroll(f);
     end
 
-    function wheel_scroll(~, event)
+    function wheel_scroll(src, event) %#ok, unused arguments
           if event.VerticalScrollCount < 0              
               %position = get(scroll_handle, 'XData');
               %disp(position);
@@ -275,11 +294,13 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
           end
     end
     
-    function key_press(~, event)
+    function key_press(src, event) %#ok, unused arguments
         switch event.Key  % Process shortcut keys
             case 'space'
                 chkShowObjects.Value = ~chkShowObjects.Value;
                 chkShowObjects_changed();
+            case 'v'
+                btnToggleValid_clicked();
             case 'leftarrow'
                 scroll(f - 1);
             case 'rightarrow'
@@ -312,15 +333,15 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     end
 
 	%mouse handler
-	function button_down(src, event)  %#ok, unused arguments
+	function button_down(src, event)
 		set(src,'Units','norm')
 		click_pos = get(src, 'CurrentPoint');
         if click_pos(2) <= 0.035
             click = 1; % click happened on the scroll bar
-            on_click([],[]);
+            on_click(src,event);
         else
             click = 2; % click happened somewhere else
-            on_click([],[]);
+            on_click(src,event);
         end
 	end
 
@@ -333,6 +354,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 		
         if click == 1 
             % User clicked the scroll bar, get x-coordinate of click
+            
             set(fig_handle, 'Units', 'normalized');
             click_point = get(fig_handle, 'CurrentPoint');
             set(fig_handle, 'Units', 'pixels');
@@ -347,16 +369,38 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 scroll(new_f);
             end
         else
-            % Get XY-coordinate of click in pixels
+            % User clicked on the image get XY-coordinates in pixels
+            
             set(fig_handle, 'Units', 'pixels');
             click_point = get(gca, 'CurrentPoint');
             PosX = ceil(click_point(1,1));
-            %PosY = ceil(click_point(1,2));
             if PosX <= size(ImStk,1)
+                % User clicked in the left panel (image navigator)
+                % Note coordinates are inverted, Pos(Y, X, Z)
                 Pos = [ceil(click_point(1,1:2)),f];
+                PosZoom = [-1, -1, -1];
                 scroll(f);
             else
-                % TODO something if clicked in the zoomed region
+                % User clicked in the right panel (zoomed region)
+                % Detect coordinates of the point clicked in PosZoom
+                % Note: coordinates are inverted, PosZoom(zoomY, zoomX, Z)
+                PosZoomX = abs(ceil(click_point(1,1)) - size(ImStk,1));
+                PosZoomX = ceil(256*PosZoomX/size(ImStk,1));
+                
+                PosZoomY = abs(ceil(click_point(1,2)) - size(ImStk,2));
+                PosZoomY = ceil(256-256*PosZoomY/size(ImStk,2));
+                
+                % Do different things depending whether left/right-clicked
+                clickType = get(fig_handle, 'SelectionType');
+                if strcmp(clickType, 'alt')
+                    % User right-clicked in the right panel (zoomed region)
+                    PosZoom = [-1, -1, -1];
+                    Pos = [Pos(1)+PosZoomX-128, Pos(2)+PosZoomY-128, f];
+                elseif strcmp(clickType, 'normal')
+                    PosZoom = [PosZoomX, PosZoomY, f];
+                    Pos = [Pos(1), Pos(2), f];
+                end
+                scroll(f);
             end
         end
 	end
@@ -375,17 +419,30 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 		set(scroll_handle, 'XData', scroll_x + [0 1 1 0] * scroll_bar_width);
 		%set to the right axes and call the custom redraw function
 		set(fig_handle, 'CurrentAxes', axes_handle);
-		redraw_func(f, chkShowObjects.Value, Pos, passI);
+		SelObjID = redraw_func(f, chkShowObjects.Value, Pos, PosZoom, passI);
+        if SelObjID
+            set(txtSelObjID     ,'string',['ID#: ' num2str(SelObjID)]);
+            set(txtSelObjITMax  ,'string',['ITMax : ' num2str(Dots.ITMax(SelObjID))]);
+            set(txtSelObjVol    ,'string',['Volume : ' num2str(Dots.Vol(SelObjID))]);
+            set(txtSelObjBright ,'string',['Brightness : ' num2str(ceil(Dots.MeanBright(SelObjID)))]);
+            set(txtSelObjValid  ,'string',['Validated : ' num2str(ceil(passI(SelObjID)))]);
+        else
+            set(txtSelObjID     ,'string','ID#: ');
+            set(txtSelObjITMax  ,'string','ITMax : ');
+            set(txtSelObjVol    ,'string','Volume : ');
+            set(txtSelObjBright ,'string','Brightness : ');
+            set(txtSelObjValid  ,'string','Validated : ');
+        end
 	end
 	
 	% Convenience functions for argument checks
 	function check_int_scalar(a)
 		assert(isnumeric(a) && isscalar(a) && isfinite(a) && a == round(a), ...
 			[upper(inputname(1)) ' must be a scalar integer number.']);
-	end
+    end
+
 	function check_callback(a)
 		assert(isempty(a) || isa(a, 'function_handle'), ...
 			[upper(inputname(1)) ' must be a valid function handle.'])
 	end
-end
-
+    end

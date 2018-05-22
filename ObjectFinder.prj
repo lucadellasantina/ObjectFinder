@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2526538178" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1700027632" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -13,8 +13,8 @@
     <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.
 Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summary>
     <param.description />
-    <param.screenshot>/tmp/tpd303317e_3603_4747_b610_768307311423.png</param.screenshot>
-    <param.version>4.8</param.version>
+    <param.screenshot />
+    <param.version>4.9</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
@@ -24,6 +24,7 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
     <unset>
       <param.company />
       <param.description />
+      <param.screenshot />
       <param.products.name />
       <param.products.id />
       <param.products.version />
@@ -133,7 +134,7 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>4.15.0-20-generic</osver>
+      <osver>4.15.0-22-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>
