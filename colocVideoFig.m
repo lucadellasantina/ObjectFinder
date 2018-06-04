@@ -17,20 +17,10 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
-	colocVideoFig(redraw_func, play_fps, big_scroll, key_func,...
-    ColocManual, Grouped, Post, Colo, Settings, varargin)
-	
-	%default parameter values
-	if nargin < 2 || isempty(play_fps), play_fps = 25; end  %play speed (frames per second)
-	if nargin < 3 || isempty(big_scroll), big_scroll = 30; end  %page-up and page-down advance, in frames
-	if nargin < 4, key_func = []; end
-	
+function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Colo2, ColocManual2)
+
 	%check arguments
 	check_callback(redraw_func);
-	check_int_scalar(play_fps);
-	check_int_scalar(big_scroll);
-	check_callback(key_func);
 
     size_video = [0 0.03 0.87 0.97]; % default video window size within the open window (set same as the original videofig) HO 2/17/2011
     click = 0;
@@ -48,41 +38,46 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 	fig_handle = figure('Name','Colocalization Analysis','NumberTitle','off',...
         'Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
 		'WindowButtonDownFcn',@button_down, 'WindowButtonUpFcn',@button_up, ...
-		'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press, 'windowscrollWheelFcn', @wheel_scroll, varargin{:});
+		'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press, 'windowscrollWheelFcn', @wheel_scroll);
     
-	%axes for scroll bar
-	scroll_axes_handle = axes('Parent',fig_handle, 'Position',[0 0 1 0.03], ...
-		'Visible','off', 'Units', 'normalized');
-	axis([0 1 0 1]);
-	axis off
-	
-	%scroll bar
+	% Add custom scroll bar
+	scroll_axes_handle = axes('Parent',fig_handle, 'Position',[.000 .000 .860 .030], 'Visible','off', 'Units', 'normalized');
+	axis([0 1 0 1]); axis off
 	scroll_bar_width = max(1 / num_frames, 0.01);
-	scroll_handle = patch([0 1 1 0] * scroll_bar_width, [0 0 1 1], [.8 .8 .8], ...
-		'Parent',scroll_axes_handle, 'EdgeColor','none', 'ButtonDownFcn', @on_click);
+	scroll_handle = patch([0 1 1 0] * scroll_bar_width, [0 0 1 1], [.8 .8 .8], 'Parent',scroll_axes_handle, 'EdgeColor','none', 'ButtonDownFcn', @on_click);
 	
+    % Add GUI conmponents
     set(gcf,'units', 'normalized', 'position', [0.25 0.1 0.455 0.72]);
-    uicontrol('Style','text','Units','normalized','position',[.015,.97,.4,.02],'String',['Reference channel: ' ColocManual.Source]);
-    uicontrol('Style','text','Units','normalized','position',[.445,.97,.4,.02],'String',['Colocalizing channel: ' ColocManual.Fish1]);
-    uicontrol('Style','text','Units','normalized','position',[.015,.05,.4,.02],'String',['Current ' ColocManual.Source ' (magenta)']);
-    uicontrol('Style','text','Units','normalized','position',[.445,.05,.4,.02],'String',['Current ' ColocManual.Source ' (magenta),' ColocManual.Fish1 ' (green)']);
+    lblRefChan   = uicontrol('Style','text'      ,'Units','normalized','position',[.017,.970,.400,.020],'String',['Reference channel: ' ColocManual.Source]); %#ok, unused variable
+    lblCurrObjs  = uicontrol('Style','text'      ,'Units','normalized','position',[.017,.050,.400,.020],'String',['Current ' ColocManual.Source ' (green)']); %#ok, unused variable
+    if isempty(Colo2)
+        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.970,.400,.020],'String',['Colocalizing channel: ' ColocManual.Fish1]); %#ok, unused variable
+        lblOverlay   = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.050,.400,.020],'String',['Current ' ColocManual.Source ' (green),' ColocManual.Fish1 ' (magenta)']); %#ok, unused variable
+    else
+        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.970,.400,.020],'String',['Colocalizing red: ' ColocManual.Fish1 ' green: ' ColocManual2.Fish1]); %#ok, unused variable
+        lblOverlay   = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.050,.400,.020],'String',['Current ' ColocManual.Source ' (green), ' ColocManual.Fish1 ' (red), ' ColocManual2.Fish1 ' (blue)']); %#ok, unused variable
+    end
 
-    uicontrol('Style','text','Units','normalized','position',[.88,.94,.11,.02],'String','Objects #');
-    uicontrol('Style','text','Units','normalized','position',[.88,.92,.11,.02],'String',['Total: ' num2str(ColocManual.TotalNumDotsManuallyColocAnalyzed)]);
-    txtCurrent_handle = uicontrol('Style','text','Units','normalized','position',[.88,.90,.11,.02],'String',['Current: ' num2str(DotNum)]);
-    txtRemaining_handle = uicontrol('Style','text','Units','normalized','position',[.88,.88,.11,.02],'String',['Remaining: ' num2str(NumRemainingDots)]);
+    pnlSettings  = uipanel(  'Title',' '         ,'Units','normalized','Position',[.865,.005,.133,.990]); %#ok, unused variable    
+    lblObjNum    = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.950,.110,.020],'String','Objects'); %#ok, unused variable
+    lblObjTotal  = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.920,.110,.020],'String',['Total: ' num2str(ColocManual.TotalNumDotsManuallyColocAnalyzed)]); %#ok, unused variable
+    txtCurrent   = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.900,.110,.020],'String',['Current: ' num2str(DotNum)]);
+    txtRemaining = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.880,.110,.020],'String',['Left: ' num2str(NumRemainingDots)]);
 
-    uicontrol('Style','Pushbutton','Units','normalized','position',[.88,.70,.11,.05], 'String','Reset last choice','CallBack',@btnResetLast_clicked);    
-    uicontrol('Style','Pushbutton','Units','normalized','position',[.88,.58,.11,.1], 'String','Colocalized','CallBack',@btnColocalized_clicked);
-    uicontrol('Style','Pushbutton','Units','normalized','position',[.88,.47,.11,.1], 'String','Not colocalized','CallBack',@btnNotColocalized_clicked);
-    uicontrol('Style','Pushbutton','Units','normalized','position',[.88,.09,.11,.05], 'String','Save','Callback',@btnSave_clicked);    
-    uicontrol('Style','Pushbutton','Units','normalized','position',[.88,.03,.11,.05], 'String','Exit','Callback','close');    
+    btnResetLast = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.800,.110,.050], 'String','Reset last','CallBack',@btnResetLast_clicked); %#ok, unused variable        
+    if isempty(Colo2)
+        btnColoc    = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.510,.110,.100], 'String','Colocalized','CallBack',@btnColocalized_clicked); %#ok, unused variable
+        btnNotColoc = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String','<html><center>Not<br>Colocalized','CallBack',@btnNotColocalized_clicked); %#ok, unused variable
+    else
+        btnNotColoc12 = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.620,.110,.100], 'String','<html><center>Not<br>Colocalized','CallBack',@btnNotColoc12_clicked); %#ok, unused variable        
+        btnColoc1     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.510,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual.Fish1],'CallBack',@btnColoc1_clicked); %#ok, unused variable
+        btnColoc2     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual2.Fish1],'CallBack',@btnColoc2_clicked); %#ok, unused variable
+        btnColoc12    = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.290,.110,.100], 'String','<html><center>Double<br>Colocalized','CallBack',@btnColoc12_clicked); %#ok, unused variable        
+    end    
+    btnSave      = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.030,.110,.050], 'String','Save','Callback',@btnSave_clicked); %#ok, unused variable
     
-	% Timer to play video
-	play_timer = timer('TimerFcn',@play_timer_callback, 'ExecutionMode','fixedRate');
-	
-	% Main drawing axes for video display
-    if size_video(2) < 0.03; size_video(2) = 0.03; end; %bottom 0.03 must be used for scroll bar HO 2/17/2011
+    % Main drawing axes for video display
+    if size_video(2) < 0.03; size_video(2) = 0.03; end % Bottom 0.03 must be used for scroll bar HO 2/17/2011
 	axes_handle = axes('Position',size_video); %[0 0.03 1 0.97] to size_video (6th input argument) to allow space for buttons and annotations 2/13/2011 HO
     
 	% Return handles and initial call to redraw_func
@@ -102,24 +97,54 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             CutNumVox = [60, 60, 20];
             PostCut = colocDotStackCutter(Post, Grouped, DotNum, [], CutNumVox);
             ColoCut = colocDotStackCutter(Colo, Grouped, DotNum, [], CutNumVox);
+            if ~isempty(Colo2)
+                Colo2Cut = colocDotStackCutter(Colo2, Grouped, DotNum, [], CutNumVox);
+            end
+
             PostVoxMapCut = colocDotStackCutter(PostVoxMap, Grouped, DotNum, [], CutNumVox);
             
             MaxRawBright = max(Grouped.Vox(DotNum).RawBright);
             %PostMaxRawBright = single(max(PostCut(:)));
-            ColoMaxRawBright = single(max(ColoCut(:)));
             PostUpperLimit = 200;
-            ColoUpperLimit = 200;
             PostScalingFactor = PostUpperLimit/MaxRawBright; % Normalized to brightness of the current object
-            ColoScalingFactor = ColoUpperLimit/ColoMaxRawBright; % Normalized to the local field's brightness
-            
             PostCutScaled = uint8(single(PostCut)*single(PostScalingFactor));
+
+            ColoMaxRawBright = single(max(ColoCut(:)));
+            ColoUpperLimit = 200;
+            ColoScalingFactor = ColoUpperLimit/ColoMaxRawBright; % Normalized to the local field's brightness
             ColoCutScaled = uint8(single(ColoCut)*single(ColoScalingFactor));
+
+            if ~isempty(Colo2)
+                Colo2MaxRawBright = single(max(Colo2Cut(:)));
+                Colo2UpperLimit = 200;
+                Colo2ScalingFactor = Colo2UpperLimit/Colo2MaxRawBright; % Normalized to the local field's brightness
+                Colo2CutScaled = uint8(single(Colo2Cut)*single(Colo2ScalingFactor));
+            end
+            
             ZeroCut = uint8(zeros(size(PostCut)));
             
             ImStk1 = cat(4, PostCutScaled, PostCutScaled, PostCutScaled);
-            ImStk2 = cat(4, ColoCutScaled, ColoCutScaled, ColoCutScaled);
-            ImStk3 = cat(4, PostCutScaled.*PostVoxMapCut, ZeroCut, PostCutScaled.*PostVoxMapCut);
-            ImStk4 = cat(4, PostCutScaled.*PostVoxMapCut, ColoCutScaled, PostCutScaled.*PostVoxMapCut);
+            if ~isempty(Colo2)
+                ImStk2 = cat(4, ColoCutScaled, ZeroCut, Colo2CutScaled);
+            else
+                ImStk2 = cat(4, ColoCutScaled, ColoCutScaled, ColoCutScaled);
+            end
+            
+            if ~isempty(Colo2)
+                ImStk3 = cat(4, ZeroCut, PostCutScaled.*PostVoxMapCut, ZeroCut);
+                ImStk4 = cat(4, ColoCutScaled, PostCutScaled.*PostVoxMapCut, Colo2CutScaled);
+            else
+                ImStk3 = cat(4, ZeroCut, PostCutScaled.*PostVoxMapCut, ZeroCut);                
+                ImStk4 = cat(4, ColoCutScaled, PostCutScaled.*PostVoxMapCut, ColoCutScaled);
+            end
+
+            % Separate left and right panels visually with a vertical line
+            ImStk1(1:end, end, 1:end, 1:3) = 60;
+            ImStk3(1:end, end, 1:end, 1:3) = 60;
+            % Separate top and bottom panels visually with a vertical line
+            ImStk3(1, 1:end, 1:end, 1:3) = 60;
+            ImStk4(1, 1:end, 1:end, 1:3) = 60;
+
             ImStk = cat(1, cat(2, ImStk1, ImStk2),  cat(2, ImStk3, ImStk4));
         else
             % Add stats so that you can remember ColocFlag of 1 is coloc, etc.
@@ -129,59 +154,153 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             ColocManual.ColocRate = ColocManual.NumDotsColoc/(ColocManual.NumDotsColoc+ColocManual.NumDotsNonColoc);
             ColocManual.FalseDotRate = ColocManual.NumFalseDots/(ColocManual.NumDotsColoc+ColocManual.NumDotsNonColoc+ColocManual.NumFalseDots);
             ColocManual.ColocRateInclugingFalseDots = ColocManual.NumDotsColoc/(ColocManual.NumDotsColoc+ColocManual.NumDotsNonColoc+ColocManual.NumFalseDots);            
-            if exist([Settings.TPN 'Coloc.mat'], 'file')
-                load([Settings.TPN 'Coloc.mat']);
-                Coloc(end+1) = ColocManual;
+
+            if ~isempty(Colo2)            
+                    % Add stats so that you can remember ColocFlag of 1 is coloc, etc.
+                    ColocManual2.NumDotsColoc = length(find(ColocManual2.ColocFlag == 1));
+                    ColocManual2.NumDotsNonColoc = length(find(ColocManual2.ColocFlag == 2));
+                    ColocManual2.NumFalseDots = length(find(ColocManual2.ColocFlag == 3));
+                    ColocManual2.ColocRate = ColocManual2.NumDotsColoc/(ColocManual2.NumDotsColoc+ColocManual2.NumDotsNonColoc);
+                    ColocManual2.FalseDotRate = ColocManual2.NumFalseDots/(ColocManual2.NumDotsColoc+ColocManual2.NumDotsNonColoc+ColocManual2.NumFalseDots);
+                    ColocManual2.ColocRateInclugingFalseDots = ColocManual2.NumDotsColoc/(ColocManual2.NumDotsColoc+ColocManual2.NumDotsNonColoc+ColocManual2.NumFalseDots);            
+            end
+            
+            if exist([pwd filesep 'Coloc.mat'], 'file')
+                load([pwd filesep 'Coloc.mat'], 'Coloc');
+                % Check if we need to replace a previously done analysis
+                FoundColocManual  = false;
+                FoundColocManual2 = false;
+                for i=1:numel(Coloc)
+                    if strcmp(Coloc(i).Source, ColocManual.Source) && strcmp(Coloc(i).Fish1, ColocManual.Fish1)
+                        Coloc(i) = ColocManual;
+                        FoundColocManual = true;
+                    end
+                    if (~isempty(Colo2)) && strcmp(Coloc(i).Source, ColocManual2.Source) && strcmp(Coloc(i).Fish1, ColocManual2.Fish1)
+                        Coloc(i) = ColocManual2;
+                        FoundColocManual2 = true;
+                    end
+                end
+                
+                % If nothing to replace, just append to the list
+                if ~FoundColocManual
+                    Coloc(end+1) = ColocManual; % Coloc is saved later
+                end
+                if ~isempty(Colo2) && ~FoundColocManual2
+                    Coloc(end+1) = ColocManual2;
+                end
             else
-                Coloc = ColocManual;
+                % If Coloc.mat does not exist, create a new one
+                Coloc = ColocManual; % Coloc is saved later
+                if ~isempty(Colo2)
+                    Coloc(2) = ColocManual2;
+                end
             end
-            save([Settings.TPN 'Coloc.mat'], 'Coloc'); % Add completed analusis to Coloc
-            if exist([Settings.TPN 'ColocManual.mat'], 'file')
-                delete([Settings.TPN 'ColocManual.mat']); % Remove temporary ColocManual
+            save([pwd filesep 'Coloc.mat'], 'Coloc'); % Add completed analusis to Coloc
+            
+            % Delete any temporary file
+            if exist([pwd filesep 'Colo.mat'], 'file')
+                delete([pwd filesep 'Colo.mat']);
             end
+            if exist([pwd filesep 'Colo2.mat'], 'file')
+                delete([pwd filesep 'Colo2.mat']);
+            end
+            if exist([pwd filesep 'ColocManual.mat'], 'file')
+                delete([pwd filesep 'ColocManual.mat']);
+            end
+            if exist([pwd filesep 'ColocManual2.mat'], 'file')
+                delete([pwd filesep 'ColocManual2.mat']);
+            end
+
             ImStk = [];
             DotNum = 0;
             return;
         end
     end
     
-    function btnResetLast_clicked(~, ~)
+    function btnResetLast_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=0;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
-        set(txtCurrent_handle,'string',['Current: ' num2str(DotNum)]);
-        set(txtRemaining_handle,'string',['Remaining: ' num2str(NumRemainingDots)]);
+        set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
+        set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);
         num_frames = size(ImStk,3);
         f = ceil(num_frames/2); % Current frame
         scroll(f);
         msgbox('Last object will be examined again in random order.');
     end
 
-    function btnColocalized_clicked(~, ~)
+    function btnColocalized_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
-        set(txtCurrent_handle,'string',['Current: ' num2str(DotNum)]);
-        set(txtRemaining_handle,'string',['Remaining: ' num2str(NumRemainingDots)]);        
+        set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
+        set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
         num_frames = size(ImStk,3);
         f = ceil(num_frames/2); % Current frame
         scroll(f);
     end
 
-    function btnNotColocalized_clicked(~, ~)
+    function btnNotColocalized_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
-        set(txtCurrent_handle,'string',['Current: ' num2str(DotNum)]);
-        set(txtRemaining_handle,'string',['Remaining: ' num2str(NumRemainingDots)]);        
+        set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
+        set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
         num_frames = size(ImStk,3);
         f = ceil(num_frames/2); % Current frame
         scroll(f);        
     end
 
-    function btnSave_clicked(~, ~)
-        save([Settings.TPN 'ColocManual.mat'], 'ColocManual');
+    function btnNotColoc12_clicked(src, event) %#ok, unused arguments
+        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
+        set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
+        num_frames = size(ImStk,3);
+        f = ceil(num_frames/2); % Current frame
+        scroll(f);        
+    end
+
+    function btnColoc1_clicked(src, event) %#ok, unused arguments
+        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
+        set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
+        num_frames = size(ImStk,3);
+        f = ceil(num_frames/2); % Current frame
+        scroll(f);
+    end
+
+    function btnColoc2_clicked(src, event) %#ok, unused arguments
+        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
+        set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
+        num_frames = size(ImStk,3);
+        f = ceil(num_frames/2); % Current frame
+        scroll(f);
+    end
+
+    function btnColoc12_clicked(src, event) %#ok, unused arguments
+        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
+        set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
+        num_frames = size(ImStk,3);
+        f = ceil(num_frames/2); % Current frame
+        scroll(f);
+    end
+
+    function btnSave_clicked(src, event) %#ok, unused arguments
+        save([pwd filesep 'ColocManual.mat'], 'ColocManual');
+        if ~isempty(Colo2)
+            save([pwd filesep 'ColocManual2.mat'], 'ColocManual2');
+        end
         msgbox('Progress saved.');        
     end
     
-    function wheel_scroll(~, event)
+    function wheel_scroll(src, event) %#ok
           if event.VerticalScrollCount < 0
               %disp('scroll up');
               %position = get(scroll_handle, 'XData');
@@ -199,26 +318,10 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 			scroll(f - 1);
 		case 'rightarrow'
 			scroll(f + 1);
-		case 'pageup'
-			if f - big_scroll < 1  %scrolling before frame 1, stop at frame 1
-				scroll(1);
-			else
-				scroll(f - big_scroll);
-			end
-		case 'pagedown'
-			if f + big_scroll > num_frames  %scrolling after last frame
-				scroll(num_frames);
-			else
-				scroll(f + big_scroll);
-			end
 		case 'home'
 			scroll(1);
 		case 'end'
 			scroll(num_frames);
-		case 'return'
-			play(1/play_fps)
-		case 'backspace'
-			play(5/play_fps)
 		otherwise
 			if ~isempty(key_func)
 				key_func(event.Key);  % call custom key handler
@@ -259,24 +362,6 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 		end
 	end
 
-	function play(period)
-		%toggle between stoping and starting the "play video" timer
-		if strcmp(get(play_timer,'Running'), 'off')
-			set(play_timer, 'Period', period);
-			start(play_timer);
-		else
-			stop(play_timer);
-		end
-	end
-	function play_timer_callback(src, event)  %#ok
-		%executed at each timer period, when playing the video
-		if f < num_frames
-			scroll(f + 1);
-		elseif strcmp(get(play_timer,'Running'), 'on')
-			stop(play_timer);  %stop the timer if the end is reached
-		end
-	end
-
 	function scroll(new_f)
         if nargin == 1  %scroll to another position (new_f)
             if new_f < 1 || new_f > num_frames
@@ -300,11 +385,6 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 		pause(0.001)
 	end
 	
-	%convenience functions for argument checks
-	function check_int_scalar(a)
-		assert(isnumeric(a) && isscalar(a) && isfinite(a) && a == round(a), ...
-			[upper(inputname(1)) ' must be a scalar integer number.']);
-	end
 	function check_callback(a)
 		assert(isempty(a) || isa(a, 'function_handle'), ...
 			[upper(inputname(1)) ' must be a valid function handle.'])

@@ -204,12 +204,26 @@ disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
 %
-% _*Version 4.9*               created on 2018-05-22 by Luca Della Santina_
+% _*Version 4.10*             created on 2018-06-03 by Luca Della Santina_
+%
+%   + Colocalization of objects allowed with 2 channels at the same time
+%   + Inspect2D arrows and wasd allow nagivation across the left panel
+%   + Colocalization settings panel on right hand of GUI
+%   + Colocalization GUI panels visually separated by gray lines
+%   % Colocalization GUI scrollbar overlapped with panel
+%   % Sholl analysis plot didn't show axes when called after heatmap plot
+%   - Removed settings.TPN from colocVideoFig (pwd filesep is default)
+%
+% _*Version 4.9.1*             created on 2018-05-25 by Luca Della Santina_
 %
 %   + Inspect2D allows to select individual objects in the zoomed region
 %   + Inspect2D allows to toggle validation status of selected object
 %   + Inspect2D right-clicking zoomed region panel centers the view there
 %   % Inspect2D left-clicking obhect highlights it in blue
+%   % Filter now saves Threshold field among options on file
+%   % Filter now loads threshold direction from options on file
+%   % Filter now defaults to average values for if no value is on file
+%   % Total # of valid objects updates when user manually change validation
 
 % _*Version 4.8*               created on 2018-05-20 by Luca Della Santina_
 %

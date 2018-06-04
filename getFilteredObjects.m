@@ -17,7 +17,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 function[Passing] = getFilteredObjects(Objects, Filter)
-Passing.ids = find(Filter.passF);
+Passing.idx = find(Filter.passF);
 Passing.Pos = Objects.Pos(Filter.passF, :);
 Passing.Vox = Objects.Vox(Filter.passF);
 Passing.Vol = Objects.Vol(Filter.passF);
@@ -33,5 +33,5 @@ end
 if isfield(Objects,'ClosestSkelDist')
     Passing.ClosestSkelDist = Objects.ClosestSkelDist(Filter.passF);
 end
-
+Passing.ImSize = Objects.ImSize;
 end

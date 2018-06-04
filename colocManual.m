@@ -28,25 +28,47 @@
 % depends on: colocDotStackCutter.m  colocVideoFig.m
 % -------------------------------------------------------------------------
 
-function ColocManual = colocManual(Settings, Dots, Filter, Colo, Post, FileName)
+function ColocManual = colocManual(Dots, Filter, Post, Colo, FileName, Colo2, FileName2)
 %%
 Grouped = getFilteredObjects(Dots, Filter);
 [~, fName, ~] = fileparts(FileName);
-if exist([Settings.TPN 'ColocManual.mat'],'file')
-    load([Settings.TPN 'ColocManual.mat']); % Load a previously unfinished analysis
+if exist([pwd filesep 'ColocManual.mat'],'file')
+    load([pwd filesep 'ColocManual.mat'], 'ColocManual'); % Load a previously unfinished analysis
+    if exist([pwd filesep 'ColocManual2.mat'],'file')
+        load([pwd filesep 'ColocManual2.mat'], 'ColocManual2'); % Load a previously unfinished analysis
+    end
 else
-    tmpPrompt = {'Reference objects: ', 'Colocalized signal:'};
-    tmpAns = inputdlg(tmpPrompt, 'Assign channels', 1, {'PSD95', fName});
-    ColocManual.Source = tmpAns{1};
-    ColocManual.Fish1 = tmpAns{2};
+    if isempty(Colo2)
+        tmpPrompt = {'Reference objects: ', 'Colocalized channel:'};
+        tmpAns = inputdlg(tmpPrompt, 'Assign channels', 1, {'PSD95', fName});
+        ColocManual.Source = tmpAns{1};
+        ColocManual.Fish1 = tmpAns{2};
     
-    ManualColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
-    ColocManual.ListDotIDsManuallyColocAnalyzed = find(ManualColocAnalyzingFlag == 1);
-    ColocManual.TotalNumDotsManuallyColocAnalyzed = length(ColocManual.ListDotIDsManuallyColocAnalyzed);
-    ColocManual.ColocFlag = zeros([1,ColocManual.TotalNumDotsManuallyColocAnalyzed], 'uint8');
+        ManualColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
+        ColocManual.ListDotIDsManuallyColocAnalyzed = find(ManualColocAnalyzingFlag == 1);
+        ColocManual.TotalNumDotsManuallyColocAnalyzed = length(ColocManual.ListDotIDsManuallyColocAnalyzed);
+        ColocManual.ColocFlag = zeros([1,ColocManual.TotalNumDotsManuallyColocAnalyzed], 'uint8');
+
+        ColocManual2 = struct;
+    else
+        [~, fName2, ~] = fileparts(FileName2);
+        tmpPrompt = {'Reference objects: ', 'Colocalized channel #1:', 'Colocalized channel #2:'};
+        tmpAns = inputdlg(tmpPrompt, 'Assign channels', 1, {'PSD95', fName, fName2});
+
+        ColocManual.Source = tmpAns{1};
+        ColocManual.Fish1 = tmpAns{2};
+
+        ManualColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
+        ColocManual.ListDotIDsManuallyColocAnalyzed = find(ManualColocAnalyzingFlag == 1);
+        ColocManual.TotalNumDotsManuallyColocAnalyzed = length(ColocManual.ListDotIDsManuallyColocAnalyzed);
+        ColocManual.ColocFlag = zeros([1,ColocManual.TotalNumDotsManuallyColocAnalyzed], 'uint8');
+
+        ColocManual2 = ColocManual;
+        ColocManual2.Fish1 = tmpAns{3};
+    end    
 end
 
-colocVideoFig(@(frm, ImStk) colocRedraw(frm, ImStk, 'gray(256)'), 5, [], [], ColocManual, Grouped, Post, Colo, Settings);
+colocVideoFig(@(frm, ImStk) colocRedraw(frm, ImStk, 'gray(256)'), ColocManual, Grouped, Post, Colo, Colo2, ColocManual2);
 end
 
 

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1700027632" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="333567997" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -14,7 +14,7 @@
 Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summary>
     <param.description />
     <param.screenshot />
-    <param.version>4.9</param.version>
+    <param.version>4.10</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
@@ -38,6 +38,8 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-clear.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Filter.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-FindObjects.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherries.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherriesCheck.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-cherries.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-recherries.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-bottom.png</file>
@@ -59,6 +61,7 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/calcSkelPathLength.m</file>
       <file>${PROJECT_ROOT}/colocDotStackCutter.m</file>
       <file>${PROJECT_ROOT}/colocManual.m</file>
+      <file>${PROJECT_ROOT}/colocManualCheckDouble.m</file>
       <file>${PROJECT_ROOT}/colocRedraw.m</file>
       <file>${PROJECT_ROOT}/colocVideoFig.m</file>
       <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>

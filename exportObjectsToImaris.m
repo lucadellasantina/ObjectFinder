@@ -73,29 +73,34 @@ if Settings.Inspect3D.showPassing
     vImarisApplication.mSurpassScene.AddChild(vSpotsA);
     % get custom spots statistics and push them into Imaris
     pause(1); % This pause is needed to allow Imaris time to load scene before asking for statistics
-    [aNames,aValues,aUnits,aFactors,aFactorNames,aIds]=vSpotsA.GetStatistics;
-    clear aNames; clear aValues; clear aUnits; clear aFactors; clear aIds;
-    
-    dotFN = fieldnames(Dots);
-    [vDotsStats,vOk] = listdlg('ListString', dotFN,...
-        'SelectionMode','multiple', ...
-        'ListSize',[300 300], 'Name','DotsStats', ...
-        'PromptString',{'Please select passing dot stats:'});
-    if vOk<1, return, end
-    dotStatsNames = dotFN(vDotsStats);
-    
-    for i = 1:length(dotStatsNames)
-        for j = 1:length(vSpotsAPosXYZ)
-            aNames{j,1} = strcat('RC_' ,dotStatsNames{i});
-            aValues(j,1) = single(Dots.(dotStatsNames{i})(PassDotIDs(j)));
-            aUnits{j,1} = 'arb';
-            aFactors{1,j} = 'Spots';
-            aFactors{2,j} = '';
-            aFactors{3,j} = '1';
-            aIds(j,1) = int32(j-1);
-        end
-        vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+
+    try
+        [aNames,aValues,aUnits,aFactors,aFactorNames,aIds]=vSpotsA.GetStatistics;
         clear aNames; clear aValues; clear aUnits; clear aFactors; clear aIds;
+        
+        dotFN = fieldnames(Dots);
+        [vDotsStats,vOk] = listdlg('ListString', dotFN,...
+            'SelectionMode','multiple', ...
+            'ListSize',[300 300], 'Name','DotsStats', ...
+            'PromptString',{'Please select passing dot stats:'});
+        if vOk<1, return, end
+        dotStatsNames = dotFN(vDotsStats);
+        
+        for i = 1:length(dotStatsNames)
+            for j = 1:length(vSpotsAPosXYZ)
+                aNames{j,1} = strcat('RC_' ,dotStatsNames{i});
+                aValues(j,1) = single(Dots.(dotStatsNames{i})(PassDotIDs(j)));
+                aUnits{j,1} = 'arb';
+                aFactors{1,j} = 'Spots';
+                aFactors{2,j} = '';
+                aFactors{3,j} = '1';
+                aIds(j,1) = int32(j-1);
+            end
+            vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+            clear aNames; clear aValues; clear aUnits; clear aFactors; clear aIds;
+        end
+    catch
+        disp('Error pushing custom statistics into Imaris');
     end
 end
 

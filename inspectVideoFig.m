@@ -39,13 +39,11 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     thresh  = 0;                        % Initialize thresholds
     thresh2 = 0;                        % Initialize thresholds
     SelObjID= 0;                        % Initialize selected object ID#
+    ZoomSize= 256; 
 	
 	% Initialize GUI
-	fig_handle = figure('Name','Volume inspector (green: raw signal, magenta: detected objects)','NumberTitle','off',...
-        'Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
-		'WindowButtonDownFcn',@button_down, 'WindowButtonUpFcn',@button_up, ...
-		'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press,...
-        'windowscrollWheelFcn', @wheel_scroll, varargin{:});
+	fig_handle = figure('Name','Volume inspector (green: raw signal, magenta: validated object, blue: selected object)','NumberTitle','off','Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
+		'WindowButtonDownFcn',@button_down, 'WindowButtonUpFcn',@button_up, 'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press,'windowscrollWheelFcn', @wheel_scroll, varargin{:});
 	
 	% Add custom scroll bar
 	scroll_axes = axes('Parent',fig_handle, 'Position',[0 0 0.9 0.045], 'Visible','off', 'Units', 'normalized');
@@ -56,8 +54,8 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     % Add GUI conmponents
     set(gcf,'units', 'normalized', 'position', [0.05 0.1 0.90 0.76]);
     pnlSettings     = uipanel(  'Title','Objects'   ,'Units','normalized','Position',[.903,.005,.095,.99]); %#ok, unused variable
-    txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.930,.085,.02],'String',['Valid Objects: ' num2str(numel(find(passI)))]);
-    txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.900,.085,.02],'String',['Total Objects: ' num2str(numel(passI))]); %#ok, unused variable
+    txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.930,.085,.02],'String',['Valid: ' num2str(numel(find(passI)))]);
+    txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.900,.085,.02],'String',['Total: ' num2str(numel(passI))]); %#ok, unused variable
     chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.912,.870,.085,.02],'String','Show (spacebar)', 'Value',1     ,'Callback',@chkShowObjects_changed);
     btnSave         = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.010,.088,.05],'String','Save'                           ,'Callback',@btnSave_clicked); %#ok, unused variable    
     
@@ -98,8 +96,9 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     
     function btnToggleValid_clicked(src,event) %#ok, unused arguments 
         if SelObjID
-            disp('changing selection status');
             passI(SelObjID) = ~passI(SelObjID);
+            set(txtValidObjs,'string',['Valid: ' num2str(numel(find(passI)))]);
+            PosZoom = [-1, -1, -1]; % Deselect object after validatio change
             scroll(f);    
         end
     end
@@ -162,22 +161,37 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 set(btnPlus,'Visible','off');
                 set(btnMinus,'Visible','off');
             case 2 % ITMax
-                %new_thresh = ceil(mean(Dots.ITMax)); % mean value
-                new_thresh = Filter.FilterOpts.Thresholds.ITMax;
+                try
+                    new_thresh = Filter.FilterOpts.Thresholds.ITMax;
+                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.ITMaxDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh = ceil(mean(Dots.ITMax)); % mean value;
+                end
                 set(cmbFilterDir,'Visible','on');
                 set(txtThresh,'Visible','on');
                 set(btnPlus,'Visible','on');
                 set(btnMinus,'Visible','on');                
             case 3 % Volume
-                %new_thresh = ceil(mean(Dots.Vol)); % mean value
-                new_thresh = Filter.FilterOpts.Thresholds.Vol;
+                try
+                    new_thresh = Filter.FilterOpts.Thresholds.Vol;
+                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.VolDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh = ceil(mean(Dots.Vol)); % mean value;
+                end
                 set(cmbFilterDir,'Visible','on');
                 set(txtThresh,'Visible','on');
                 set(btnPlus,'Visible','on');
                 set(btnMinus,'Visible','on');                
             case 4 % Brightness
-                %new_thresh = ceil(mean(Dots.MeanBright)); % mean value
-                new_thresh = Filter.FilterOpts.Thresholds.MeanBright;
+                try
+                    new_thresh = Filter.FilterOpts.Thresholds.MeanBright;
+                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.MeanBrightDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh = ceil(mean(Dots.MeanBright)); % mean value;
+                end
                 set(cmbFilterDir,'Visible','on');
                 set(txtThresh,'Visible','on');
                 set(btnPlus,'Visible','on');
@@ -196,19 +210,37 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 set(btnPlus2,'Visible','off');
                 set(btnMinus2,'Visible','off');
             case 2 % ITMax
-                new_thresh2 = Filter.FilterOpts.Thresholds.ITMax;
+                try
+                    new_thresh2 = Filter.FilterOpts.Thresholds.ITMax;
+                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.ITMaxDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh2 = ceil(mean(Dots.ITMax)); % mean value;
+                end
                 set(cmbFilter2Dir,'Visible','on');
                 set(txtThresh2,'Visible','on');
                 set(btnPlus2,'Visible','on');
                 set(btnMinus2,'Visible','on');                
             case 3 % Volume
-                new_thresh2 = Filter.FilterOpts.Thresholds.Vol;
+                try
+                    new_thresh2 = Filter.FilterOpts.Thresholds.Vol;
+                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.VolDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh2 = ceil(mean(Dots.Vol)); % mean value;
+                end
                 set(cmbFilter2Dir,'Visible','on');
                 set(txtThresh2,'Visible','on');
                 set(btnPlus2,'Visible','on');
                 set(btnMinus2,'Visible','on');                
             case 4 % Brightness
-                new_thresh2 = Filter.FilterOpts.Thresholds.MeanBright;
+                try
+                    new_thresh2 = Filter.FilterOpts.Thresholds.MeanBright;
+                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.MeanBrightDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh2 = ceil(mean(Dots.MeanBright)); % mean value;
+                end
                 set(cmbFilter2Dir,'Visible','on');
                 set(txtThresh2,'Visible','on');
                 set(btnPlus2,'Visible','on');
@@ -301,10 +333,22 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 chkShowObjects_changed();
             case 'v'
                 btnToggleValid_clicked();
-            case 'leftarrow'
-                scroll(f - 1);
-            case 'rightarrow'
-                scroll(f + 1);
+            case {'leftarrow','a'}
+                Pos = [max(1, Pos(1)-ZoomSize+ceil(ZoomSize/5)), Pos(2),f];
+                PosZoom = [-1, -1, -1];
+                scroll(f);
+            case {'rightarrow','d'}
+                Pos = [min(size(ImStk,1)-1, Pos(1)+ZoomSize-ceil(ZoomSize/5)), Pos(2),f];
+                PosZoom = [-1, -1, -1];
+                scroll(f);
+            case {'uparrow','w'}
+                Pos = [Pos(1), max(1, Pos(2)-ZoomSize+ceil(ZoomSize/5)),f];
+                PosZoom = [-1, -1, -1];
+                scroll(f);
+            case {'downarrow','s'}
+                Pos = [Pos(1), min(size(ImStk,2)-1, Pos(2)+ZoomSize-ceil(ZoomSize/5)),f];
+                PosZoom = [-1, -1, -1];
+                scroll(f);
             case 'pageup'
                 if f - big_scroll < 1  %scrolling before frame 1, stop at frame 1
                     scroll(1);
