@@ -322,10 +322,6 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = colocVideo
 			scroll(1);
 		case 'end'
 			scroll(num_frames);
-		otherwise
-			if ~isempty(key_func)
-				key_func(event.Key);  % call custom key handler
-			end
 		end
 	end
 	
