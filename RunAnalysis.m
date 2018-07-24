@@ -204,15 +204,29 @@ disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
 %
-% _*Version 4.10*             created on 2018-06-03 by Luca Della Santina_
+%  _*Version 5.0*              created on 2018-07-23 by Luca Della Santina_
+%
+%   % findObjects: Fixed wrong computation when watershed was disabled
+%   % findObjects: Fixed skipping objects on border region
+%   % findObjects: Fixed error when no LosingID is found
+%   % Inspect2D now able to show images smaller than the default 256x256
+%   % Automatic colocalization analysis against mask 
+%
+% _*Version 4.10.5*            created on 2018-07-03 by Luca Della Santina_
 %
 %   + Colocalization of objects allowed with 2 channels at the same time
+%   + Check double colocalization to reinspect only double-colocalized obj
 %   + Inspect2D arrows and wasd allow nagivation across the left panel
 %   + Colocalization settings panel on right hand of GUI
 %   + Colocalization GUI panels visually separated by gray lines
 %   % Colocalization GUI scrollbar overlapped with panel
 %   % Sholl analysis plot didn't show axes when called after heatmap plot
+%   % Colocalized channel replaces any previous version of it in Coloc.mat
 %   - Removed settings.TPN from colocVideoFig (pwd filesep is default)
+%   % Fixed bug preventing selection of border object in volume inspector
+%   % Primary filter did not allow to lower threshold below starting value
+%   % Renamed ITMax as Score in the GUI to allow new search algorithms
+%   % Inverted order of presented panels in colocalization analysis
 %
 % _*Version 4.9.1*             created on 2018-05-25 by Luca Della Santina_
 %

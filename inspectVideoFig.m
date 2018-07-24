@@ -18,7 +18,7 @@
 %
 
 function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
-	inspectVideoFig(num_frames, redraw_func, big_scroll, key_func, ImStk, Dots, Filter, varargin)
+	inspectVideoFig(num_frames, redraw_func, big_scroll, key_func, ImStk, Dots, Filter, CutNumVox, varargin)
 
 	% Default parameter values
 	if nargin < 3 || isempty(big_scroll), big_scroll = 30; end  %page-up and page-down advance, in frames
@@ -39,7 +39,6 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     thresh  = 0;                        % Initialize thresholds
     thresh2 = 0;                        % Initialize thresholds
     SelObjID= 0;                        % Initialize selected object ID#
-    ZoomSize= 256; 
 	
 	% Initialize GUI
 	fig_handle = figure('Name','Volume inspector (green: raw signal, magenta: validated object, blue: selected object)','NumberTitle','off','Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
@@ -61,7 +60,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     
     % Primary filter parameter controls
     txtFilter       = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.800,.085,.02],'String','Primary filter type'); %#ok, unused variable   
-    cmbFilterType   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.750,.060,.04],'String', {'Disabled', 'ITMax','Volume','Brightness'},'Callback', @cmbFilterType_changed);  
+    cmbFilterType   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.750,.060,.04],'String', {'Disabled', 'Score','Volume','Brightness'},'Callback', @cmbFilterType_changed);  
     cmbFilterDir    = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.750,.025,.04],'String', {'>=', '<='}, 'Visible', 'off'  ,'callback',@cmbFilterDir_changed);            
     btnMinus        = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.715,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus_clicked);    
     txtThresh       = uicontrol('Style','edit'      ,'Units','normalized','Position',[.932,.715,.036,.04],'String',num2str(thresh),'Visible', 'off' ,'CallBack',@txtThresh_changed);
@@ -69,7 +68,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 
     % Secondary filter parameter controls
     txtFilter2      = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.680,.085,.02],'String','Secondary filter type'); %#ok, unused variable   
-    cmbFilterType2  = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.630,.060,.04],'String',{'Disabled','ITMax','Volume','Brightness'},'Callback', @cmbFilterType2_changed);
+    cmbFilterType2  = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.630,.060,.04],'String',{'Disabled','Score','Volume','Brightness'},'Callback', @cmbFilterType2_changed);
     cmbFilter2Dir   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.630,.025,.04],'String',{'>=', '<='}, 'Visible', 'off'   ,'callback',@cmbFilterDir_changed);                 
     btnMinus2       = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.595,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus2_clicked);    
     txtThresh2      = uicontrol('Style','edit'      ,'Units','normalized','Position',[.932,.595,.036,.04],'String',num2str(thresh2),'Visible','off' ,'CallBack',@txtThresh2_changed);
@@ -78,7 +77,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     % Selected object info
     txtSelObj       = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.560,.085,.02],'String','Selected Object info'); %#ok, unused variable
     txtSelObjID     = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.530,.085,.02],'String','ID# :');
-    txtSelObjITMax  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.500,.085,.02],'String','ITMax : ');
+    txtSelObjITMax  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.500,.085,.02],'String','Score : ');
     txtSelObjVol    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.470,.085,.02],'String','Volume : ');
     txtSelObjBright = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.440,.085,.02],'String','Brightness : ');
     txtSelObjValid  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.410,.085,.02],'String','Validated : ');    
@@ -260,25 +259,31 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 passI = Filter.passF;
             case 2 % ITMax
                 if cmbFilterDir.Value == 1
-                    passI = Filter.passF & (Dots.ITMax >= new_thresh)';
+                    %passI = Filter.passF & (Dots.ITMax >= new_thresh)'; %Filter only previously filtered objects 
+                    passI = (Dots.ITMax >= new_thresh)'; % Filter all objects
                 else
-                    passI = Filter.passF & (Dots.ITMax <= new_thresh)';
+                    %passI = Filter.passF & (Dots.ITMax <= new_thresh)';
+                    passI = (Dots.ITMax <= new_thresh)';
                 end
                 Filter.FilterOpts.Thresholds.ITMaxDir   = cmbFilterDir.Value;
                 Filter.FilterOpts.Thresholds.ITMax      = new_thresh;
             case 3 % Volume
                 if cmbFilterDir.Value == 1
-                    passI = Filter.passF & (Dots.Vol >= new_thresh)';
+                    %passI = Filter.passF & (Dots.Vol >= new_thresh)';
+                    passI = (Dots.Vol >= new_thresh)';
                 else
-                    passI = Filter.passF & (Dots.Vol <= new_thresh)';
+                    %passI = Filter.passF & (Dots.Vol <= new_thresh)';
+                    passI = (Dots.Vol <= new_thresh)';
                 end
                 Filter.FilterOpts.Thresholds.VolDir     = cmbFilterDir.Value;
                 Filter.FilterOpts.Thresholds.Vol        = new_thresh;
             case 4 % Brightness
                 if cmbFilterDir.Value == 1
-                    passI = Filter.passF & (Dots.MeanBright >= new_thresh)';
+                    %passI = Filter.passF & (Dots.MeanBright >= new_thresh)';
+                    passI = (Dots.MeanBright >= new_thresh)';
                 else    
-                    passI = Filter.passF & (Dots.MeanBright <= new_thresh)';
+                    %passI = Filter.passF & (Dots.MeanBright <= new_thresh)';
+                    passI = (Dots.MeanBright <= new_thresh)';
                 end
                 Filter.FilterOpts.Thresholds.MeanBrightDir  = cmbFilterDir.Value;
                 Filter.FilterOpts.Thresholds.MeanBright     = new_thresh;
@@ -334,19 +339,19 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             case 'v'
                 btnToggleValid_clicked();
             case {'leftarrow','a'}
-                Pos = [max(1, Pos(1)-ZoomSize+ceil(ZoomSize/5)), Pos(2),f];
+                Pos = [max(CutNumVox(1)/2, Pos(1)-CutNumVox(1)+ceil(CutNumVox(1)/5)), Pos(2),f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
             case {'rightarrow','d'}
-                Pos = [min(size(ImStk,1)-1, Pos(1)+ZoomSize-ceil(ZoomSize/5)), Pos(2),f];
+                Pos = [min(size(ImStk,1)-1-CutNumVox(1)/2, Pos(1)+CutNumVox(1)-ceil(CutNumVox(1)/5)), Pos(2),f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
             case {'uparrow','w'}
-                Pos = [Pos(1), max(1, Pos(2)-ZoomSize+ceil(ZoomSize/5)),f];
+                Pos = [Pos(1), max(CutNumVox(2)/2, Pos(2)-CutNumVox(2)+ceil(CutNumVox(2)/5)),f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
             case {'downarrow','s'}
-                Pos = [Pos(1), min(size(ImStk,2)-1, Pos(2)+ZoomSize-ceil(ZoomSize/5)),f];
+                Pos = [Pos(1), min(size(ImStk,2)-1-CutNumSize(2)/2, Pos(2)+CutNumVox(2)-ceil(CutNumVox(2)/5)),f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
             case 'pageup'
@@ -421,7 +426,11 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             if PosX <= size(ImStk,1)
                 % User clicked in the left panel (image navigator)
                 % Note coordinates are inverted, Pos(Y, X, Z)
-                Pos = [ceil(click_point(1,1:2)),f];
+                ClickPos = ceil(click_point(1,1:2));
+                % Make sure zoom rectangle is within image area
+                ClickPos = [max(CutNumVox(1)/2,ClickPos(1)), max(CutNumVox(2)/2,ClickPos(2))];
+                ClickPos = [min(size(ImStk,2)-1-CutNumVox(1)/2,ClickPos(1)), min(size(ImStk,2)-1-CutNumVox(2)/2,ClickPos(2))];
+                Pos = [ClickPos, f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
             else
@@ -429,17 +438,17 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 % Detect coordinates of the point clicked in PosZoom
                 % Note: coordinates are inverted, PosZoom(zoomY, zoomX, Z)
                 PosZoomX = abs(ceil(click_point(1,1)) - size(ImStk,1));
-                PosZoomX = ceil(256*PosZoomX/size(ImStk,1));
+                PosZoomX = ceil(CutNumVox(2)*PosZoomX/size(ImStk,1));
                 
                 PosZoomY = abs(ceil(click_point(1,2)) - size(ImStk,2));
-                PosZoomY = ceil(256-256*PosZoomY/size(ImStk,2));
+                PosZoomY = ceil(CutNumVox(1)-CutNumVox(1)*PosZoomY/size(ImStk,2));
                 
                 % Do different things depending whether left/right-clicked
                 clickType = get(fig_handle, 'SelectionType');
                 if strcmp(clickType, 'alt')
                     % User right-clicked in the right panel (zoomed region)
                     PosZoom = [-1, -1, -1];
-                    Pos = [Pos(1)+PosZoomX-128, Pos(2)+PosZoomY-128, f];
+                    Pos = [Pos(1)+PosZoomX-CutNumVox(2)/2, Pos(2)+CutNumVox(1)/2, f];
                 elseif strcmp(clickType, 'normal')
                     PosZoom = [PosZoomX, PosZoomY, f];
                     Pos = [Pos(1), Pos(2), f];
@@ -463,16 +472,16 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 		set(scroll_handle, 'XData', scroll_x + [0 1 1 0] * scroll_bar_width);
 		%set to the right axes and call the custom redraw function
 		set(fig_handle, 'CurrentAxes', axes_handle);
-		SelObjID = redraw_func(f, chkShowObjects.Value, Pos, PosZoom, passI);
+		SelObjID = redraw_func(f, chkShowObjects.Value, Pos, PosZoom, CutNumVox, passI);
         if SelObjID
             set(txtSelObjID     ,'string',['ID#: ' num2str(SelObjID)]);
-            set(txtSelObjITMax  ,'string',['ITMax : ' num2str(Dots.ITMax(SelObjID))]);
+            set(txtSelObjITMax  ,'string',['Score : ' num2str(Dots.ITMax(SelObjID))]);
             set(txtSelObjVol    ,'string',['Volume : ' num2str(Dots.Vol(SelObjID))]);
             set(txtSelObjBright ,'string',['Brightness : ' num2str(ceil(Dots.MeanBright(SelObjID)))]);
             set(txtSelObjValid  ,'string',['Validated : ' num2str(ceil(passI(SelObjID)))]);
         else
             set(txtSelObjID     ,'string','ID#: ');
-            set(txtSelObjITMax  ,'string','ITMax : ');
+            set(txtSelObjITMax  ,'string','Score : ');
             set(txtSelObjVol    ,'string','Volume : ');
             set(txtSelObjBright ,'string','Brightness : ');
             set(txtSelObjValid  ,'string','Validated : ');

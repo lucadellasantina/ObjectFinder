@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2813162005" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="501234929" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -14,7 +14,7 @@
 Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summary>
     <param.description />
     <param.screenshot />
-    <param.version>4.9.1</param.version>
+    <param.version>5.0</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
@@ -38,8 +38,9 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-clear.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Filter.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-FindObjects.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherries.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherriesCheck.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-cherries.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-recherries.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-bottom.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-down.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-top.png</file>
@@ -49,18 +50,27 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Inspect.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-add.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-remove.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Masks.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Measure.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-View-refresh.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-database.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-folder-save.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-monkey.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-stop-hand.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/72px-Batch-process.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/Fruit-2cherries-check.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_big.png</file>
       <file>${PROJECT_ROOT}/calcDensity.m</file>
       <file>${PROJECT_ROOT}/calcDotDensityAlongZ.m</file>
       <file>${PROJECT_ROOT}/calcPathLengthStats.m</file>
       <file>${PROJECT_ROOT}/calcSkelPathLength.m</file>
+      <file>${PROJECT_ROOT}/colocAutoMask.m</file>
       <file>${PROJECT_ROOT}/colocDotStackCutter.m</file>
       <file>${PROJECT_ROOT}/colocManual.m</file>
+      <file>${PROJECT_ROOT}/colocManualCheckDouble.m</file>
       <file>${PROJECT_ROOT}/colocRedraw.m</file>
       <file>${PROJECT_ROOT}/colocVideoFig.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV3toV4.m</file>
       <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>
       <file>${PROJECT_ROOT}/distDotsToSkel.m</file>
       <file>${PROJECT_ROOT}/exportObjectsToImaris.m</file>
@@ -134,7 +144,7 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>4.15.0-22-generic</osver>
+      <osver>4.15.0-24-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>

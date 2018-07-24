@@ -18,10 +18,10 @@
 %
 function inspectVolume2D(Post, Dots, Filter)
 % Prepare volume for inspection
-CutNumVox = [256, 256, size(Post, 3)]; % Magnify a zoom region of this size
+CutNumVox = [min(256, size(Post,1)), min(256, size(Post,2)), size(Post,3)]; % Magnify a zoom region of this size
 ImStk = cat(4, Post, Post, Post); % Create an RGB version of Post
 
 % Visualize volume as video frames
-redraw_func = @(frm, ShowObjects, Pos, PosZoom, Filter) inspectRedraw(frm, ShowObjects, Pos, PosZoom, ImStk, 'gray(256)', CutNumVox, Dots, Filter);
-inspectVideoFig(size(ImStk,3), redraw_func, [], [], ImStk, Dots, Filter);
+redraw_func = @(frm, ShowObjects, Pos, PosZoom, CutNumVox, Filter) inspectRedraw(frm, ShowObjects, Pos, PosZoom, ImStk, 'gray(256)', CutNumVox, Dots, Filter);
+inspectVideoFig(size(ImStk,3), redraw_func, [], [], ImStk, Dots, Filter, CutNumVox);
 end

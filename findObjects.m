@@ -66,8 +66,8 @@ for block = 1:(NumBx*NumBy*NumBz)
     %disp(['current block = Bx:' num2str(Bx) ', By:' num2str(By) ', Bz:' num2str(Bz)]);
 
     %Find real territory
-    Tystart=(Blocks(block).By-1)*Byc+1;
     Txstart=(Blocks(block).Bx-1)*Bxc+1;
+    Tystart=(Blocks(block).By-1)*Byc+1;
     Tzstart=(Blocks(block).Bz-1)*Bzc+1;
 
     if Byc, Tyend=Blocks(block).By*Byc; else, Tyend=size(Post,1); end
@@ -121,91 +121,104 @@ fprintf('Searching candidate objects using multi-threaded iterarive threshold ..
 parfor block = 1:(NumBx*NumBy*NumBz)
     % Scan volume to find areas crossing contrast threshold with progressively coarser intensity filter
     for i = Blocks(block).Gmax:-thresholdStep:Blocks(block).Gmode+1 % Iterate from Gmax to noise level (Gmode+1) within each block
+        
         % Label all areas in the block (Igl) that crosses the intensity threshold "i"
         %[Igl,labels] = bwlabeln(Igm>i,6); % shorter but slower
         CC = bwconncomp(Blocks(block).Igm > i,6); % 10 percent faster
         labels = CC.NumObjects;
         Blocks(block).Igl = labelmatrix(CC);
-
+        
         if labels == 0
             continue;
         elseif labels <= 1
             labels = 2;
         end
-       if labels < 65536
-           Blocks(block).Igl=uint16(Blocks(block).Igl);
-       end % Reduce bitdepth if possible
-       nPixel = hist(Blocks(block).Igl(Blocks(block).Igl>0), 1:labels);
+        if labels < 65536
+            Blocks(block).Igl=uint16(Blocks(block).Igl);
+        end % Reduce bitdepth if possible
+        nPixel = hist(Blocks(block).Igl(Blocks(block).Igl>0), 1:labels);
 
-       for p=1:labels
-           % Identify the peak location in each labeled object whose size is within min and max DotSize
-           pixelIndex = find(Blocks(block).Igl==p);
-           
-           if (nPixel(p) < maxDotSize) && (nPixel(p) > 3)
-               if sum(Blocks(block).peakMap(pixelIndex))== 0 % sets up critireon to limit one peak per labeled field "Igl"
-                   peakValue = max(Blocks(block).Igm(pixelIndex));
-                   peakIndex = find(Blocks(block).Igl==p & Blocks(block).Igm==peakValue);
-                   if numel(peakIndex) > 1
-                       peakIndex = peakIndex(round(numel(peakIndex)/2));
-                   end
-                   [y,x,z] = ind2sub(Blocks(block).sizeIgm, peakIndex);
-                   Blocks(block).peakMap(y,x,z) = 1; % Register the peak position in peak map
-               end
-           else
-               Blocks(block).Igl(pixelIndex)=0;
-           end
-       end
-       Blocks(block).thresholdMap(Blocks(block).Igl>0) = Blocks(block).thresholdMap(Blocks(block).Igl>0)+1; % Add 1 to the threshold score of all peaks that passed this iteration
+        % Find peak location in each labeled object and check object size
+        for p=1:labels
+            pixelIndex = find(Blocks(block).Igl==p);
+            
+            if (nPixel(p) < maxDotSize) && (nPixel(p) > 3)
+                if sum(Blocks(block).peakMap(pixelIndex))== 0
+                    % limit one peak (peakIndex) per labeled area (where Igl==p)
+                    peakValue = max(Blocks(block).Igm(pixelIndex));
+                    peakIndex = find(Blocks(block).Igl==p & Blocks(block).Igm==peakValue);
+                    if numel(peakIndex) > 1
+                        peakIndex = peakIndex(round(numel(peakIndex)/2));
+                    end
+                    Blocks(block).peakMap(peakIndex) = 1;
+                end
+            else
+                Blocks(block).Igl(pixelIndex)=0;
+            end
+        end
+        Blocks(block).thresholdMap(Blocks(block).Igl>0) = Blocks(block).thresholdMap(Blocks(block).Igl>0)+1; % +1 to all voxels that passed this iteration
     end % for all intensities
 
-    Blocks(block).thresholdMap(Blocks(block).thresholdMap<itMin) = 0; % only puncta with more than 2 IT pass are analyzed, I set to 2 for now because you want to save voxels of IT = 2 for the dot of ITmax = 4, for example. HO 2/8/2011
-    Blocks(block).wsTMLabels = Blocks(block).Igl;
-    Blocks(block).wsLabelList = unique(Blocks(block).Igl);
-    Blocks(block).nLabels = numel(unique(Blocks(block).Igl));
+    Blocks(block).thresholdMap(Blocks(block).thresholdMap<itMin) = 0; % only objects with more than 2 IT pass are analyzed, I set to 2 for now because you want to save voxels of IT = 2 for the dot of ITmax = 4, for example. HO 2/8/2011
+    Blocks(block).wsTMLabels    = Blocks(block).Igl;                  % wsTMLabels = block volume labeled with same numbers for the voxels that belong to same object
+    Blocks(block).wsLabelList   = unique(Blocks(block).wsTMLabels);   % wsLabelList = unique labels list used to label the block volume 
+    Blocks(block).nLabels       = numel(Blocks(block).wsLabelList);   % nLabels = number of labels = number of objects detected
 end
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 3: Find the countour of each dot and split it using watershed if multiple peaks are found within the same dot --
 
+tic;
 if Settings.objfinder.watershed
-    tic;
     fprintf('Split multi-peak objects using multi-threaded watershed segmentation ... ');
-    parfor block = 1:(NumBx*NumBy*NumBz)
-        ys = Blocks(block).sizeIgm(1);              % retrieve values
-        xs = Blocks(block).sizeIgm(2);              % retrieve values
-        zs = Blocks(block).sizeIgm(3);              % retrieve values
-
-        wsThresholdMapBin = uint8(Blocks(block).thresholdMap>0);                        % binary map of threshold
-        wsThresholdMapBinOpen = imdilate(wsThresholdMapBin, ones(3,3,3)); % dilate Bin map with a 3x3x3 kernel (dilated perimeter acts like ridges between background and ROIs)
-        wsThresholdMapComp = imcomplement(Blocks(block).thresholdMap); % complement (invert) image. Required because watershed() separate holes, not mountains. imcomplement creates complement using the entire range of the class, so for uint8, 0 becomes 255 and 255 becomes 0, but for double 0 becomes 1 and 255 becomes -254.
-        wsTMMod = wsThresholdMapComp.*wsThresholdMapBinOpen;            % Force background outside of dilated region to 0, and leaves walls of 255 between puncta and background.
-        wsTMLabels = watershed(wsTMMod, 6);                             % 6 voxel connectivity watershed, this will fill background with 1, ridges with 0 and puncta with 2,3,4,... in double format
-        wsBackgroundLabel = mode(double(wsTMLabels(:)));                % calculate background level
-        wsTMLabels(wsTMLabels == wsBackgroundLabel) = 0;                % seems that sometimes Background can get into puncta... so the next line was not good enough to remove all the background labels.
-        wsTMLabels= double(wsTMLabels).*double(wsThresholdMapBin);      % masking out non-puncta voxels, this makes background and dilated voxels to 0. This also prevents trough voxels from being added back somehow with background. HO 6/4/2010
-        wsTMLZeros= find(wsTMLabels==0 & Blocks(block).thresholdMap>0); % find zeros of watersheds inside of thresholdmap (add back the zero ridges in thresholdMap to their most similar neighbors)
-
-        if ~isempty(wsTMLZeros) % if exist zeros in the map
-            [wsTMLZerosY, wsTMLZerosX, wsTMLZerosZ] = ind2sub(size(Blocks(block).thresholdMap),wsTMLZeros); %6/4/2010 HO
-            for j = 1:length(wsTMLZeros) % create a dilated matrix to examine neighbor connectivity around the zero position
-                tempZMID =  wsTMLabels(max(1,wsTMLZerosY(j)-1):min(ys,wsTMLZerosY(j)+1), max(1,wsTMLZerosX(j)-1):min(xs,wsTMLZerosX(j)+1), max(1,wsTMLZerosZ(j)-1):min(zs,wsTMLZerosZ(j)+1)); %HO 6/4/2010
-                nZeroID = mode(tempZMID(tempZMID~=0)); % find most common neighbor value (watershed) not including zero
-                wsTMLabels(wsTMLZeros(j)) = nZeroID;   % re-define zero with new watershed ID (this process will act similar to watershed by making new neighboring voxels feed into the decision of subsequent zero voxels)
-            end
-        end
-        wsTMLabels = uint16(wsTMLabels);
-        wsLabelList = unique(wsTMLabels);
-        wsLabelList(1) = []; % Remove background (now labeled as 0) from list
-        nLabels = length(wsLabelList);
-
-        Blocks(block).nLabels = nLabels;         % Store for later
-        Blocks(block).wsTMLabels = wsTMLabels;   % Store for later
-        Blocks(block).wsLabelList = wsLabelList; % Store for later
-    end
-    fprintf(['DONE in ' num2str(toc) ' seconds \n']);
+    use_watershed = true;
 else
-    fprintf('Separate objects with multiple peaks using multi-threaded watershed segmentation: DISABLED by user\n');
+    fprintf('Watershed DISABLED by user, collecting candidate objects... ');
+    use_watershed = false;
 end
+
+parfor block = 1:(NumBx*NumBy*NumBz)
+    % Scan again all the blocks
+    ys = Blocks(block).sizeIgm(1);  % retrieve values
+    xs = Blocks(block).sizeIgm(2);  % retrieve values
+    zs = Blocks(block).sizeIgm(3);  % retrieve values
+    
+    wsThresholdMapBin = uint8(Blocks(block).thresholdMap>0);         % binary map of threshold
+    wsThresholdMapBinOpen = imdilate(wsThresholdMapBin, ones(3,3,3));% dilate Bin map with a 3x3x3 kernel (dilated perimeter acts like ridges between background and ROIs)
+    wsThresholdMapComp = imcomplement(Blocks(block).thresholdMap);   % complement (invert) image. Required because watershed() separate holes, not mountains. imcomplement creates complement using the entire range of the class, so for uint8, 0 becomes 255 and 255 becomes 0, but for double 0 becomes 1 and 255 becomes -254.
+    wsTMMod = wsThresholdMapComp.*wsThresholdMapBinOpen;             % Force background outside of dilated region to 0, and leaves walls of 255 between puncta and background.
+    
+    if use_watershed
+        wsTMLabels = watershed(wsTMMod, 6);                          % 6 voxel connectivity watershed, this will fill background with 1, ridges with 0 and puncta with 2,3,4,... in double format
+    else
+        wsTMMod = Blocks(block).thresholdMap;                        % 6 voxel connectivity without watershed on the original threshold map.        
+        wsTMLabels = bwlabeln(wsTMMod,6);
+    end
+    
+    wsBackgroundLabel = mode(double(wsTMLabels(:)));                 % calculate background level
+    wsTMLabels(wsTMLabels == wsBackgroundLabel) = 0;                 % seems that sometimes Background can get into puncta... so the next line was not good enough to remove all the background labels.
+    wsTMLabels= double(wsTMLabels).*double(wsThresholdMapBin);       % masking out non-puncta voxels, this makes background and dilated voxels to 0. This also prevents trough voxels from being added back somehow with background. HO 6/4/2010
+    wsTMLZeros= find(wsTMLabels==0 & Blocks(block).thresholdMap>0);  % find zeros of watersheds inside of thresholdmap (add back the zero ridges in thresholdMap to their most similar neighbors)
+    
+    if ~isempty(wsTMLZeros) % if exist zeros in the map
+        [wsTMLZerosY, wsTMLZerosX, wsTMLZerosZ] = ind2sub(size(Blocks(block).thresholdMap),wsTMLZeros); %6/4/2010 HO
+        for j = 1:length(wsTMLZeros) % create a dilated matrix to examine neighbor connectivity around the zero position
+            tempZMID =  wsTMLabels(max(1,wsTMLZerosY(j)-1):min(ys,wsTMLZerosY(j)+1), max(1,wsTMLZerosX(j)-1):min(xs,wsTMLZerosX(j)+1), max(1,wsTMLZerosZ(j)-1):min(zs,wsTMLZerosZ(j)+1)); %HO 6/4/2010
+            nZeroID = mode(tempZMID(tempZMID~=0)); % find most common neighbor value (watershed) not including zero
+            wsTMLabels(wsTMLZeros(j)) = nZeroID;   % re-define zero with new watershed ID (this process will act similar to watershed by making new neighboring voxels feed into the decision of subsequent zero voxels)
+        end
+    end
+    
+    wsTMLabels                  = uint16(wsTMLabels);
+    wsLabelList                 = unique(wsTMLabels);
+    wsLabelList(1)              = []; % Remove background (labeled 0)
+    nLabels                     = length(wsLabelList);
+    
+    Blocks(block).nLabels       = nLabels;     % Store for later
+    Blocks(block).wsTMLabels    = wsTMLabels;  % Store for later
+    Blocks(block).wsLabelList   = wsLabelList; % Store for later
+end
+fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 4: calculate dots properties and store into a struct array --
 tic;
@@ -228,47 +241,54 @@ tmpDots = struct(tmpDot);
 tmpDotNum = 0;
 
 for block = 1:(NumBx*NumBy*NumBz)
-    wsTMLabels = Blocks(block).wsTMLabels;     % get stored values
-    wsLabelList = Blocks(block).wsLabelList;   % get stored values
+    wsTMLabels  = Blocks(block).wsTMLabels;
+    wsLabelList = Blocks(block).wsLabelList;
+    nLabels     = Blocks(block).nLabels;
+    
+    for i = 1:nLabels
+        peakIndex = find( (wsTMLabels==wsLabelList(i)) & (Blocks(block).peakMap>0) ); % this line adjusted for watershed HO 6/7/2010
+        thresholdPeak = Blocks(block).thresholdMap(peakIndex);  
+        nPeaks = numel(peakIndex);                
 
-    for i = 1:Blocks(block).nLabels
-        peakIndex = find(wsTMLabels==wsLabelList(i) & Blocks(block).peakMap>0); % this line adjusted for watershed HO 6/7/2010
-        thresholdPeak = Blocks(block).thresholdMap(peakIndex);
+        if nPeaks > 1
+            % In case of multiple peaks, get the peak with max threshold
+            peakIndex = peakIndex(find(thresholdPeak==max(thresholdPeak),1));
+            thresholdPeak = max(thresholdPeak);
+            nPeaks = numel(peakIndex);
+        else
+            %disp(['block = ' num2str(block)]);
+            %disp(['i = ' num2str(i)]);
+            %disp(['peaks  =' num2str(nPeaks)]);
+            %disp(['index = ' num2str(peakIndex)]);
+            %disp(['threshold = ' num2str(thresholdPeak)]);
+        end
         
-        % Do not process dots with multiple peaks or with ITMax below threshold
-        nPeaks = numel(peakIndex);
         if (nPeaks ~=1) || (thresholdPeak < minFinalDotITMax)
-            continue;
-        end
-
-        % Do not process dots that are in the blocks' buffer region
-        [yPeak, xPeak, zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
-        if  (yPeak <= blockBuffer && Blocks(block).startPos(1) > 1) ||...
-            (xPeak <= blockBuffer && Blocks(block).startPos(2) > 1) ||...
-            (zPeak <= blockBuffer && Blocks(block).startPos(3) > 1) ||...
-            (Blocks(block).sizeIgm(1)-yPeak < blockBuffer && Blocks(block).endPos(1) < size(Post,1)) ||...
-            (Blocks(block).sizeIgm(2)-xPeak < blockBuffer && Blocks(block).endPos(2) < size(Post,2)) ||...
-            (Blocks(block).sizeIgm(3)-zPeak < blockBuffer && Blocks(block).endPos(3) < size(Post,3))
+            % If watershed was used there should not be any more object with multiple peaks
             continue;
         end
         
-        % Accumulate info only if object size is bigger than minDotSize
+        [yPeak, xPeak, zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
+
+        
+        % Accumulate only if object size is within minDotSize/maxDotSize
         contourIndex = find(wsTMLabels==wsLabelList(i)); % adjusted for watershed
-        if numel(contourIndex) >= minDotSize %HO 2/15/2011 added excluding dots that did not reach minDotSize criterion
+        
+        if (numel(contourIndex) >= minDotSize) && (numel(contourIndex) <= maxDotSize)
             [yContour, xContour, zContour] = ind2sub(Blocks(block).sizeIgm, contourIndex);
 
-            tmpDot.Pos = [yPeak+Blocks(block).startPos(1)-1, xPeak+Blocks(block).startPos(2)-1, zPeak+Blocks(block).startPos(3)-1];
-            tmpDot.Vox.Pos = [yContour+Blocks(block).startPos(1)-1, xContour+Blocks(block).startPos(2)-1, zContour+Blocks(block).startPos(3)-1];
-            tmpDot.Vox.Ind = sub2ind([size(Post,1) size(Post,2) size(Post,3)], tmpDot.Vox.Pos(:,1), tmpDot.Vox.Pos(:,2), tmpDot.Vox.Pos(:,3));
-            tmpDot.Vol = numel(contourIndex);
-            tmpDot.ITMax = thresholdPeak;
-            tmpDot.ItSum = sum(Blocks(block).thresholdMap(contourIndex));
-            tmpDot.Vox.RawBright = Blocks(block).Igm(contourIndex);
-            tmpDot.Vox.IT = Blocks(block).thresholdMap(contourIndex);
-            tmpDot.MeanBright = mean(Blocks(block).Igm(contourIndex));
-            %tmpDotNum = sum([Blocks(1:block).nLabels]) - Blocks(block).nLabels + i;
-            tmpDotNum = tmpDotNum + 1;
-            tmpDots(tmpDotNum) = tmpDot;
+            tmpDot.Pos          = [yPeak+Blocks(block).startPos(1)-1,    xPeak+Blocks(block).startPos(2)-1,    zPeak+Blocks(block).startPos(3)-1];
+            tmpDot.Vox.Pos      = [yContour+Blocks(block).startPos(1)-1, xContour+Blocks(block).startPos(2)-1, zContour+Blocks(block).startPos(3)-1];
+            tmpDot.Vox.Ind      = sub2ind([size(Post,1) size(Post,2) size(Post,3)], tmpDot.Vox.Pos(:,1), tmpDot.Vox.Pos(:,2), tmpDot.Vox.Pos(:,3));
+            tmpDot.Vol          = numel(contourIndex);
+            tmpDot.ITMax        = thresholdPeak;
+            tmpDot.ItSum        = sum(Blocks(block).thresholdMap(contourIndex));
+            tmpDot.Vox.RawBright= Blocks(block).Igm(contourIndex);
+            tmpDot.Vox.IT       = Blocks(block).thresholdMap(contourIndex);
+            tmpDot.MeanBright   = mean(Blocks(block).Igm(contourIndex));
+            %tmpDotNum = sum([Blocks(1:block).nLabels]) - Blocks(block).nLabels + i; % Work on preallocated max number of dots
+            tmpDotNum           = tmpDotNum + 1; % Work on non-preallocated dots
+            tmpDots(tmpDotNum)  = tmpDot;
         end
     end
 end
@@ -282,11 +302,11 @@ fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 tic;
 fprintf('Resolving duplicate objects in the overlapping regions of search blocks... ');
 
-VoxMap = uint8(zeros(size(Post))); % Map of whether a voxel belongs to a dot in Dots (1) or not (0)
-VoxIDMap = zeros(size(Post)); % Map of the ownerd of each voxel (dot IDs)
-[ys, xs, zs] = size(VoxMap);
-TotalNumOverlapDots = 0;
-TotalNumOverlapVoxs = 0;
+VoxMap = uint8(zeros(size(Post)));  % Map of whether a given voxel belongs to an object (value = 1) or not (values = 0)
+VoxIDMap = zeros(size(Post));       % Map of the owners of each voxel (dot IDs)
+[ys, xs, zs] = size(VoxMap);        % Size of the maps
+TotalNumOverlapDots = 0;            % Number of overlapping Dots
+TotalNumOverlapVoxs = 0;            % Number of overlapping Voxels
 
 % Delete empty dots from previous step
 %for i = numel(tmpDots):-1:1
@@ -302,25 +322,28 @@ for i = 1:numel(tmpDots)
 
     % Resolve overlapping voxels of current dot one-by-one because
     % they might overlap not all with a unique other dot ID
-    if ~isempty(OverlapVoxInd)
+    if isempty(OverlapVoxInd)
+        % Mark voxels belonging to this object as taken (value = 1)
+        VoxMap(tmpDots(i).Vox.Ind) = 1;
+        VoxIDMap(tmpDots(i).Vox.Ind) = i;
+    else
+        % Resolve conflict because some voxels are taken by another object
         TotalNumOverlapDots = TotalNumOverlapDots + 1;
         TotalNumOverlapVoxs = TotalNumOverlapVoxs + length(OverlapVoxInd);
         OverlapVoxInds = tmpDots(i).Vox.Ind(OverlapVoxInd);
         OverlapVoxIDs = VoxIDMap(OverlapVoxInds);
 
-        VoxMap(tmpDots(i).Vox.Ind) = 1; % Mark "1" voxels in the image if they belong to the current dot
-        VoxIDMap(tmpDots(i).Vox.Ind) = i; % Mark current dot ID# as the owner of those voxels
-        VoxIDMap(tmpDots(i).Vox.Ind(OverlapVoxInd)) = 0; % Unmark current dot from being the owner of overlapping voxels
+        VoxMap(tmpDots(i).Vox.Ind) = 1;                     % Mark "1" voxels in the image if they belong to the current dot
+        VoxIDMap(tmpDots(i).Vox.Ind) = i;                   % Mark current dot ID# as the owner of those voxels
+        VoxIDMap(tmpDots(i).Vox.Ind(OverlapVoxInd)) = 0;    % Unmark current dot from being the owner of overlapping voxels
 
-        % Explore overlapping voxels and assign each one of them either
-        % to current dot's ID# or to the overlapping dot's ID#
-        % using the same way as filling dot edges of watershed, HO 2/9/2011
-        [OverlapVoxY, OverlapVoxX, OverlapVoxZ] = ind2sub(size(VoxMap), OverlapVoxInds); % Find coordinates of overlapping dots
+        % loop overlapping voxels and assign them either to current dot ID or to the overlapping dot ID
+        [OverlapVoxY, OverlapVoxX, OverlapVoxZ] = ind2sub(size(VoxMap), OverlapVoxInds); % Find XYZ coordinates of overlapping dots
         for k = 1:length(OverlapVoxInds)
             SurroudingIDs =  VoxIDMap(max(1,OverlapVoxY(k)-1):min(ys,OverlapVoxY(k)+1), max(1,OverlapVoxX(k)-1):min(xs,OverlapVoxX(k)+1), max(1,OverlapVoxZ(k)-1):min(zs,OverlapVoxZ(k)+1));
             SurroudingIDs(isnan(SurroudingIDs)) = 0 ; % Convert NaN to 0 if present in the matrix LDS fix 7-25-2017
 
-            % Decide which of the 2 dots fighting over the overlapping voxel owns most of the surrounding voxels.
+            % Decide winning object as the one owning most of the surrounding voxels around the ovelapping voxel.
             WinningID = mode(SurroudingIDs((SurroudingIDs==i) | (SurroudingIDs==OverlapVoxIDs(k))));
             if WinningID == i
                 LosingID = OverlapVoxIDs(k);
@@ -328,24 +351,23 @@ for i = 1:numel(tmpDots)
                 LosingID = i;
             end
             
-            VoxIDMap(OverlapVoxInds(k)) = WinningID; % Assign voxels to winning dot ID#
-            LosingVox = find(tmpDots(LosingID).Vox.Ind == OverlapVoxInds(k)); % Remove losing voxels from losing dot ID#
-            tmpDots(LosingID).Vox.Pos(LosingVox,:) = [];
-            tmpDots(LosingID).Vox.Ind(LosingVox) = [];
-            tmpDots(LosingID).Vox.RawBright(LosingVox) = [];
-            tmpDots(LosingID).Vox.IT(LosingVox) = [];
-            tmpDots(LosingID).Vol = tmpDots(LosingID).Vol - 1;
+            VoxIDMap(OverlapVoxInds(k)) = WinningID;    % Assign voxels to winning dot ID#
+            if ~isnan(LosingID)
+                LosingVox = find(tmpDots(LosingID).Vox.Ind == OverlapVoxInds(k)); % Remove losing voxels from losing dot ID#
+                tmpDots(LosingID).Vox.Pos(LosingVox,:) = [];
+                tmpDots(LosingID).Vox.Ind(LosingVox) = [];
+                tmpDots(LosingID).Vox.RawBright(LosingVox) = [];
+                tmpDots(LosingID).Vox.IT(LosingVox) = [];
+                tmpDots(LosingID).Vol = tmpDots(LosingID).Vol - 1;
 
-            % If losing dot has still voxels left, recalculate properties
-            if numel(tmpDots(LosingID).Vox.IT) > 0
-                tmpDots(LosingID).ITMax = max(tmpDots(LosingID).Vox.IT);
-                tmpDots(LosingID).ItSum = sum(tmpDots(LosingID).Vox.IT);
-                tmpDots(LosingID).MeanBright = mean(tmpDots(LosingID).Vox.RawBright);
+                % If losing dot has still voxels left, recalculate properties
+                if numel(tmpDots(LosingID).Vox.IT) > 0
+                    tmpDots(LosingID).ITMax = max(tmpDots(LosingID).Vox.IT);
+                    tmpDots(LosingID).ItSum = sum(tmpDots(LosingID).Vox.IT);
+                    tmpDots(LosingID).MeanBright = mean(tmpDots(LosingID).Vox.RawBright);
+                end
             end
         end
-    else
-        VoxMap(tmpDots(i).Vox.Ind) = 1;
-        VoxIDMap(tmpDots(i).Vox.Ind) = i;
     end
 end
 
@@ -356,7 +378,9 @@ for i = numel(tmpDots):-1:1
     end
 end
 
-Dots = struct; % Convert tmpDots into the deprecated "Dots" structure
+% Convert tmpDots into the old "Dots" structure 
+% (TODO make this structure deprecated and return directly tmpDots)
+Dots = struct; 
 for i = numel(tmpDots):-1:1
     Dots.Pos(i,:) = tmpDots(i).Pos;
     Dots.Vox(i).Pos = tmpDots(i).Vox.Pos;
@@ -373,7 +397,7 @@ Dots.ImSize = [size(Post,1) size(Post,2) size(Post,3)];
 Dots.Num = numel(Dots.Vox); % Recalculate total number of dots
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
-clear B* CC contour* cutOff debug Gm* i j k Ig* labels Losing*
+clear B* CC contour* cutOff debug Gm* i j k Ig* labels Losing* ans
 clear max* n* Num* Overlap* p peak* Possible* size(Post,2) size(Post,1) size(Post,3) Surrouding*
 clear tmp* threshold* Total* T* v Vox* Winning* ws* x* y* z* itMin DotsToDelete
 clear block blockBuffer blockSize minDotSize minFinalDotITMax minDotSize  MultiPeakDotSizeCorrectionFactor

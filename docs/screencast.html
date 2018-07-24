@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="ObjectFinder : Recognize 3D structures in image stacks" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,700italic,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300italic,700,700italic' rel='stylesheet' type='text/css'>
+
+    <title>ObjectFinder : 3D object recognition in image volumes</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="index.html">About</a>
+            <a href="screencast.html">Videos</a>
+            <a href="contact.html">Contact</a>
+          </div>
+
+          <span id="menu_banner" style="cursor:pointer" onclick="openNav()">&#9776;  Menu</span>
+
+          <script>
+            function openNav() {document.getElementById("mySidenav").style.width = "250px";}
+            function closeNav() {document.getElementById("mySidenav").style.width = "0";}
+          </script>
+
+          <a id="forkme_banner" href="https://github.com/lucadellasantina/ObjectFinder">View on GitHub</a>
+
+          <h2 id="project_title">ObjectFinder</h2>
+          <h2 id="project_tagline">3D object recognition in image volumes</h2>
+        </header>
+    </div>
+
+
+    <section class="outer">
+        <div class="downloads inner">
+          <a class="zip_download_link" href="https://github.com/lucadellasantina/ObjectFinder/releases/download/v4.10/ObjectFinder.mlappinstall">Download ObjectFinder v4.10</a>
+          <a class="zip_download_link" href="https://github.com/lucadellasantina/ObjectFinder/releases">Release notes</a>
+          <a class="zip_download_link" href="https://github.com/lucadellasantina/ObjectFinder/issues">Report and issue</a>
+        </div>
+    </section>
+
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <div style="text-align:center"><h2>Simple Object detection</h2>
+          <video width="320" height="240" controls>
+            <source src="cast01.mp4" type="video/mp4">
+            <source src="cast01.ogg" type="video/ogg">
+            Your browser does not support the video tag.
+          </video>
+        <p>How to use ObjectFinder to do a simple object detection on a synaptic labeling channel</p>
+
+        <div style="text-align:center"><h2>Manual co-localization analysis</h2>
+          <video width="320" height="240" controls>
+            <source src="cast02.mp4" type="video/mp4">
+            <source src="cast02.ogg" type="video/ogg">
+            Your browser does not support the video tag.
+          </video>
+        <p>This tutotial shows, after detecting objects, how to manually colocalize them against 1 or 2 other channels.</p>
+
+        <div style="text-align:center"><h2>Automatic co-localization analysis against a masked channel</h2>
+          <video width="320" height="240" controls>
+            <source src="cast03.mp4" type="video/mp4">
+            <source src="cast03.ogg" type="video/ogg">
+            Your browser does not support the video tag.
+          </video>
+        <p>This tutotial shows, after detecting objects, how to automatically colocalize them against a binary mask.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <footer class="inner"></footer>
+  </body>
+</html>
