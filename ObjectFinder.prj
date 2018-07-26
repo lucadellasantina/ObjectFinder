@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="501234929" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2237527573" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -35,7 +35,10 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-BarPlot.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Bones.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-clear.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-delete-2.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Filter.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-FindObjects.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherries.png</file>
@@ -45,13 +48,17 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-down.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-top.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-up.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Heatmap.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-HomeFolder.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Image_upload.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Inspect.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-LinePlot.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-add.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-remove.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Location.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Masks.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Measure.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Text-x-generic_with_pencil.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-View-refresh.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-database.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-folder-save.png</file>
@@ -85,6 +92,9 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/saveastiff.m</file>
       <file>${PROJECT_ROOT}/shollAnalysis.m</file>
       <file>${PROJECT_ROOT}/txtBar.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/ObjectFinder_TestStacks/TRPM1-CaV1_4_WesAmy-small/Dots.mat</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/ObjectFinder_TestStacks/TRPM1-CaV1_4_WesAmy-small/Settings.mat</file>
+      <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>
       <file>${PROJECT_ROOT}/ImarisXTensions</file>
@@ -144,7 +154,7 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>4.15.0-24-generic</osver>
+      <osver>4.15.0-29-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>

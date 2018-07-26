@@ -206,11 +206,17 @@ disp('---- ObjectFinder analysis done! ----');
 %
 %  _*Version 5.0*              created on 2018-07-23 by Luca Della Santina_
 %
+%   + Multiple objects per experiment are now allowed
+%   % Dots.mat now contains info on Settings/Density/NNdist/Coloc/Filter
 %   % findObjects: Fixed wrong computation when watershed was disabled
 %   % findObjects: Fixed skipping objects on border region
 %   % findObjects: Fixed error when no LosingID is found
+%   % Reorganized plot section into the broaded report setion
+%   + Report plots distribution of size/brightness with custom fitting
+%   % Plots are in a new window by default and save always data as table
 %   % Inspect2D now able to show images smaller than the default 256x256
 %   % Automatic colocalization analysis against mask 
+%   % Removed need for files Density.mat, Coloc.mat, Filter.mat
 %
 % _*Version 4.10.5*            created on 2018-07-03 by Luca Della Santina_
 %
