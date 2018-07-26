@@ -22,7 +22,7 @@
 %
 
 % Preliminary check of valid current working directory structure
-if ~isdir([pwd filesep 'I'])
+if ~isfolder([pwd filesep 'I'])
     error(['This folder is not valid for ObjectFinder analysis, '...
            'please change current working directory to one containing '...
            'images to analyze within an "I" subfolder']);
@@ -33,8 +33,8 @@ disp('---- ObjectFinder 4.9 analysis ----');
 if exist([pwd filesep 'Settings.mat'], 'file'), load([pwd filesep 'Settings.mat']); end
 Settings.TPN = [pwd filesep];
 save([Settings.TPN 'Settings.mat'], 'Settings');
-if ~isdir([Settings.TPN 'data']), mkdir([Settings.TPN 'data']); end
-if ~isdir([Settings.TPN 'images']), mkdir([Settings.TPN 'images']); end
+if ~isfolder([Settings.TPN 'data']), mkdir([Settings.TPN 'data']); end
+if ~isfolder([Settings.TPN 'images']), mkdir([Settings.TPN 'images']); end
 
 % Read images to be used for analysis
 tmpDir=[Settings.TPN 'I' filesep];
