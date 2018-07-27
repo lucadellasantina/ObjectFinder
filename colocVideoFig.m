@@ -21,7 +21,8 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
 
 	%check arguments
 	check_callback(redraw_func);
-
+    Coloc = struct;
+    
     size_video = [0 0.03 0.87 0.97]; % default video window size within the open window (set same as the original videofig) HO 2/17/2011
     click = 0;
     [ImStk, DotNum, NumRemainingDots] = getNewImageStack();

@@ -36,6 +36,8 @@ if exist([pwd filesep 'ColocManual.mat'],'file')
     load([pwd filesep 'ColocManual.mat'], 'ColocManual'); % Load a previously unfinished analysis
     if exist([pwd filesep 'ColocManual2.mat'],'file')
         load([pwd filesep 'ColocManual2.mat'], 'ColocManual2'); % Load a previously unfinished analysis
+    else
+        ColocManual2 = struct;
     end
 else
     if isempty(Colo2)

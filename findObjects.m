@@ -28,29 +28,40 @@ maxDotSize = Settings.objfinder.maxDotSize;
 minDotSize = Settings.objfinder.minDotSize;
 itMin = Settings.objfinder.itMin;
 minFinalDotITMax = Settings.objfinder.minFinalDotITMax;
+blockSearch = Settings.objfinder.blockSearch;
 
 % Calculate the block size to Subsample the volume
-if size(Post,2)>blockSize
-    NumBx=round(size(Post,2)/blockSize);
-    Bxc=fix(size(Post,2)/NumBx);
+if blockSearch
+    if size(Post,2)>blockSize
+        NumBx=round(size(Post,2)/blockSize);
+        Bxc=fix(size(Post,2)/NumBx);
+    else
+        NumBx=1;
+        Bxc=size(Post,2);
+    end
+    
+    if size(Post,1)>blockSize
+        NumBy=round(size(Post,1)/blockSize);
+        Byc=fix(size(Post,1)/NumBy);
+    else
+        NumBy=1;
+        Byc=size(Post,1);
+    end
+    
+    if size(Post,3)>blockSize
+        NumBz=round(size(Post,3)/blockSize);
+        Bzc=fix(size(Post,3)/NumBz);
+    else
+        NumBz=1;
+        Bzc=size(Post,3);
+    end
 else
-    NumBx=1;
-    Bxc=size(Post,2);
-end
-
-if size(Post,1)>blockSize
-    NumBy=round(size(Post,1)/blockSize);
-    Byc=fix(size(Post,1)/NumBy);
-else
+    % Just one block
+	NumBx=1;
     NumBy=1;
-    Byc=size(Post,1);
-end
-
-if size(Post,3)>blockSize
-    NumBz=round(size(Post,3)/blockSize);
-    Bzc=fix(size(Post,3)/NumBz);
-else
     NumBz=1;
+    Bxc=size(Post,2);
+    Byc=size(Post,1);
     Bzc=size(Post,3);
 end
 
