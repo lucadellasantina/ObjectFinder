@@ -204,9 +204,11 @@ disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
 %
-%  _*Version 5.0*              created on 2018-07-23 by Luca Della Santina_
+%  _*Version 5.0*              created on 2018-07-26 by Luca Della Santina_
 %
 %   + Multiple objects per experiment are now allowed
+%   + Nearest neighbor analysis with distance and overlap distribution calc
+%   + Automatic colocalization analysis between nearest neigbor object sets
 %   % Dots.mat now contains info on Settings/Density/NNdist/Coloc/Filter
 %   % findObjects: Fixed wrong computation when watershed was disabled
 %   % findObjects: Fixed skipping objects on border region

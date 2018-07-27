@@ -28,7 +28,7 @@
 % depends on: colocDotStackCutter.m  colocVideoFig.m
 % -------------------------------------------------------------------------
 
-function ColocManual = colocManual(Dots, Filter, Post, Colo, FileName, Colo2, FileName2)
+function Coloc = colocManual(Dots, Filter, Post, Colo, FileName, Colo2, FileName2)
 %%
 Grouped = getFilteredObjects(Dots, Filter);
 [~, fName, ~] = fileparts(FileName);
@@ -39,10 +39,8 @@ if exist([pwd filesep 'ColocManual.mat'],'file')
     end
 else
     if isempty(Colo2)
-        tmpPrompt = {'Reference objects: ', 'Colocalized channel:'};
-        tmpAns = inputdlg(tmpPrompt, 'Assign channels', 1, {'PSD95', fName});
-        ColocManual.Source = tmpAns{1};
-        ColocManual.Fish1 = tmpAns{2};
+        ColocManual.Source = Dots.Name;
+        ColocManual.Fish1 = fName;
     
         ManualColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
         ColocManual.ListDotIDsManuallyColocAnalyzed = find(ManualColocAnalyzingFlag == 1);
@@ -52,11 +50,9 @@ else
         ColocManual2 = struct;
     else
         [~, fName2, ~] = fileparts(FileName2);
-        tmpPrompt = {'Reference objects: ', 'Colocalized channel #1:', 'Colocalized channel #2:'};
-        tmpAns = inputdlg(tmpPrompt, 'Assign channels', 1, {'PSD95', fName, fName2});
 
-        ColocManual.Source = tmpAns{1};
-        ColocManual.Fish1 = tmpAns{2};
+        ColocManual.Source = Dots.Name;
+        ColocManual.Fish1 = fName;
 
         ManualColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
         ColocManual.ListDotIDsManuallyColocAnalyzed = find(ManualColocAnalyzingFlag == 1);
@@ -64,11 +60,11 @@ else
         ColocManual.ColocFlag = zeros([1,ColocManual.TotalNumDotsManuallyColocAnalyzed], 'uint8');
 
         ColocManual2 = ColocManual;
-        ColocManual2.Fish1 = tmpAns{3};
+        ColocManual2.Fish1 = fName2;
     end    
 end
 
-colocVideoFig(@(frm, ImStk) colocRedraw(frm, ImStk, 'gray(256)'), ColocManual, Grouped, Post, Colo, Colo2, ColocManual2);
+Coloc = colocVideoFig(@(frm, ImStk) colocRedraw(frm, ImStk, 'gray(256)'), ColocManual, Grouped, Post, Colo, Colo2, ColocManual2);
 end
 
 

@@ -17,7 +17,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Colo2, ColocManual2)
+function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Colo2, ColocManual2)
 
 	%check arguments
 	check_callback(redraw_func);
@@ -196,7 +196,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = colocVideo
                     Coloc(2) = ColocManual2;
                 end
             end
-            save([pwd filesep 'Coloc.mat'], 'Coloc'); % Add completed analusis to Coloc
+            %save([pwd filesep 'Coloc.mat'], 'Coloc'); % Add completed analusis to Coloc
             
             % Delete any temporary file
             if exist([pwd filesep 'Colo.mat'], 'file')

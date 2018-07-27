@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="4216671754" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="4240457550" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -35,12 +35,12 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-BarPlot.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Bones.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Angler-Fish.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-clear.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-delete-2.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Filter.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-FindObjects.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fish-Bone.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherries.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherriesCheck.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-cherries.png</file>
@@ -52,14 +52,17 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-HomeFolder.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Image_upload.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Inspect.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-LinePlot.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-add.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-remove.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Location.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Map-Treaure.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Masks.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Measure.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Sholl.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Tentacle.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Text-x-generic_with_pencil.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-View-refresh.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Whale-Small-Fish.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Whale-Tail.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-database.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-folder-save.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-monkey.png</file>
@@ -90,6 +93,7 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/inspectRedraw.m</file>
       <file>${PROJECT_ROOT}/inspectVideoFig.m</file>
       <file>${PROJECT_ROOT}/inspectVolume2D.m</file>
+      <file>${PROJECT_ROOT}/loadImage.m</file>
       <file>${PROJECT_ROOT}/saveastiff.m</file>
       <file>${PROJECT_ROOT}/shollAnalysis.m</file>
       <file>${PROJECT_ROOT}/txtBar.m</file>
