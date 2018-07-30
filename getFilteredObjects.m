@@ -24,6 +24,9 @@ Passing.Vol = Objects.Vol(Filter.passF);
 Passing.ITMax = Objects.ITMax(Filter.passF);
 Passing.ItSum = Objects.ItSum(Filter.passF);
 Passing.MeanBright = Objects.MeanBright(Filter.passF);
+if isfield(Objects.Round,'Oblong')
+    Passing.Round.Oblong = Objects.Round.Oblong(Filter.passF);
+end
 if isfield(Objects,'Dist2CB')
     Passing.Dist2CB = Objects.Dist2CB(Filter.passF,:);
 end

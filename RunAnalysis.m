@@ -209,6 +209,10 @@ disp('---- ObjectFinder analysis done! ----');
 %   + Multiple objects per experiment are now allowed
 %   + Nearest neighbor analysis with distance and overlap distribution calc
 %   + Automatic colocalization analysis between nearest neigbor object sets
+%   + User can disable block search
+%   + Connectivity min. constrained to a certain # times the local noise
+%   + New icons sea creature themed and updated graphical layout
+%   + Oblongness is calculated/plotted as proxy for sphericity
 %   % Dots.mat now contains info on Settings/Density/NNdist/Coloc/Filter
 %   % findObjects: Fixed wrong computation when watershed was disabled
 %   % findObjects: Fixed skipping objects on border region

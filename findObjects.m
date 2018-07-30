@@ -21,14 +21,15 @@
 function Dots = findObjects(Post, Settings)
 
 % Retrieve parameters to use from Settings
-blockSize = Settings.objfinder.blockSize;
-blockBuffer = Settings.objfinder.blockBuffer;
-thresholdStep = Settings.objfinder.thresholdStep;
-maxDotSize = Settings.objfinder.maxDotSize;
-minDotSize = Settings.objfinder.minDotSize;
-itMin = Settings.objfinder.itMin;
+blockSize        = Settings.objfinder.blockSize;
+blockBuffer      = Settings.objfinder.blockBuffer;
+thresholdStep    = Settings.objfinder.thresholdStep;
+maxDotSize       = Settings.objfinder.maxDotSize;
+minDotSize       = Settings.objfinder.minDotSize;
+itMin            = Settings.objfinder.itMin;
 minFinalDotITMax = Settings.objfinder.minFinalDotITMax;
-blockSearch = Settings.objfinder.blockSearch;
+blockSearch      = Settings.objfinder.blockSearch;
+minIntensity     = Settings.objfinder.minIntensity;
 
 % Calculate the block size to Subsample the volume
 if blockSearch
@@ -85,41 +86,42 @@ for block = 1:(NumBx*NumBy*NumBz)
     if Bxc, Txend=Blocks(block).Bx*Bxc; else, Txend=size(Post,2); end
     if Bzc, Tzend=Blocks(block).Bz*Bzc; else, Tzend=size(Post,3); end
 
-    %Find buffered Borders (if last block, extend to image borders)
-    yStart = Tystart-blockBuffer;
-    yStart(yStart<1) = 1;
-    yEnd = Tyend+blockBuffer;
-    yEnd(yEnd>size(Post,1))=size(Post,1);
-    xStart = Txstart-blockBuffer;
-    xStart(xStart<1) = 1;
-    xEnd=Txend+blockBuffer;
-    xEnd(xEnd>size(Post,2))=size(Post,2);
-    zStart=Tzstart-blockBuffer;
-    zStart(zStart<1)=1;
-    zEnd=Tzend+blockBuffer;
-    zEnd(zEnd>size(Post,3))=size(Post,3);
+    % Find buffered Borders (if last block, extend to image borders)
+    yStart                  = Tystart-blockBuffer;
+    yStart(yStart<1)        = 1;
+    yEnd                    = Tyend+blockBuffer;
+    yEnd(yEnd>size(Post,1)) = size(Post,1);
+    xStart                  = Txstart-blockBuffer;
+    xStart(xStart<1)        = 1;
+    xEnd                    = Txend+blockBuffer;
+    xEnd(xEnd>size(Post,2)) = size(Post,2);
+    zStart                  = Tzstart-blockBuffer;
+    zStart(zStart<1)        = 1;
+    zEnd                    = Tzend+blockBuffer;
+    zEnd(zEnd>size(Post,3)) = size(Post,3);
 
     % Slice the raw image into the block of interest (Igm)
-    Blocks(block).Igm = Post(yStart:yEnd,xStart:xEnd,zStart:zEnd);
-    % Search only between max intensity (Gmax) and noise intensity level (Gmode)
-    Blocks(block).Gmode = mode(Blocks(block).Igm(Blocks(block).Igm>0)); % Most common intensity found in the block (noise level, excluding zero)
-    Blocks(block).Gmax = max(Blocks(block).Igm(:)); % Maximum intensity found in the block
-    Blocks(block).sizeIgm = size(Blocks(block).Igm);
+    Blocks(block).Igm           = Post(yStart:yEnd,xStart:xEnd,zStart:zEnd);
+    
+    % Search only between max intensity (Gmax) and noise intensity level (Gmode) found in each block
+    Blocks(block).Gmode         = mode(Blocks(block).Igm(Blocks(block).Igm>0)); % Most common intensity found in the block (noise level, excluding zero)
+    Blocks(block).Gmax          = max(Blocks(block).Igm(:));
+    Blocks(block).sizeIgm       = size(Blocks(block).Igm);
 
-    Blocks(block).peakMap = zeros(Blocks(block).sizeIgm(1),Blocks(block).sizeIgm(2),Blocks(block).sizeIgm(3),'uint8'); % Initialize matrix to map peaks found
-    Blocks(block).thresholdMap = Blocks(block).peakMap; % Initialize matrix to sum passed thresholds
+    Blocks(block).peakMap       = zeros(Blocks(block).sizeIgm(1),Blocks(block).sizeIgm(2),Blocks(block).sizeIgm(3),'uint8'); % Initialize matrix to map peaks found
+    Blocks(block).thresholdMap  = Blocks(block).peakMap; % Initialize matrix to sum passed thresholds
 
     % Make sure Gmax can be divided by the stepping size of thresholdStep
     if mod(Blocks(block).Gmax, thresholdStep) ~= mod(Blocks(block).Gmode+1, thresholdStep)
-        Blocks(block).Gmax = Blocks(block).Gmax+1;
+        Blocks(block).Gmax      = Blocks(block).Gmax+1;
     end
 
-    Blocks(block).startPos = [yStart, xStart, zStart]; % Store for later
-    Blocks(block).endPos = [yEnd, xEnd, zEnd];         % Store for later
-    Blocks(block).Igl = [];
-    Blocks(block).wsTMLabels = [];
-	Blocks(block).wsLabelList = [];
-	Blocks(block).nLabels = 0;
+    Blocks(block).startPos      = [yStart, xStart, zStart]; % Store for later
+    Blocks(block).endPos        = [yEnd, xEnd, zEnd];         % Store for later
+    Blocks(block).Igl           = [];
+    Blocks(block).wsTMLabels    = [];
+	Blocks(block).wsLabelList   = [];
+	Blocks(block).nLabels       = 0;
 
 end
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
@@ -131,7 +133,7 @@ fprintf('Searching candidate objects using multi-threaded iterarive threshold ..
 
 parfor block = 1:(NumBx*NumBy*NumBz)
     % Scan volume to find areas crossing contrast threshold with progressively coarser intensity filter
-    for i = Blocks(block).Gmax:-thresholdStep:Blocks(block).Gmode+1 % Iterate from Gmax to noise level (Gmode+1) within each block
+    for i = Blocks(block).Gmax:-thresholdStep:ceil(Blocks(block).Gmode * minIntensity)+1 % Iterate from Gmax to noise level (Gmode+1) within each block
         
         % Label all areas in the block (Igl) that crosses the intensity threshold "i"
         %[Igl,labels] = bwlabeln(Igm>i,6); % shorter but slower
