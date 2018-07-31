@@ -113,6 +113,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     function btnSave_clicked(src, event) %#ok, unused arguments
         Filter.passF = passI;
         save([pwd filesep 'Filter.mat'], 'Filter');
+        msgbox('Validated objects saved.', 'Saved', 'help');
     end
 
     function btnPlus_clicked(src, event) %#ok, unused arguments
@@ -339,19 +340,19 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             case 'v'
                 btnToggleValid_clicked();
             case {'leftarrow','a'}
-                Pos = [max(CutNumVox(1)/2, Pos(1)-CutNumVox(1)+ceil(CutNumVox(1)/5)), Pos(2),f];
+                Pos = [max(CutNumVox(2)/2, Pos(1)-CutNumVox(1)+ceil(CutNumVox(2)/5)), Pos(2),f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
             case {'rightarrow','d'}
-                Pos = [min(size(ImStk,1)-1-CutNumVox(1)/2, Pos(1)+CutNumVox(1)-ceil(CutNumVox(1)/5)), Pos(2),f];
+                Pos = [min(size(ImStk,2)-1-CutNumVox(2)/2, Pos(1)+CutNumVox(2)-ceil(CutNumVox(2)/5)), Pos(2),f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
             case {'uparrow','w'}
-                Pos = [Pos(1), max(CutNumVox(2)/2, Pos(2)-CutNumVox(2)+ceil(CutNumVox(2)/5)),f];
+                Pos = [Pos(1), max(CutNumVox(1)/2, Pos(2)-CutNumVox(1)+ceil(CutNumVox(1)/5)),f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
             case {'downarrow','s'}
-                Pos = [Pos(1), min(size(ImStk,2)-1-CutNumSize(2)/2, Pos(2)+CutNumVox(2)-ceil(CutNumVox(2)/5)),f];
+                Pos = [Pos(1), min(size(ImStk,1)-1-CutNumVox(1)/2, Pos(2)+CutNumVox(1)-ceil(CutNumVox(1)/5)),f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
             case 'pageup'
@@ -423,13 +424,15 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             set(fig_handle, 'Units', 'pixels');
             click_point = get(gca, 'CurrentPoint');
             PosX = ceil(click_point(1,1));
-            if PosX <= size(ImStk,1)
+            if PosX <= size(ImStk,2)
                 % User clicked in the left panel (image navigator)
                 % Note coordinates are inverted, Pos(Y, X, Z)
                 ClickPos = ceil(click_point(1,1:2));
+
                 % Make sure zoom rectangle is within image area
-                ClickPos = [max(CutNumVox(1)/2,ClickPos(1)), max(CutNumVox(2)/2,ClickPos(2))];
-                ClickPos = [min(size(ImStk,2)-1-CutNumVox(1)/2,ClickPos(1)), min(size(ImStk,2)-1-CutNumVox(2)/2,ClickPos(2))];
+                ClickPos = [max(CutNumVox(2)/2,ClickPos(1)), max(CutNumVox(1)/2,ClickPos(2))];
+                ClickPos = [min(size(ImStk,2)-1-CutNumVox(2)/2,ClickPos(1)), min(size(ImStk,1)-1-CutNumVox(1)/2,ClickPos(2))];
+
                 Pos = [ClickPos, f];
                 PosZoom = [-1, -1, -1];
                 scroll(f);
@@ -437,18 +440,23 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 % User clicked in the right panel (zoomed region)
                 % Detect coordinates of the point clicked in PosZoom
                 % Note: coordinates are inverted, PosZoom(zoomY, zoomX, Z)
-                PosZoomX = abs(ceil(click_point(1,1)) - size(ImStk,1));
-                PosZoomX = ceil(CutNumVox(2)*PosZoomX/size(ImStk,1));
+                PosZoomX = abs(ceil(click_point(1,1)) - size(ImStk,2));
+                PosZoomX = ceil(CutNumVox(2)*PosZoomX/size(ImStk,2));
                 
-                PosZoomY = abs(ceil(click_point(1,2)) - size(ImStk,2));
-                PosZoomY = ceil(CutNumVox(1)-CutNumVox(1)*PosZoomY/size(ImStk,2));
+                PosZoomY = abs(ceil(click_point(1,2)) - size(ImStk,1));
+                PosZoomY = ceil(CutNumVox(1)-CutNumVox(1)*PosZoomY/size(ImStk,1));
                 
                 % Do different things depending whether left/right-clicked
                 clickType = get(fig_handle, 'SelectionType');
                 if strcmp(clickType, 'alt')
                     % User right-clicked in the right panel (zoomed region)
                     PosZoom = [-1, -1, -1];
-                    Pos = [Pos(1)+PosZoomX-CutNumVox(2)/2, Pos(2)+CutNumVox(1)/2, f];
+                    Pos = [Pos(1)+PosZoomX-CutNumVox(2)/2, Pos(2)+PosZoomY-CutNumVox(1)/2, f];
+
+                    % Make sure zoom rectangle is within image area
+                    Pos = [max(CutNumVox(2)/2,Pos(1)), max(CutNumVox(1)/2,Pos(2)),f];
+                    Pos = [min(size(ImStk,2)-1-CutNumVox(2)/2,Pos(1)), min(size(ImStk,1)-1-CutNumVox(1)/2,Pos(2)),f];
+
                 elseif strcmp(clickType, 'normal')
                     PosZoom = [PosZoomX, PosZoomY, f];
                     Pos = [Pos(1), Pos(2), f];

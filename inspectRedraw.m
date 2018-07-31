@@ -24,7 +24,7 @@ if size(Post, 4) == 3 % RGB 3-D matrix (4th dimention is R, G, B)
     PostCut = zeros(NaviRectSize(1), NaviRectSize(2),3, 'uint8');
     PostVoxMapCut = PostCut;
     PostCutResized = zeros(size(Post,1), size(Post,2), 3, 'uint8');
-    if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,1)) && (Pos(2) < size(Post,2))
+    if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,2)) && (Pos(2) < size(Post,1))
         % Identify XY borders of the area to zoom according to passed mouse
         % position Pos. Note: Pos(2) is X, Pos(1) is Y
         fxmin = max(ceil(Pos(2) - NaviRectSize(1)/2), 1);
@@ -63,7 +63,7 @@ if size(Post, 4) == 3 % RGB 3-D matrix (4th dimention is R, G, B)
             for i=1:numel(VisObjIDs)
                 VoxPos = Dots.Vox(VisObjIDs(i)).Pos;
                 for j = 1:size(VoxPos,1)
-                    if (VoxPos(j,3) == frameNum) && ( VoxPos(j,1)==(fxpad+fxmin+PosZoom(2)) ) && (VoxPos(j,2)==(fxpad+fymin+PosZoom(1)) )
+                    if (VoxPos(j,3) == frameNum) && ( VoxPos(j,1)==(fxpad+fxmin+PosZoom(2)) ) && (VoxPos(j,2)==(fypad+fymin+PosZoom(1)) )
                         %disp('clicked voxel belongs to a validated object');
                         SelObjID = VisObjIDs(i); % Return ID of selected object
                         for k = 1:size(VoxPos,1)

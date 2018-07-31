@@ -204,7 +204,7 @@ disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
 %
-%  _*Version 5.0*              created on 2018-07-26 by Luca Della Santina_
+%  _*Version 5.0*              created on 2018-07-30 by Luca Della Santina_
 %
 %   + Multiple objects per experiment are now allowed
 %   + Nearest neighbor analysis with distance and overlap distribution calc
@@ -213,16 +213,19 @@ disp('---- ObjectFinder analysis done! ----');
 %   + Connectivity min. constrained to a certain # times the local noise
 %   + New icons sea creature themed and updated graphical layout
 %   + Oblongness is calculated/plotted as proxy for sphericity
+%   + Inspect2D allows visualization of non-square images
+%   + Inspect2D now able to show images smaller than the default 256x256
+%   + Report plots distribution of size/brightness with custom fitting
+%   % Ispect2D fixed wrong calculation of Pos and PosZoom
 %   % Dots.mat now contains info on Settings/Density/NNdist/Coloc/Filter
 %   % findObjects: Fixed wrong computation when watershed was disabled
 %   % findObjects: Fixed skipping objects on border region
 %   % findObjects: Fixed error when no LosingID is found
 %   % Reorganized plot section into the broaded report setion
-%   + Report plots distribution of size/brightness with custom fitting
 %   % Plots are in a new window by default and save always data as table
-%   % Inspect2D now able to show images smaller than the default 256x256
 %   % Automatic colocalization analysis against mask 
 %   % Removed need for files Density.mat, Coloc.mat, Filter.mat
+%   % Fixes error if cancel is clicked when loading images
 %
 % _*Version 4.10.5*            created on 2018-07-03 by Luca Della Santina_
 %

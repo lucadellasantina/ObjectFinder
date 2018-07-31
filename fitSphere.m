@@ -17,21 +17,6 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 function Dots = fitSphere(Dots)
-% HO 6/25/2010 flipped the division to calculate Round.Long, Round.Oblong
-% and Round.Compact so that less spherical or less smooth ugly dots get
-% lower values, then you can set threshold to take higher values in anaSG.
-% However, Compact doesn't work well with small dots which have only
-% several voxels because if you think 7-voxel sphere, 1 in the center and 6
-% around the center voxel, the average 6-connectivity face per voxel will
-% be ~4.3, but if you think 2by2by2 square (8 voxels in total), the value
-% will be 3, much lower than sphere. So, actually lots of small dots whose
-% Compact values come out large with my flipping the division are noise, so
-% the thresholding in anaSG using Compact wouldn't work. This is why the
-% old definition somehow worked fine. Just don't include this criteria for
-% minimum thresholding in anaSG.
-
-
-
 %% Find mean number of faces for perfect reference sphere
 % changed from 11*11*11 to 31*31*31 because I do 0.025um xy 0.2um z for the 
 % finest image of CtBP2 puncta (so 24 times more possible dot volume 
@@ -51,8 +36,9 @@ for d=1:160                             % If you go >160, the sphere tries to ge
     TSphere(Near) = 1;                  % Fill voxels of the current sphere with ones
     Tperim        = bwperim(TSphere,6); % Fill only pixels on the perimether of the sphere
     NearPerim     = find(Tperim);       % Store voxel number corresponding to perimeter
-    [NearPerimY, NearPerimX, NearPerimZ] = ind2sub(size(TSphere), NearPerim); % Convert voxel numbers into y-x-z coordinates for the perimeter
     FaceCount     = 0;
+    [NearPerimY, NearPerimX, NearPerimZ] = ind2sub(size(TSphere), NearPerim); % Convert voxel numbers into y-x-z coordinates for the perimeter
+
     
     % Explore each voxel at the perimeter, if there is no sphere in the
     % of the perimeter+-1pixel, then increase FaceCount as the real sphere 
@@ -114,14 +100,14 @@ for i = 1:Dots.Num
     if size(Vox,1) < 4
         % If volume < 4 voxels, PCA cannot calculate 3 variance components
 
-        Dots.Round.Var(i,:)     = [0;0;0];      % Variance (voxel distance) along three PCA axes
-        Dots.Round.SumVar(i)    = 0;            % Sum of distances along the three main axis
-        Dots.Round.Oblong(i)    = 0;            % Ratio of variances between 2nd longest and longest axes, =1 if perfectly round, <1 if not round
+        Dots.Shape.Var(i,:)     = [0;0;0];      % Variance (voxel distance) along three PCA axes
+        Dots.Shape.SumVar(i)    = 0;            % Sum of distances along the three main axis
+        Dots.Shape.Oblong(i)    = 0;            % Ratio of variances between 2nd longest and longest axes, =1 if perfectly round, <1 if not round
     else
         [~, ~, latent]         = pca(VoxN);    % PCA analysis on normalized distances
-        Dots.Round.Var(i,:)     = latent;       % Longest distance from center along the three axis
-        Dots.Round.SumVar(i)    = sum(latent);  % Sum of distances along three axis
-        Dots.Round.Oblong(i)    = mean([latent(2)/latent(1), latent(3)/latent(1)]); % Average longest distance on the 2nd and 3rd longest axis compared to the longest distance == 1 if perfectly spherical or cubic
+        Dots.Shape.Var(i,:)     = latent;       % Longest distance from center along the three axis
+        Dots.Shape.SumVar(i)    = sum(latent);  % Sum of distances along three axis
+        Dots.Shape.Oblong(i)    = mean([latent(2)/latent(1), latent(3)/latent(1)]); % Average longest distance on the 2nd and 3rd longest axis compared to the longest distance == 1 if perfectly spherical or cubic
     end
     
     % Step-2: find surface area for each object
@@ -132,19 +118,8 @@ for i = 1:Dots.Num
         Conn                 = dist2(Dots.Vox(i).Pos, Dots.Vox(i).Pos(v,:));
         Dots.Vox(i).Faces(v) = 6-sum(Conn==1);
     end
-    Dots.Round.meanFaces(i)  = mean(Dots.Vox(i).Faces);
-    
-    % HO 6/25/2010 flipped the following division so that more spherical or
-    % smooth dots get higher values and ugly dots get lower values.
-    % Compact is the ratio of the average number of faces (facing outside)
-    % per voxel for an ideal sphere with the same volume as a given object 
-    % divided by the actual volume of the currenct object.
-    % This value can be >1 or <1, doesn't tell much about
-    %how close to sphere if the dots are small, but tells more about how
-    %smooth the surface connectivity is. 
-    % The actual roundness is described better by Round.Long & Round.Oblong
-    %Dots.Round.Compact(i)=Dots.Round.meanFaces(i)/RoundFaces(Dots.Vol(i)); %This was original Compact definition. HO
-    Dots.Round.Smoothness(i) = RoundFaces(Dots.Vol(i)) / Dots.Round.meanFaces(i);
+    Dots.Shape.meanFaces(i)  = mean(Dots.Vox(i).Faces);
+    Dots.Shape.Smoothness(i) = Dots.Shape.meanFaces(i) / RoundFaces(Dots.Vol(i)); % Number of faces of the object compared to a sphere
 end
 fprintf('DONE\n');
 end

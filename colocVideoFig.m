@@ -299,7 +299,7 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
         if ~isempty(Colo2)
             save([pwd filesep 'ColocManual2.mat'], 'ColocManual2');
         end
-        msgbox('Progress saved.');        
+        msgbox('Progress saved.','Saved', 'help');        
     end
     
     function wheel_scroll(src, event) %#ok
