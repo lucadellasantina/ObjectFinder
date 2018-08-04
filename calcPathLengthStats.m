@@ -16,39 +16,38 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function calcPathLengthStats(Settings, Grouped, Skel, showPlot)
+function PathLengthStats = calcPathLengthStats(Dots, Skel, showPlot)
 
-DotPathLengthList = Skel.FilStats.SkelPathLength2Soma(Grouped.ClosestSkelIDs);
-EdgePathLengthList = Skel.FilStats.EdgePathLength2Soma;
-EdgeLengthList = Skel.SegStats.Lengths;
+Dots = getFilteredObjects(Dots, Dots.Filter); % work only on validated objects
 
-EdgePathLengthMax = ceil(max(EdgePathLengthList));
+DotPathLengthList   = Skel.FilStats.SkelPathLength2Soma(Dots.Skel.ClosestSkelIDs);
+EdgePathLengthList  = Skel.FilStats.EdgePathLength2Soma;
+EdgeLengthList      = Skel.SegStats.Lengths;
 
-DistBin = 10; %Bin distance is 10 micron by default
-DistFromSoma = 5:1:EdgePathLengthMax;
-clear NumDots EdgeLengths;
-NumDots = zeros(1, length(DistFromSoma));
-EdgeLengths = zeros(1, length(DistFromSoma));
-for i=1:length(DistFromSoma)
-    NumDots(i) = length(find((DotPathLengthList>DistFromSoma(i)-DistBin/2) & (DotPathLengthList<=DistFromSoma(i)+DistBin/2)));
-    EdgeLengths(i) = sum(EdgeLengthList((EdgePathLengthList>DistFromSoma(i)-DistBin/2) & (EdgePathLengthList<=DistFromSoma(i)+DistBin/2)));
+EdgePathLengthMax   = ceil(max(EdgePathLengthList));
+
+DistBin             = 10; %Bin distance is 10 micron by default
+DistFromSoma        = 5:1:EdgePathLengthMax;
+NumDots             = zeros(1, length(DistFromSoma));
+EdgeLengths         = zeros(1, length(DistFromSoma));
+for i = 1 : length(DistFromSoma)
+    NumDots(i)      = length(find((DotPathLengthList>DistFromSoma(i)-DistBin/2) & (DotPathLengthList<=DistFromSoma(i)+DistBin/2)));
+    EdgeLengths(i)  = sum(EdgeLengthList((EdgePathLengthList>DistFromSoma(i)-DistBin/2) & (EdgePathLengthList<=DistFromSoma(i)+DistBin/2)));
 end
-PoverD = NumDots./EdgeLengths;
 
-PathLengthStats.PathLengthBin = DistBin;
-PathLengthStats.PathLength2CB = DistFromSoma;
-PathLengthStats.PvsPathLength = NumDots;
-PathLengthStats.DvsPathLength = EdgeLengths;
-PathLengthStats.PoverDvsPathLength = PoverD;
-save([Settings.TPN 'PathLengthStats.mat'], 'PathLengthStats');
+PathLengthStats.PathLengthBin       = DistBin;
+PathLengthStats.PathLength2CB       = DistFromSoma;
+PathLengthStats.PvsPathLength       = NumDots;
+PathLengthStats.DvsPathLength       = EdgeLengths;
+PathLengthStats.PoverDvsPathLength  = NumDots./EdgeLengths;
 
 if showPlot
-    width = 20;
-    height = 20;
+    width   = 20;
+    height  = 20;
     set(0,'units','centimeters');
-    scrsz=get(0,'screensize');
-    position=[scrsz(3)/2-width/2 scrsz(4)/2-height/2 width height];
-    h=figure;
+    scrsz   = get(0,'screensize');
+    position= [scrsz(3)/2-width/2 scrsz(4)/2-height/2 width height];
+    h       = figure;
     set(h,'units','centimeters');
     set(h,'position',position);
     set(h,'paperpositionmode','auto');
@@ -81,6 +80,6 @@ if showPlot
     ylabel('#puncta/µm dendrite');
     
     set(gcf,'inverthardcopy','off'); %this will prevent color change back to default upon saving or printing
-    saveas(gcf, [Settings.TPN 'images' filesep 'DotDend_vs_PathLengthStats'], 'tif');
+    %saveas(gcf, [pwd filesep 'images' filesep 'DotDend_vs_PathLengthStats'], 'tif');
 end    
 end

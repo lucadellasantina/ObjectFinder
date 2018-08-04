@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2574661223" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1422086791" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -37,6 +37,7 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
     <fileset.depfun>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Angler-Fish.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Blow-Fish.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Crab.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-clear.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-delete-2.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Filter.png</file>
@@ -83,9 +84,11 @@ Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summ
       <file>${PROJECT_ROOT}/colocRedraw.m</file>
       <file>${PROJECT_ROOT}/colocVideoFig.m</file>
       <file>${PROJECT_ROOT}/convertObjectFinderDataV3toV4.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV4toV5.m</file>
       <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>
       <file>${PROJECT_ROOT}/distDotsToSkel.m</file>
-      <file>${PROJECT_ROOT}/exportObjectsToImaris.m</file>
+      <file>${PROJECT_ROOT}/exportObjectsToImaris7.m</file>
+      <file>${PROJECT_ROOT}/exportObjectsToImaris8.m</file>
       <file>${PROJECT_ROOT}/filterObjects.m</file>
       <file>${PROJECT_ROOT}/findObjects.m</file>
       <file>${PROJECT_ROOT}/fitSphere.m</file>

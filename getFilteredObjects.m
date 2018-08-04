@@ -17,24 +17,33 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 function[Passing] = getFilteredObjects(Objects, Filter)
-Passing.idx = find(Filter.passF);
-Passing.Pos = Objects.Pos(Filter.passF, :);
-Passing.Vox = Objects.Vox(Filter.passF);
-Passing.Vol = Objects.Vol(Filter.passF);
-Passing.ITMax = Objects.ITMax(Filter.passF);
-Passing.ItSum = Objects.ItSum(Filter.passF);
-Passing.MeanBright = Objects.MeanBright(Filter.passF);
+
+Passing.Name        = Objects.Name;
+Passing.ImSize      = Objects.ImSize;
+Passing.Settings    = Objects.Settings;
+Passing.idx         = find(Filter.passF);
+Passing.Pos         = Objects.Pos(Filter.passF, :);
+Passing.Vox         = Objects.Vox(Filter.passF);
+Passing.Vol         = Objects.Vol(Filter.passF);
+Passing.ITMax       = Objects.ITMax(Filter.passF);
+Passing.ItSum       = Objects.ItSum(Filter.passF);
+Passing.MeanBright  = Objects.MeanBright(Filter.passF);
+
 if isfield(Objects.Shape,'Oblong')
     Passing.Shape.Oblong = Objects.Shape.Oblong(Filter.passF);
 end
-if isfield(Objects,'Dist2CB')
-    Passing.Dist2CB = Objects.Dist2CB(Filter.passF,:);
+if isfield(Objects.Shape,'PrincipalAxisLen')
+    Passing.Shape.PrincipalAxisLen = Objects.Shape.PrincipalAxisLen(Filter.passF,:);
 end
-if isfield(Objects,'ClosestSkelIDs')
-    Passing.ClosestSkelIDs = Objects.ClosestSkelIDs(Filter.passF);
+
+if isfield(Objects.Skel,'Dist2CB')
+    Passing.Skel.Dist2CB = Objects.Skel.Dist2CB(Filter.passF,:);
 end
-if isfield(Objects,'ClosestSkelDist')
-    Passing.ClosestSkelDist = Objects.ClosestSkelDist(Filter.passF);
+if isfield(Objects.Skel,'ClosestSkelIDs')
+    Passing.Skel.ClosestSkelIDs = Objects.Skel.ClosestSkelIDs(Filter.passF);
 end
-Passing.ImSize = Objects.ImSize;
+if isfield(Objects.Skel,'ClosestSkelDist')
+    Passing.Skel.ClosestSkelDist = Objects.Skel.ClosestSkelDist(Filter.passF);
+end
+
 end

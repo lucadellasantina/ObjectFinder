@@ -17,7 +17,9 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 function Density = calcDensity(Settings, Dots, Skel, showPlot)
-%% Mids are the middle point of each skeleton's segment
+Dots = getFilteredObjects(Dots, Dots.Filter); % Work only on validated objects
+
+% Mids are the middle point of each skeleton's segment
 AllSegCut = cat(2, Skel.SegStats.Seg(:,2,:), ...
                    Skel.SegStats.Seg(:,1,:), ...
                    Skel.SegStats.Seg(:,3,:));

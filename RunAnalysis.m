@@ -204,7 +204,7 @@ disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
 %
-%  _*Version 5.0*              created on 2018-07-30 by Luca Della Santina_
+%  _*Version 5.0*              created on 2018-08-03 by Luca Della Santina_
 %
 %   + Multiple objects per experiment are now allowed
 %   + Nearest neighbor analysis with distance and overlap distribution calc
@@ -216,6 +216,9 @@ disp('---- ObjectFinder analysis done! ----');
 %   + Inspect2D allows visualization of non-square images
 %   + Inspect2D now able to show images smaller than the default 256x256
 %   + Report plots distribution of size/brightness with custom fitting
+%   + Conversion tool for data analyzed with version 4.x
+%   + Lenght of major object axis is calculated as part of sphericity
+%   % User can repeat sphericity calculation at will
 %   % Ispect2D fixed wrong calculation of Pos and PosZoom
 %   % Dots.mat now contains info on Settings/Density/NNdist/Coloc/Filter
 %   % findObjects: Fixed wrong computation when watershed was disabled
@@ -226,6 +229,7 @@ disp('---- ObjectFinder analysis done! ----');
 %   % Automatic colocalization analysis against mask 
 %   % Removed need for files Density.mat, Coloc.mat, Filter.mat
 %   % Fixes error if cancel is clicked when loading images
+%   % fitSphere takes now into account XY resolution different from Z res.
 %
 % _*Version 4.10.5*            created on 2018-07-03 by Luca Della Santina_
 %
