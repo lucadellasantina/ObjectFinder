@@ -16,7 +16,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function inspectVolume2D(Post, Dots, Filter)
+function create_new_objs = inspectVolume2D(Post, Dots, Filter)
 % Prepare volume for inspection
 CutNumVox = [min(256, size(Post,1)), min(256, size(Post,2)), size(Post,3)]; % Magnify a zoom region of this size
 ImStk = cat(4, Post, Post, Post); % Create an RGB version of Post

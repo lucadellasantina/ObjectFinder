@@ -17,7 +17,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 % *Pass objects detected by the ObjectFinder to Imaris version 7.2.3*
-function[] = exportObjectsToImaris7(Settings, Dots, Filter)
+function exportObjectsToImaris7(Dots)
 
 % Start Imaris using COM interface
 try
@@ -29,18 +29,17 @@ catch
     return;
 end
 
-% Load the imaris file contained in the TPN/I folder 
-TPN = [pwd filesep];
+% Load the imaris file contained in the I folder 
 if isempty(vImarisApplication.GetCurrentFileName)
-    tmpDir=[TPN 'I' filesep];
+    tmpDir  = [pwd filesep 'I' filesep];
     tmpFile = dir([tmpDir '*.ims']);
     vImarisApplication.FileOpen([tmpDir tmpFile(1).name], 'LoadDataSet="eDataSetYes"');
 end
 
 %% Aquire Matlab Dot information  
-xyum                = Settings.ImInfo.xyum; % image calibration
-zum                 = Settings.ImInfo.zum;   % image calibration
-passingIDs          = Filter.passF';  % Passing objects' IDs
+xyum                = Dots.Settings.ImInfo.xyum;    % image calibration
+zum                 = Dots.Settings.ImInfo.zum;     % image calibration
+passingIDs          = Dots.Filter.passF';           % Passing objects' IDs
 
 % Changing passingIDs from passF/passI form (0 or 1 in each element) 
 % to list of dot IDs (1 to total number of dots, as expected by Imaris)
@@ -48,11 +47,11 @@ PassDotIDs          = find(passingIDs==1);
 NoPassDotIDs        = find(passingIDs==0);
 
 % Default to show only objects passing the Filter conditions
-Settings.Inspect3D.showPassing      = 1;
-Settings.Inspect3D.showNonPassing   = 0;
+Dots.Settings.Inspect3D.showPassing      = 1;
+Dots.Settings.Inspect3D.showNonPassing   = 0;
 
 % Process passing objects
-if Settings.Inspect3D.showPassing
+if Dots.Settings.Inspect3D.showPassing
     dPosPassF       = Dots.Pos(PassDotIDs,:);       %(dotPassingID,:); % create directory of passing dots positions
     dPosPassF(:,1:2)= (dPosPassF(:,1:2)-0.5)*xyum;  % Pixel positions into calibrated values(um)
     dPosPassF(:,3)  = (dPosPassF(:,3)-0.5)*zum;
@@ -72,75 +71,58 @@ if Settings.Inspect3D.showPassing
     vSpotsA.mName   = sprintf('passing');
     vSpotsA.SetColor(0.0, 1.0, 0.0, 0.0);
     vImarisApplication.mSurpassScene.AddChild(vSpotsA);
-
-    % Import custom spots statistics into Imaris
     pause(1); % This pause is needed to allow Imaris time to load scene
 
+    % Import custom spots statistics into Imaris
     try
-        [aNames,aValues,aUnits,aFactors,aFactorNames,aIds]=vSpotsA.GetStatistics;
+        [aNames, aValues, aUnits, aFactors, aFactorNames, aIds] = vSpotsA.GetStatistics;
         clear aNames; clear aValues; clear aUnits; clear aFactors; clear aIds;
         
-        dotFN = fieldnames(Dots);
-        [vDotsStats,vOk] = listdlg('ListString', dotFN,...
-            'SelectionMode','multiple', ...
-            'ListSize',[300 300], 'Name','DotsStats', ...
-            'PromptString',{'Please select passing dot stats:'});
-        if vOk<1, return, end
-        dotStatsNames = dotFN(vDotsStats);
-        
-        for i = 1:length(dotStatsNames)
-            for j = 1:length(vSpotsAPosXYZ)
-                aNames{j,1}     = strcat('RC_' ,dotStatsNames{i});
-                aValues(j,1)    = single(Dots.(dotStatsNames{i})(PassDotIDs(j)));
-                aUnits{j,1}     = 'arb';
-                aFactors{1,j}   = 'Spots';
-                aFactors{2,j}   = '';
-                aFactors{3,j}   = '1';
-                aIds(j,1)       = int32(j-1);
-            end
-            vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
-            clear aNames; clear aValues; clear aUnits; clear aFactors; clear aIds;
+        % Add ITmax as score parameter
+        for j = 1:length(vSpotsAPosXYZ)
+            aNames{j,1}     = strcat('ObjectFinder_Score');
+            aValues(j,1)    = single(Dots.ITMax(PassDotIDs(j)));
+            aUnits{j,1}     = 'arb';
+            aFactors{1,j}   = 'Spots';
+            aFactors{2,j}   = '';
+            aFactors{3,j}   = '1';
+            aIds(j,1)       = int32(j-1);
         end
+        vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+        
+        % Add volume parameter from Dots.Vol
+        for j = 1:length(vSpotsAPosXYZ)
+            aNames{j,1}     = strcat('ObjectFinder_Volume');
+            aValues(j,1)    = single(Dots.Vol(PassDotIDs(j)));
+        end
+        vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+
+        % Add Brightness parameter from Dots.MeanBright
+        for j = 1:length(vSpotsAPosXYZ)
+            aNames{j,1}     = strcat('ObjectFinder_Brightness');
+            aValues(j,1)    = single(Dots.MeanBright(PassDotIDs(j)));
+        end
+        vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+        
     catch
         disp('Error pushing custom statistics into Imaris');
+        return
     end
 end
 
-% Process non passing objects
-if Settings.Inspect3D.showNonPassing
-    dPosNoPassF         = Dots.Pos(NoPassDotIDs,:); % (dotPassingID,:); % create directory of passing dots positions
-    dPosNoPassF(:,1:2)  = dPosNoPassF(:,1:2)*xyum;  % Convert dots into actual values(um)
-    dPosNoPassF(:,3)    = dPosNoPassF(:,3)*zum;
-    SPosNoPassF         = [dPosNoPassF(:,2),dPosNoPassF(:,1),dPosNoPassF(:,3)]; % transpose x and y to convert from Matlab to Imaris
-    xyzVolConv          = xyum^2*zum;
-    dVolNopassF         = Dots.Vol(NoPassDotIDs).*xyzVolConv;
-    dRadiusNoPassF      = (dVolNopassF.*3/(4*pi)).^(1/3);
-
-    % convert non passing objects to imaris spots
-    vSpotsBPosXYZ       = SPosNoPassF;
-    vSpotsBRadius       = dRadiusNoPassF;
-    vSpotsBPosT         = zeros(1,length(dPosNoPassF));
-
-    % add non passing spots to Imaris
-    vSpotsB             = vImarisApplication.mFactory.CreateSpots;
-    vSpotsB.Set(vSpotsBPosXYZ, vSpotsBPosT, vSpotsBRadius);
-    vSpotsB.mName       = sprintf('nonpassing');
-    vSpotsB.SetColor(0.0, 0.0, 1.0, 0.0);
-    vImarisApplication.mSurpassScene.AddChild(vSpotsB);
-    vSpotsB.mVisible    = 0;
-end
-
 %% Wait for user input to close and catch validated objects
+disp('Select valid objects as spots in Imaris, then press Enter in matlab command window when done');
 input('Press Enter when done using Imaris');
 
 %% Now catch the imaris-validated spots and export back to MATLAB
+
 vSurpassScene = vImarisApplication.mSurpassScene;
 if isequal(vSurpassScene, [])
     msgbox('Please create a Surpass scene!');
     return;
 end
 
-%% make directory of Spots in surpass scene
+% make directory of Spots in surpass scene
 cnt = 0;
 for vChildIndex = 1:vSurpassScene.GetNumberOfChildren
     if vImarisApplication.mFactory.IsSpots(vSurpassScene.GetChild(vChildIndex - 1))
@@ -149,14 +131,14 @@ for vChildIndex = 1:vSurpassScene.GetNumberOfChildren
     end
 end
 
-%% choose passing spots
+% Choose passing spots
 vSpotsCnt = length(vSpots);
 for n= 1:vSpotsCnt
     vSpotsName{n} = vSpots{n}.mName;
 end
 cellstr = cell2struct(vSpotsName,{'names'},vSpotsCnt+2);
 str = {cellstr.names};
-[vAnswer_iPass,~] = listdlg('ListSize',[200 160], 'PromptString','Validated objects to export back to MATLAB', 'SelectionMode','single', 'ListString',str);
+[vAnswer_iPass,~] = listdlg('ListSize',[200 160], 'PromptString','Validated spots to export back to ObjectFinder', 'SelectionMode','single', 'ListString',str);
 if ~isempty(vAnswer_iPass)
     iPassSpots          = vSpots{vAnswer_iPass};
     [vYesSpotsXYZ,~,~]  = iPassSpots.Get;
@@ -202,12 +184,13 @@ if ~isempty(vAnswer_iPass)
         end
     end
     
-    DotsfoundID         = DotsfoundID(DotsfoundID>=0); %Luca: Exclude Imaris dots that found no matching in matlab dots
-    Hit3D               = unique(DotsfoundID);
+    DotsfoundID = DotsfoundID(DotsfoundID >= 0); % Exclude Imaris dots that found no matching in matlab dots
+    Hit3D       = unique(DotsfoundID);
     
-    Filter.passF        = false(Dots.Num,1);% setup SG.passI variable (Imaris passing)
+    Filter.passF        = false(Dots.Num,1); % Store passing spots
     Filter.passF(Hit3D) = true;
-    save([TPN 'Filter.mat'],'Filter');
+    save([pwd filesep 'Filter.mat'], 'Filter'); 
+
     disp('Passing spots exported successfully!');
 else
     disp('Exporting operation of Imaris-validated objects was cancelled by user');

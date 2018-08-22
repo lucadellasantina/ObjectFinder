@@ -17,7 +17,10 @@ if isfield(Dots, 'Round')
     Dots        = rmfield(Dots,'Round');
     Dots.Shape  = struct;
     Dots        = fitSphere(Dots, Dots.Settings);
-end
+else
+    Dots.Shape  = struct;
+    Dots        = fitSphere(Dots, Dots.Settings);
+end    
 
 Dots.Density = struct;
 if exist('Density.mat', 'file')

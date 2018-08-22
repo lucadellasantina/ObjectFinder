@@ -206,6 +206,7 @@ disp('---- ObjectFinder analysis done! ----');
 %
 %  _*Version 5.0*              created on 2018-08-03 by Luca Della Santina_
 %
+%   + Custom neural network can be trained and used as validation method
 %   + Multiple objects per experiment are now allowed
 %   + Nearest neighbor analysis with distance and overlap distribution calc
 %   + Automatic colocalization analysis between nearest neigbor object sets

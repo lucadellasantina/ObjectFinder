@@ -56,7 +56,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.930,.085,.02],'String',['Valid: ' num2str(numel(find(passI)))]);
     txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.900,.085,.02],'String',['Total: ' num2str(numel(passI))]); %#ok, unused variable
     chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.912,.870,.085,.02],'String','Show (spacebar)', 'Value',1     ,'Callback',@chkShowObjects_changed);
-    btnSave         = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.010,.088,.05],'String','Save'                           ,'Callback',@btnSave_clicked); %#ok, unused variable    
+    btnSave         = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.010,.088,.05],'String','Save current objects'           ,'Callback',@btnSave_clicked); %#ok, unused variable    
     
     % Primary filter parameter controls
     txtFilter       = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.800,.085,.02],'String','Primary filter type'); %#ok, unused variable   
@@ -111,7 +111,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     end
 
     function btnSave_clicked(src, event) %#ok, unused arguments
-        Filter.passF = passI;
+        Filter.passF    = passI;
         save([pwd filesep 'Filter.mat'], 'Filter');
         msgbox('Validated objects saved.', 'Saved', 'help');
     end
