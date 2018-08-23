@@ -56,26 +56,16 @@
       <section id="main_content" class="inner">
         <div style="text-align:center"><h2>What is ObjectFinder?</h2><img src ="images/app_icon_big.png"/></div>
         <p>
-        ObjectFinder is a MATLAB® app that allows you to recognize a large number of small structures, such as synapses in neuronal tissue, within a three-dimensional image volume. </p>
+        ObjectFinder is a MATLAB® app that allows you to recognize small structures in a large volumetric image, plot their statistics and perform quantitative analysis such as nearest neighbor and colocalization analysis.</p>
 
-        <p>ObjectFinder was originally developed for neuroscience research purposes, where it is able to detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.</p>
+        <p>This software is developed for neuroscience research purposes, where it is able to detect fluorescently-labeled synapses in neuronal image stacks acquired using confocal or super-resolution microscopes.</p>
 
-        <div style="text-align:center"><img src ="images/Screenshot_heatmap.png" width="60%"/></div>
-
-        <div style="text-align:center"><h2>Free as in freedom</h2></div>
+        <div style="text-align:center"><img src ="images/logo_open_source.png" width="40%"/></div>
 
         <p>ObjectFinder is licensed under <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">GNU General Public License v3.</a>
         This strong copyleft license ensures you will always have the right to obtain ObjectFinder for free, view and modify the source code to review its functionality and improve its features.</p>
-        <div style="text-align:center"><img src ="images/logo_open_source.png" width="40%"/></div>
 
         <p>We strongly believe that software developed for data analysis in scientific research must be open source, to ensure the highest level of reproducibility of your science.</p>
-
-        <div style="text-align:center"><h2>Tuned for speed!</h2></div>
-
-        <p>ObjectFinder can search hundred thosands objects in a matter of minutes by taking full advantage of your computer's CPU cores, this is achieved by implementing multi-threaded search inside the 3D volume.</p>
-
-        <p>For a typical workstation with an 8-core CPU this means an 8X fold faster speed compared to a classic app running on the same computer!</p>
-        <div style="text-align:center"><img src ="images/speed.png" width="80" height="80"/></div>
 
         <div style="text-align:center"><h2>Multiplatform architecture</h2></div>
 
@@ -84,21 +74,32 @@
 
         Having a single codebase for all platforms makes developing new features as well as fixing bugs a much faster and enjoyable journey.
 
-        <div style="text-align:center"><h2>Seamlessly integrated with Bitplane Imaris®</h2></div>
+        <div style="text-align:center"><h2>Visually interact with your data</h2></div>
 
-        ObjectFinder can display detected objects in Imaris® to take full advantage of Imaris advanced 3D rendering capabilities.
+        <p>ObjectFinder can display detected objects using the builtin volume inspector against your source image volime, explore, filter and interact directly with detected objects.</p>
+        <div style="text-align:center"><img src ="images/Screenshot_inspector.png" width="100%"/></div>
+
+        <p>Need to render your data? ObjectFinder seamlessly supports visualization of objects using Bitplane Imaris® to take full advantage of Imaris advanced 3D rendering capabilities.
         <div style="text-align:center"><img src ="images/Screenshot_imaris.png" width="100%"/></div>
         <p>You can visually add, remove or filter objects by visual inspection against the original signal and export them back to ObjectFinder for further processing.</p>
 
-        <div style="text-align:center"><h2>Export results to Microsoft Excel®</h2></div>
+        <div style="text-align:center"><h2>Plot results and export data to Excel</h2></div>
 
         Analysis results can be exported to Excel spreadsheets for further elaboration or plotting using your favorite data analysis application.
-        <div style="text-align:center"><img src ="images/Screenshot_export_excel.png" width="100%"/></div>
+        <div style="text-align:center"><img src ="images/Screenshot_excel.png" width="100%"/></div>
+
+        <div style="text-align:center"><h2>Deep Learning at your service</h2></div>
+
+        <p>Do you have millions of candidate to validate as objects vs noise? Train your personal deep learning network using you own trusted data to automatize and reduce subjectivity of this critical step.</p>
+
+        <p>ObjectFinder uses the latest deep learning technology together with GPU computing to scale up the validation of large number of objects. This feature takes advantage of recent NVIDIA graphic cards through the Neural Network toolbox.</p>
+        <div style="text-align:center"><img src ="images/Screenshot_NeuralNet.png" width="100%"/></div>
 
         <div style="text-align:center"><h2>Works around <i>your</i> schedule</h2></div>
 
-        Schedule ObjectFinder to start the automatic object finding process anytime within 24 hours to keep working on your other projects. Then let ObjectFinder do the work during your quiet hours, day or night. Do you have multiple images to process? Use the automation tab to allow batch processing without user supervision!
-        <div style="text-align:center"><img src ="images/Screenshot_timer.png" width="100%"/></div>
+        <p>Schedule ObjectFinder to start searching for objects during your quiet hours, so you keep working on your other projects.</p>
+        <p>Do you have multiple images to process? Use the automation tab to allow batch processing without user supervision.
+        <div style="text-align:center"><img src ="images/Screenshot_timer.png" width="60%"/></div>
 
         <div style="text-align:center"><h2>How do I install and use ObjectFinder?</h2></div>
 
@@ -117,30 +118,40 @@
        <div style="text-align:center"><img src ="images/Screenshot_toolbar.png" width="80%"/></div>
 
        <ol>
-          <li>Click "Folder" and Select "MyExperiment" as the current working folder to use for analysis.</li>
-          <li>Click "Load Images" to choose which image contains the structures to recognize. Optionally, you can also specify which a 3D binary mask to limit the search.</li>
+          <li>"Select Folder" to choose "MyExperiment" as the current working folder to use for analysis.</li>
+          <li>"Choose Images" to tell ObjectFinder which image contains the structures to recognize. You can also specify a 3D binary mask to limit the search only to the masked region.</li>
           <div style="text-align:center"><img src ="images/Screenshot_ImageSelection.png" width="100%"/></div>
-          <li>Click "Search Objects" to start the automatic search of objects.</li>
-          <li>Click "Filter" to reject candidate objects not meeting specified criteria</li>
-          <li>Click on "Inspect" to visually inspect and validate objects.</li>
+          <li>"Find Objects" to start the automatic search of objects.</li>
+          <li>"Validate objects" to visually inspect and validate objects from noise.</li>
        </ol>
 
          <div style="text-align:center"><h2>System Requirements</h2></div>
 
-        Software:
-        <ul style="list-style-type:none">
-          <li><a href="https://www.mathworks.com/products/matlab.html">MATLAB</a> R2017b or newer</li>
-          <li><a href="https://www.mathworks.com/products/image.html">Image Processing Toolbox</a></li>
-          <li><a href="https://www.mathworks.com/products/parallel-computing.html">Parallel Computing Toolbox</a> (optional)</li>
-          <li><a href="http://www.bitplane.com/">Bitplane Imaris</a> for 3D inspection (optional)</li>
-        </ul>
+        <table width="100%">
+          <tr>
+            <td>Software:</td>
+            <td>Hardware (recommended):</td>
+          </tr>
+          <tr>
+            <td>
+              <ul style="list-style-type:none">
+                <li><a href="https://www.mathworks.com/products/matlab.html">MATLAB</a> R2018a or newer</li>
+                <li><a href="https://www.mathworks.com/products/image.html">Image Processing Toolbox</a></li>
+                <li><a href="https://www.mathworks.com/products/parallel-computing.html">Parallel Computing Toolbox</a> (optional)</li>
+                <li><a href="https://www.mathworks.com/products/neural-network.html">Neural Network Toolbox</a> (optional)</li>
+                <li><a href="http://www.bitplane.com/">Bitplane Imaris</a> for 3D inspection (optional)</li>
+              </ul>
+            </td>
+            <td>
+              <ul style="list-style-type:none">
+                <li>CPU: Intel Xeon >2GHz</li>
+                <li>RAM: 32Gb</li>
+                <li>GPU: NVidia for deep learning</li>
+              </ul>
+            </td>
+          </tr>
+        </table>
 
-        Hardware (recommended):
-        <ul style="list-style-type:none">
-          <li>Processor (CPU): Intel Xeon >2GHz</li>
-          <li>System Memory (RAM): 32Gb</li>
-          <li>Video Card (GPU): NVidia Quadro with 4Gb VRAM</li>
-        </ul>
       </section>
     </div>
 
