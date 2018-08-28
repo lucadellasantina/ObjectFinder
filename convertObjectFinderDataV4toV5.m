@@ -7,8 +7,15 @@ load('Settings.mat', 'Settings');
 
 Dots.Name                           = 'PSD95';
 Dots.Settings                       = Settings;
-Dots.Settings.objfinder.blockSearch = true;
-Dots.Settings.objfinder.sphericity  = true;
+if isfield(Dots.Settings, 'dotfinder')
+    Dots.Settings.objfinder = Dots.Settings.dotfinder;
+    Dots.Settings = rmfield(Dots.Settings, 'dotfinder');
+end
+
+Dots.Settings.objfinder.blockSearch  = true;
+Dots.Settings.objfinder.sphericity   = true;
+Dots.Settings.objfinder.watershed    = true;
+Dots.Settings.objfinder.minIntensity = 2;
 Dots.Settings.ImInfo.PostChName     = 'PSD95.tif';
 Dots.Filter                         = Filter;
 Dots.Settings.Filter                = Dots.Filter.FilterOpts;

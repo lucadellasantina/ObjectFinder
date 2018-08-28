@@ -17,23 +17,17 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 % *Pass objects detected by the ObjectFinder to Imaris version 8 and newer
-function exportObjectsToImaris8(Dots)
-
-% Start Imaris using ICE interface
-javaaddpath ImarisLib.jar
-vImarisLib = ImarisLib;
-vObjectId = 101;
-for vIndex = 1:100 % do several attempts waiting for Imaris to be registered
-    vImaris = vImarisLib.GetApplication(vObjectId);
-    if ~isempty(vImaris)
-    break
-    end
-    pause(0.1)
+function exportObjectsToImaris8(Dots, vImarisLib)
+vServer = vImarisLib.GetServer;
+if vServer
+    vImaris = vImarisLib.GetApplication(vServer.GetObjectID(0));
+    vImaris.SetVisible(true);
+    disp(vImaris.GetVisible);
+else
+    disp('Error: Imaris is not running, please start imaris and then try again.');
+    return
 end
-vImaris.SetVisible(true);
-disp(vImaris.GetVisible);
-
-% Load the imaris file contained in the I folder 
+%% Load the imaris file contained in the I folder 
 if isempty(vImarisApplication.GetCurrentFileName)
     tmpDir  = [pwd filesep 'I' filesep];
     tmpFile = dir([tmpDir '*.ims']);

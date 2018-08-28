@@ -204,7 +204,11 @@ disp('---- ObjectFinder analysis done! ----');
 
 %% Change log
 %
-%  _*Version 5.0*              created on 2018-08-03 by Luca Della Santina_
+%  _*Version 5.1*              created on 2018-08-28 by Luca Della Santina_
+%
+%   % Improved 5x the validation speed when using NeuralNetwork
+%
+%  _*Version 5.0*              created on 2018-08-22 by Luca Della Santina_
 %
 %   + Custom neural network can be trained and used as validation method
 %   + Multiple objects per experiment are now allowed
