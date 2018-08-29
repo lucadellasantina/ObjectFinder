@@ -60,7 +60,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     
     % Primary filter parameter controls
     txtFilter       = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.800,.085,.02],'String','Primary filter type'); %#ok, unused variable   
-    cmbFilterType   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.750,.060,.04],'String', {'Disabled', 'Score','Volume','Brightness'},'Callback', @cmbFilterType_changed);  
+    cmbFilterType   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.750,.060,.04],'String', {'Disabled', 'Score','Volume','Brightness','Roundness','Major Axis Length'},'Callback', @cmbFilterType_changed);  
     cmbFilterDir    = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.750,.025,.04],'String', {'>=', '<='}, 'Visible', 'off'  ,'callback',@cmbFilterDir_changed);            
     btnMinus        = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.715,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus_clicked);    
     txtThresh       = uicontrol('Style','edit'      ,'Units','normalized','Position',[.932,.715,.036,.04],'String',num2str(thresh),'Visible', 'off' ,'CallBack',@txtThresh_changed);
@@ -68,7 +68,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 
     % Secondary filter parameter controls
     txtFilter2      = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.680,.085,.02],'String','Secondary filter type'); %#ok, unused variable   
-    cmbFilterType2  = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.630,.060,.04],'String',{'Disabled','Score','Volume','Brightness'},'Callback', @cmbFilterType2_changed);
+    cmbFilterType2  = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.630,.060,.04],'String',{'Disabled','Score','Volume','Brightness','Roundness','Major Axis Length'},'Callback', @cmbFilterType2_changed);
     cmbFilter2Dir   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.630,.025,.04],'String',{'>=', '<='}, 'Visible', 'off'   ,'callback',@cmbFilterDir_changed);                 
     btnMinus2       = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.595,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus2_clicked);    
     txtThresh2      = uicontrol('Style','edit'      ,'Units','normalized','Position',[.932,.595,.036,.04],'String',num2str(thresh2),'Visible','off' ,'CallBack',@txtThresh2_changed);
@@ -196,6 +196,30 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 set(txtThresh,'Visible','on');
                 set(btnPlus,'Visible','on');
                 set(btnMinus,'Visible','on');                
+            case 5 % Oblongness
+                try
+                    new_thresh = Filter.FilterOpts.Thresholds.Oblong;
+                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.OblongDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh = ceil(mean(Dots.Shape.Oblong)); % mean value;
+                end
+                set(cmbFilterDir,'Visible','on');
+                set(txtThresh,'Visible','on');
+                set(btnPlus,'Visible','on');
+                set(btnMinus,'Visible','on');                
+            case 6 % PrincipalAxisLen
+                try
+                    new_thresh = Filter.FilterOpts.Thresholds.PrincipalAxisLen;
+                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.PrincipalAxisLenDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh = ceil(mean(Dots.Shape.PrincipalAxisLen)); % mean value;
+                end
+                set(cmbFilterDir,'Visible','on');
+                set(txtThresh,'Visible','on');
+                set(btnPlus,'Visible','on');
+                set(btnMinus,'Visible','on');                
         end
         applyFilter(new_thresh, thresh2);
         set(txtThresh,'string',num2str(new_thresh));        
@@ -212,7 +236,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             case 2 % ITMax
                 try
                     new_thresh2 = Filter.FilterOpts.Thresholds.ITMax;
-                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.ITMaxDir);
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.ITMaxDir);
                 catch
                     disp('Threshold value or direction not specified on file, using default average value');
                     new_thresh2 = ceil(mean(Dots.ITMax)); % mean value;
@@ -224,7 +248,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             case 3 % Volume
                 try
                     new_thresh2 = Filter.FilterOpts.Thresholds.Vol;
-                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.VolDir);
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.VolDir);
                 catch
                     disp('Threshold value or direction not specified on file, using default average value');
                     new_thresh2 = ceil(mean(Dots.Vol)); % mean value;
@@ -236,10 +260,34 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             case 4 % Brightness
                 try
                     new_thresh2 = Filter.FilterOpts.Thresholds.MeanBright;
-                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.MeanBrightDir);
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.MeanBrightDir);
                 catch
                     disp('Threshold value or direction not specified on file, using default average value');
                     new_thresh2 = ceil(mean(Dots.MeanBright)); % mean value;
+                end
+                set(cmbFilter2Dir,'Visible','on');
+                set(txtThresh2,'Visible','on');
+                set(btnPlus2,'Visible','on');
+                set(btnMinus2,'Visible','on');                
+            case 5 % Oblongness
+                try
+                    new_thresh2 = Filter.FilterOpts.Thresholds.Oblong;
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.OblongDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh2 = ceil(mean(Dots.Shape.Oblong)); % mean value;
+                end
+                set(cmbFilter2Dir,'Visible','on');
+                set(txtThresh2,'Visible','on');
+                set(btnPlus2,'Visible','on');
+                set(btnMinus2,'Visible','on');                
+            case 6 % PrincipalAxisLen
+                try
+                    new_thresh2 = Filter.FilterOpts.Thresholds.PrincipalAxisLen;
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.PrincipalAxisLenDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh2 = ceil(mean(Dots.Shape.PrincipalAxisLen)); % mean value;
                 end
                 set(cmbFilter2Dir,'Visible','on');
                 set(txtThresh2,'Visible','on');
@@ -270,24 +318,36 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 Filter.FilterOpts.Thresholds.ITMax      = new_thresh;
             case 3 % Volume
                 if cmbFilterDir.Value == 1
-                    %passI = Filter.passF & (Dots.Vol >= new_thresh)';
                     passI = (Dots.Vol >= new_thresh)';
                 else
-                    %passI = Filter.passF & (Dots.Vol <= new_thresh)';
                     passI = (Dots.Vol <= new_thresh)';
                 end
                 Filter.FilterOpts.Thresholds.VolDir     = cmbFilterDir.Value;
                 Filter.FilterOpts.Thresholds.Vol        = new_thresh;
             case 4 % Brightness
                 if cmbFilterDir.Value == 1
-                    %passI = Filter.passF & (Dots.MeanBright >= new_thresh)';
                     passI = (Dots.MeanBright >= new_thresh)';
                 else    
-                    %passI = Filter.passF & (Dots.MeanBright <= new_thresh)';
                     passI = (Dots.MeanBright <= new_thresh)';
                 end
                 Filter.FilterOpts.Thresholds.MeanBrightDir  = cmbFilterDir.Value;
                 Filter.FilterOpts.Thresholds.MeanBright     = new_thresh;
+            case 5 % Oblongness
+                if cmbFilterDir.Value == 1
+                    passI = (Dots.Shape.Oblong >= new_thresh)';
+                else    
+                    passI = (Dots.Shape.Oblong <= new_thresh)';
+                end
+                Filter.FilterOpts.Thresholds.OblongDir  = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.Oblong     = new_thresh;
+            case 6 % Oblongness
+                if cmbFilterDir.Value == 1
+                    passI = (Dots.Shape.PrincipalAxisLen(:,1)' >= new_thresh)';
+                else    
+                    passI = (Dots.Shape.PrincipalAxisLen(:,1)' <= new_thresh)';
+                end
+                Filter.FilterOpts.Thresholds.PrincipalAxisLenDir  = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.PrincipalAxisLen     = new_thresh;
         end
         
         % Apply secondary filter criteria if selected
@@ -316,6 +376,22 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 end
                 Filter.FilterOpts.Thresholds.MeanBrightDir  = cmbFilter2Dir.Value;
                 Filter.FilterOpts.Thresholds.MeanBright     = new_thresh2;
+            case 5 % Oblongness
+                if cmbFilter2Dir.Value == 1
+                    passI = (Dots.Shape.Oblong >= new_thresh)';
+                else    
+                    passI = (Dots.Shape.Oblong <= new_thresh)';
+                end
+                Filter.FilterOpts.Thresholds.OblongDir  = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds.Oblong     = new_thresh;
+            case 6 % Oblongness
+                if cmbFilter2Dir.Value == 1
+                    passI = (Dots.Shape.PrincipalAxisLen(:,1)' >= new_thresh)';
+                else    
+                    passI = (Dots.Shape.PrincipalAxisLen(:,1)' <= new_thresh)';
+                end
+                Filter.FilterOpts.Thresholds.PrincipalAxisLenDir  = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds.PrincipalAxisLen     = new_thresh;
         end      
         
         set(txtValidObjs,'string',['Valid Objects: ' num2str(numel(find(passI)))]);
