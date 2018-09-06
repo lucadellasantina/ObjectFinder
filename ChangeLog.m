@@ -22,6 +22,10 @@
 %
 % *Change log*
 %
+%  _*Version 5.4*              created on 2018-09-06 by Luca Della Santina_
+%
+%   + Added Local thresholding mode, 30X faster than iterative thresholding
+%
 %  _*Version 5.3*              created on 2018-09-06 by Luca Della Santina_
 %
 %   + Simplified resolution of duplicated objects across overlapping blocks
