@@ -124,7 +124,7 @@ for block = 1:(NumBx*NumBy*NumBz)
 	Blocks(block).nLabels       = 0;
 
 end
-fprintf(['DONE in ' num2str(toc) ' seconds \n']);
+fprintf([num2str(NumBx*NumBy*NumBz) ' blocks, DONE in ' num2str(toc) ' seconds \n']);
 clear xStart xEnd yStart yEnd zStart zEnd T*
 
 %% -- STEP 2: scan the volume and find areas crossing local contrast threshold with a progressively coarser intensity filter --
@@ -309,84 +309,24 @@ fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 5: resolve empty dots and dots in border between blocks --
 % Some voxels could be shared by multiple dots because of the overlapping
-% search blocks approach in Step#1 and Step#2. This happens for voxels at
-% the border lines of processing blocks. Disambiguate those voxels by
-% re-assigning them only to the dot that has most voxels in the area.
+% search blocks approach in Step#1 and Step#2. When this happens, remove
+% the smaller orbject of the two.
+
 tic;
 fprintf('Resolving duplicate objects in the overlapping regions of search blocks... ');
 
-VoxMap = uint8(zeros(size(Post)));  % Map of whether a given voxel belongs to an object (value = 1) or not (values = 0)
-VoxIDMap = zeros(size(Post));       % Map of the owners of each voxel (dot IDs)
-[ys, xs, zs] = size(VoxMap);        % Size of the maps
-TotalNumOverlapDots = 0;            % Number of overlapping Dots
-TotalNumOverlapVoxs = 0;            % Number of overlapping Voxels
-
-% Delete empty dots from previous step
-%for i = numel(tmpDots):-1:1
-%    if isempty(tmpDots(i).Vol) || (tmpDots(i).Vol == 0) 
-%        tmpDots(i) = [];
-%    end
-%end
-
-for i = 1:numel(tmpDots)
-    % Mark voxels belonging to this dot as overlapping if in VoxMap those
-    % voxels were already assigned to another dot (value in VoxMap == 1)
-    OverlapVoxInd = find((VoxMap(tmpDots(i).Vox.Ind) > 0));
-
-    % Resolve overlapping voxels of current dot one-by-one because
-    % they might overlap not all with a unique other dot ID
-    if isempty(OverlapVoxInd)
-        % Mark voxels belonging to this object as taken (value = 1)
-        VoxMap(tmpDots(i).Vox.Ind) = 1;
-        VoxIDMap(tmpDots(i).Vox.Ind) = i;
-    else
-        % Resolve conflict because some voxels are taken by another object
-        TotalNumOverlapDots = TotalNumOverlapDots + 1;
-        TotalNumOverlapVoxs = TotalNumOverlapVoxs + length(OverlapVoxInd);
-        OverlapVoxInds = tmpDots(i).Vox.Ind(OverlapVoxInd);
-        OverlapVoxIDs = VoxIDMap(OverlapVoxInds);
-
-        VoxMap(tmpDots(i).Vox.Ind) = 1;                     % Mark "1" voxels in the image if they belong to the current dot
-        VoxIDMap(tmpDots(i).Vox.Ind) = i;                   % Mark current dot ID# as the owner of those voxels
-        VoxIDMap(tmpDots(i).Vox.Ind(OverlapVoxInd)) = 0;    % Unmark current dot from being the owner of overlapping voxels
-
-        % loop overlapping voxels and assign them either to current dot ID or to the overlapping dot ID
-        [OverlapVoxY, OverlapVoxX, OverlapVoxZ] = ind2sub(size(VoxMap), OverlapVoxInds); % Find XYZ coordinates of overlapping dots
-        for k = 1:length(OverlapVoxInds)
-            SurroudingIDs =  VoxIDMap(max(1,OverlapVoxY(k)-1):min(ys,OverlapVoxY(k)+1), max(1,OverlapVoxX(k)-1):min(xs,OverlapVoxX(k)+1), max(1,OverlapVoxZ(k)-1):min(zs,OverlapVoxZ(k)+1));
-            SurroudingIDs(isnan(SurroudingIDs)) = 0 ; % Convert NaN to 0 if present in the matrix LDS fix 7-25-2017
-
-            % Decide winning object as the one owning most of the surrounding voxels around the ovelapping voxel.
-            WinningID = mode(SurroudingIDs((SurroudingIDs==i) | (SurroudingIDs==OverlapVoxIDs(k))));
-            if WinningID == i
-                LosingID = OverlapVoxIDs(k);
-            else
-                LosingID = i;
-            end
-            
-            VoxIDMap(OverlapVoxInds(k)) = WinningID;    % Assign voxels to winning dot ID#
-            if ~isnan(LosingID)
-                LosingVox = find(tmpDots(LosingID).Vox.Ind == OverlapVoxInds(k)); % Remove losing voxels from losing dot ID#
-                tmpDots(LosingID).Vox.Pos(LosingVox,:) = [];
-                tmpDots(LosingID).Vox.Ind(LosingVox) = [];
-                tmpDots(LosingID).Vox.RawBright(LosingVox) = [];
-                tmpDots(LosingID).Vox.IT(LosingVox) = [];
-                tmpDots(LosingID).Vol = tmpDots(LosingID).Vol - 1;
-
-                % If losing dot has still voxels left, recalculate properties
-                if numel(tmpDots(LosingID).Vox.IT) > 0
-                    tmpDots(LosingID).ITMax = max(tmpDots(LosingID).Vox.IT);
-                    tmpDots(LosingID).ItSum = sum(tmpDots(LosingID).Vox.IT);
-                    tmpDots(LosingID).MeanBright = mean(tmpDots(LosingID).Vox.RawBright);
-                end
+% Detect pairs of objects with overlapping voxels, tag & delete the smaller
+for i = numel(tmpDots):-1:1
+    DeleteTag = false;
+    for j = numel(tmpDots):-1:1
+        if tmpDots(i).Vol < tmpDots(j).Vol
+            if intersect(tmpDots(i).Vox.Ind, tmpDots(j).Vox.Ind)
+                DeleteTag = true;
+                break
             end
         end
     end
-end
-
-% Delete dots that have no more voxels left after the previous pruning
-for i = numel(tmpDots):-1:1
-    if numel(tmpDots(i).Vox.IT) == 0
+    if DeleteTag
         tmpDots(i) = [];
     end
 end

@@ -22,6 +22,13 @@
 %
 % *Change log*
 %
+%  _*Version 5.3*              created on 2018-09-06 by Luca Della Santina_
+%
+%   + Simplified resolution of duplicated objects across overlapping blocks
+%   + Fixed insufficient block buffer calculation (now 2 times max xy size)
+%   + Fixed inconsistent block size calculation (now 3 times max xy size)
+%   + When detecting a new set of objects remember previous search settings
+%
 %  _*Version 5.2*              created on 2018-08-29 by Luca Della Santina_
 %
 %   + 8 new NeuralNetworks (VGG, SqueezeNet, GoogleNet, Inception, ResNet)
