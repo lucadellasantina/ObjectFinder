@@ -26,7 +26,11 @@
 %
 %   + 8 new NeuralNetworks (VGG, SqueezeNet, GoogleNet, Inception, ResNet)
 %   + Objects can be filtered based on Roundness and Major Axis Length
+%   + Colocalized objects can now be saved as a new set of objects
+%   % Colocalization with mask no longer asks for objects name
+%   % Inspect2D: Fixed bug in applying secondary filter 
 %   % Removed need for a custom readfunction when training NeuralNet
+%   % Fixed selecting objects with names that are substrings of each other
 %
 %  _*Version 5.1*              created on 2018-08-28 by Luca Della Santina_
 %

@@ -30,10 +30,8 @@ function ColocAuto = colocAutoMask(Dots, Filter, Colo, FileName, NumVoxOverlap, 
 %%
 Grouped = getFilteredObjects(Dots, Filter);
 [~, fName, ~] = fileparts(FileName);
-tmpPrompt = {'Reference objects: ', 'Colocalized channel:'};
-tmpAns = inputdlg(tmpPrompt, 'Assign channels', 1, {'PSD95', fName});
-ColocAuto.Source = tmpAns{1};
-ColocAuto.Fish1 = tmpAns{2};
+ColocAuto.Source = Dots.Name;
+ColocAuto.Fish1 = fName;
 
 AutoColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
 ColocAuto.ListDotIDsManuallyColocAnalyzed = find(AutoColocAnalyzingFlag == 1);

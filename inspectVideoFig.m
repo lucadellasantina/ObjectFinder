@@ -80,8 +80,10 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     txtSelObjITMax  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.500,.085,.02],'String','Score : ');
     txtSelObjVol    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.470,.085,.02],'String','Volume : ');
     txtSelObjBright = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.440,.085,.02],'String','Brightness : ');
-    txtSelObjValid  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.410,.085,.02],'String','Validated : ');    
-    btnToggleValid  = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.360,.088,.04],'String','Change Validation (v)'          ,'Callback',@btnToggleValid_clicked); %#ok, unused variable
+    txtSelObjRound  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.410,.085,.02],'String','Roundness : ');
+    txtSelObjLength = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.380,.085,.02],'String','Length : ');
+    txtSelObjValid  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.350,.085,.02],'String','Validated : ');    
+    btnToggleValid  = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.300,.088,.04],'String','Change Validation (v)'          ,'Callback',@btnToggleValid_clicked); %#ok, unused variable
     
 	% Main drawing axes for video display
     if size_video(2) < 0.03; size_video(2) = 0.03; end % bottom 0.03 will be used for scroll bar HO 2/17/2011
@@ -354,17 +356,17 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
         switch get(cmbFilterType2,'Value')
             case 2 % ITMax
                 if cmbFilter2Dir.Value == 1
-                    passI = passI & (Dots.Vol >= new_thresh2)';
+                    passI = passI & (Dots.ITMax >= new_thresh2)';
                 else
-                    passI = passI & (Dots.Vol <= new_thresh2)';
+                    passI = passI & (Dots.ITMax <= new_thresh2)';
                 end
                 Filter.FilterOpts.Thresholds.ITMaxDir = cmbFilter2Dir.Value;
                 Filter.FilterOpts.Thresholds.ITMax    = new_thresh2;
             case 3 % Volume
                 if cmbFilter2Dir.Value == 1
-                    passI = passI & (Dots.MeanBright >= new_thresh2)';
+                    passI = passI & (Dots.Vol >= new_thresh2)';
                 else
-                    passI = passI & (Dots.MeanBright <= new_thresh2)';
+                    passI = passI & (Dots.Vol <= new_thresh2)';
                 end
                 Filter.FilterOpts.Thresholds.VolDir = cmbFilter2Dir.Value;
                 Filter.FilterOpts.Thresholds.Vol    = new_thresh2;
@@ -378,20 +380,20 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 Filter.FilterOpts.Thresholds.MeanBright     = new_thresh2;
             case 5 % Oblongness
                 if cmbFilter2Dir.Value == 1
-                    passI = (Dots.Shape.Oblong >= new_thresh)';
+                    passI = passI & (Dots.Shape.Oblong >= new_thresh2)';
                 else    
-                    passI = (Dots.Shape.Oblong <= new_thresh)';
+                    passI = passI & (Dots.Shape.Oblong <= new_thresh2)';
                 end
                 Filter.FilterOpts.Thresholds.OblongDir  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds.Oblong     = new_thresh;
-            case 6 % Oblongness
+                Filter.FilterOpts.Thresholds.Oblong     = new_thresh2;
+            case 6 % Principal axis length
                 if cmbFilter2Dir.Value == 1
-                    passI = (Dots.Shape.PrincipalAxisLen(:,1)' >= new_thresh)';
+                    passI = passI & (Dots.Shape.PrincipalAxisLen(:,1)' >= new_thresh2)';
                 else    
-                    passI = (Dots.Shape.PrincipalAxisLen(:,1)' <= new_thresh)';
+                    passI = passI & (Dots.Shape.PrincipalAxisLen(:,1)' <= new_thresh2)';
                 end
                 Filter.FilterOpts.Thresholds.PrincipalAxisLenDir  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds.PrincipalAxisLen     = new_thresh;
+                Filter.FilterOpts.Thresholds.PrincipalAxisLen     = new_thresh2;
         end      
         
         set(txtValidObjs,'string',['Valid Objects: ' num2str(numel(find(passI)))]);
@@ -558,16 +560,21 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 		set(fig_handle, 'CurrentAxes', axes_handle);
 		SelObjID = redraw_func(f, chkShowObjects.Value, Pos, PosZoom, CutNumVox, passI);
         if SelObjID
-            set(txtSelObjID     ,'string',['ID#: ' num2str(SelObjID)]);
-            set(txtSelObjITMax  ,'string',['Score : ' num2str(Dots.ITMax(SelObjID))]);
-            set(txtSelObjVol    ,'string',['Volume : ' num2str(Dots.Vol(SelObjID))]);
-            set(txtSelObjBright ,'string',['Brightness : ' num2str(ceil(Dots.MeanBright(SelObjID)))]);
-            set(txtSelObjValid  ,'string',['Validated : ' num2str(ceil(passI(SelObjID)))]);
+            set(txtSelObjID     ,'string',['ID#: '          num2str(SelObjID)]);
+            set(txtSelObjITMax  ,'string',['Score : '       num2str(Dots.ITMax(SelObjID))]);
+            set(txtSelObjVol    ,'string',['Volume : '      num2str(Dots.Vol(SelObjID))]);
+            set(txtSelObjBright ,'string',['Brightness : '  num2str(ceil(Dots.MeanBright(SelObjID)))]);
+            set(txtSelObjRound  ,'string',['Roundness : '   num2str(Dots.Shape.Oblong(SelObjID))]);
+            set(txtSelObjLength ,'string',['Length : '      num2str(ceil(Dots.Shape.PrincipalAxisLen(SelObjID)))]);
+            set(txtSelObjValid  ,'string',['Validated : '   num2str(ceil(passI(SelObjID)))]);
+            
         else
-            set(txtSelObjID     ,'string','ID#: ');
-            set(txtSelObjITMax  ,'string','Score : ');
-            set(txtSelObjVol    ,'string','Volume : ');
-            set(txtSelObjBright ,'string','Brightness : ');
+            set(txtSelObjID     ,'string','ID#: '       );
+            set(txtSelObjITMax  ,'string','Score : '    );
+            set(txtSelObjVol    ,'string','Volume : '   );
+            set(txtSelObjBright ,'string','Brightness :');
+            set(txtSelObjRound  ,'string','Roundness : ');
+            set(txtSelObjLength ,'string','Length : '   );
             set(txtSelObjValid  ,'string','Validated : ');
         end
 	end
