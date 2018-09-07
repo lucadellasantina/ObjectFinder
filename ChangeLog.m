@@ -25,6 +25,9 @@
 %  _*Version 5.4*              created on 2018-09-06 by Luca Della Santina_
 %
 %   + Added Local thresholding mode, 30X faster than iterative thresholding
+%   + User can choose between search algorithms
+%   + Simplified object size to a single Max and Min diameter values
+%   + Improved speed of resolving duplicate objects by using ismembc()
 %
 %  _*Version 5.3*              created on 2018-09-06 by Luca Della Santina_
 %

@@ -309,41 +309,39 @@ fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 5: resolve empty dots and dots in border between blocks --
 % Some voxels could be shared by multiple dots because of the overlapping
-% search blocks approach in Step#1 and Step#2. When this happens, remove
-% the smaller orbject of the two.
+% search blocks approach in Step#1 and Step#2. Remove the smaller orbject.
 
-tic;
+% Convert tmpDots into the easily accessible fields 
 fprintf('Resolving duplicate objects in the overlapping regions of search blocks... ');
+tic;
 
-% Detect pairs of objects with overlapping voxels, tag & delete the smaller
-for i = numel(tmpDots):-1:1
-    DeleteTag = false;
-    for j = numel(tmpDots):-1:1
+Dots = struct;
+iDots = 0;
+for i = 1:numel(tmpDots)
+    for j = 1 : i
         if tmpDots(i).Vol < tmpDots(j).Vol
-            if intersect(tmpDots(i).Vox.Ind, tmpDots(j).Vox.Ind)
-                DeleteTag = true;
+            % ismembc is faster than ismember but requires ordered arrays
+            if ismembc(tmpDots(i).Vox.Ind, tmpDots(j).Vox.Ind) 
+                tmpDots(i).Vol = 0;
                 break
             end
         end
     end
-    if DeleteTag
-        tmpDots(i) = [];
+    
+    if tmpDots(i).Vol == 0
+        continue
+    else
+        iDots                       = iDots+1;
+        Dots.Pos(iDots,:)           = tmpDots(i).Pos;
+        Dots.Vox(iDots).Pos         = tmpDots(i).Vox.Pos;
+        Dots.Vox(iDots).Ind         = tmpDots(i).Vox.Ind;
+        Dots.Vol(iDots)             = tmpDots(i).Vol;
+        Dots.ITMax(iDots)           = tmpDots(i).ITMax;
+        Dots.ItSum(iDots)           = tmpDots(i).ItSum;
+        Dots.Vox(iDots).RawBright   = tmpDots(i).Vox.RawBright;
+        Dots.Vox(iDots).IT          = tmpDots(i).Vox.IT;
+        Dots.MeanBright(iDots)      = tmpDots(i).MeanBright;
     end
-end
-
-% Convert tmpDots into the old "Dots" structure 
-% (TODO make this structure deprecated and return directly tmpDots)
-Dots = struct; 
-for i = numel(tmpDots):-1:1
-    Dots.Pos(i,:) = tmpDots(i).Pos;
-    Dots.Vox(i).Pos = tmpDots(i).Vox.Pos;
-    Dots.Vox(i).Ind = tmpDots(i).Vox.Ind;
-    Dots.Vol(i) = tmpDots(i).Vol;
-    Dots.ITMax(i) = tmpDots(i).ITMax;
-    Dots.ItSum(i) = tmpDots(i).ItSum;
-    Dots.Vox(i).RawBright = tmpDots(i).Vox.RawBright;
-    Dots.Vox(i).IT = tmpDots(i).Vox.IT;
-    Dots.MeanBright(i) = tmpDots(i).MeanBright;
 end
 
 Dots.ImSize = [size(Post,1) size(Post,2) size(Post,3)];

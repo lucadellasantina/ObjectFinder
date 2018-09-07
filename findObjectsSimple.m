@@ -64,7 +64,7 @@ else
     Bzc=size(Post,3);
 end
 
-%% -- STEP 1: divide the image volume into searching blocks for multi-threading
+%% -- STEP 1: divide the volume into searching blocks for multi-threading
 clear Blocks;
 tic;
 fprintf('Dividing image volume into blocks... ');
@@ -125,7 +125,7 @@ end
 fprintf([num2str(NumBx*NumBy*NumBz) ' blocks, DONE in ' num2str(toc) ' seconds \n']);
 clear xStart xEnd yStart yEnd zStart zEnd T*
 
-%% -- STEP 2: scan the volume and find areas crossing local contrast threshold with a progressively coarser intensity filter --
+%% -- STEP 2: scan volume to find areas above local contrast threshold --
 tic;
 fprintf('Searching candidate objects using multi-threaded iterarive threshold ... ');
 
@@ -233,16 +233,16 @@ fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 tic;
 fprintf('Accumulating properties for each detected object... ');
 
-tmpDot = struct;
-tmpDot.Pos=[0,0,0];
-tmpDot.Vox.Pos=[0,0,0];
-tmpDot.Vox.Ind=[0,0,0];
-tmpDot.Vol = 0;
-tmpDot.ITMax = 0;
-tmpDot.ItSum = 0;
+tmpDot               = struct;
+tmpDot.Pos           = [0,0,0];
+tmpDot.Vox.Pos       = [0,0,0];
+tmpDot.Vox.Ind       = [0,0,0];
+tmpDot.Vol           = 0;
+tmpDot.ITMax         = 0;
+tmpDot.ItSum         = 0;
 tmpDot.Vox.RawBright = 0;
-tmpDot.Vox.IT = 0;
-tmpDot.MeanBright = 0;
+tmpDot.Vox.IT        = 0;
+tmpDot.MeanBright    = 0;
 
 %clear tmpDots
 %tmpDots(sum([Blocks.nLabels])) = struct(tmpDot); % Preallocate max number of dots
@@ -275,8 +275,7 @@ for block = 1:(NumBx*NumBy*NumBz)
         if (nPeaks ~=1)
             % If watershed was used there should not be any more object with multiple peaks
             continue;
-        end
-        
+        end        
         [yPeak, xPeak, zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
 
         
@@ -295,7 +294,6 @@ for block = 1:(NumBx*NumBy*NumBz)
             tmpDot.Vox.RawBright= Blocks(block).Igm(contourIndex);
             tmpDot.Vox.IT       = Blocks(block).thresholdMap(contourIndex);
             tmpDot.MeanBright   = mean(Blocks(block).Igm(contourIndex));
-            %tmpDotNum = sum([Blocks(1:block).nLabels]) - Blocks(block).nLabels + i; % Work on preallocated max number of dots
             tmpDotNum           = tmpDotNum + 1; % Work on non-preallocated dots
             tmpDots(tmpDotNum)  = tmpDot;
         end
@@ -305,41 +303,39 @@ fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 5: resolve empty dots and dots in border between blocks --
 % Some voxels could be shared by multiple dots because of the overlapping
-% search blocks approach in Step#1 and Step#2. When this happens, remove
-% the smaller orbject of the two.
+% search blocks approach in Step#1 and Step#2. Remove the smaller orbject.
 
-tic;
+% Convert tmpDots into the easily accessible fields 
 fprintf('Resolving duplicate objects in the overlapping regions of search blocks... ');
+tic;
 
-% Detect pairs of objects with overlapping voxels, tag & delete the smaller
-for i = numel(tmpDots):-1:1
-    DeleteTag = false;
-    for j = numel(tmpDots):-1:1
+Dots = struct;
+iDots = 0;
+for i = 1:numel(tmpDots)
+    for j = 1 : i
         if tmpDots(i).Vol < tmpDots(j).Vol
-            if intersect(tmpDots(i).Vox.Ind, tmpDots(j).Vox.Ind)
-                DeleteTag = true;
+            % ismembc is faster than ismember but requires ordered arrays
+            if ismembc(tmpDots(i).Vox.Ind, tmpDots(j).Vox.Ind) 
+                tmpDots(i).Vol = 0;
                 break
             end
         end
     end
-    if DeleteTag
-        tmpDots(i) = [];
+    
+    if tmpDots(i).Vol == 0
+        continue
+    else
+        iDots                       = iDots+1;
+        Dots.Pos(iDots,:)           = tmpDots(i).Pos;
+        Dots.Vox(iDots).Pos         = tmpDots(i).Vox.Pos;
+        Dots.Vox(iDots).Ind         = tmpDots(i).Vox.Ind;
+        Dots.Vol(iDots)             = tmpDots(i).Vol;
+        Dots.ITMax(iDots)           = tmpDots(i).ITMax;
+        Dots.ItSum(iDots)           = tmpDots(i).ItSum;
+        Dots.Vox(iDots).RawBright   = tmpDots(i).Vox.RawBright;
+        Dots.Vox(iDots).IT          = tmpDots(i).Vox.IT;
+        Dots.MeanBright(iDots)      = tmpDots(i).MeanBright;
     end
-end
-
-% Convert tmpDots into the old "Dots" structure 
-% (TODO make this structure deprecated and return directly tmpDots)
-Dots = struct; 
-for i = numel(tmpDots):-1:1
-    Dots.Pos(i,:) = tmpDots(i).Pos;
-    Dots.Vox(i).Pos = tmpDots(i).Vox.Pos;
-    Dots.Vox(i).Ind = tmpDots(i).Vox.Ind;
-    Dots.Vol(i) = tmpDots(i).Vol;
-    Dots.ITMax(i) = tmpDots(i).ITMax;
-    Dots.ItSum(i) = tmpDots(i).ItSum;
-    Dots.Vox(i).RawBright = tmpDots(i).Vox.RawBright;
-    Dots.Vox(i).IT = tmpDots(i).Vox.IT;
-    Dots.MeanBright(i) = tmpDots(i).MeanBright;
 end
 
 Dots.ImSize = [size(Post,1) size(Post,2) size(Post,3)];
