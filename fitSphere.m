@@ -22,6 +22,7 @@ function Dots = fitSphere(Dots, Settings)
 % finest image of CtBP2 puncta (so 24 times more possible dot volume 
 % compared to 0.103um xy 0.3um z) 6/25/2010
 
+tic;
 fprintf('Calculating sphericity of each object ... ');
 TSphere           = zeros(31,31,31);    % Create a matrix to hold the sphere pixels
 TSphere2          = zeros(33,33,33);    % Create a slightly bigger sphere to check in the for loop +-1 pixels away from the perimeter 
@@ -152,7 +153,7 @@ for i= 1:Dots.Num
     PrincipalAxisLength = table2array(regionprops3(Iobject, 'PrincipalAxisLength'));
     Dots.Shape.PrincipalAxisLen(i,:) = PrincipalAxisLength(1,:);
 end
-fprintf('DONE\n');
+fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 end
 
 function[d] = dist2(A, B, Zscaling)

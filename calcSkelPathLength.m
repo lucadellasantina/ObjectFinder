@@ -33,9 +33,8 @@ SkelIDsPool(SomaPtID) = []; %deplete the soma point.
 SkelPathLength2Soma = zeros(1,size(Skel.FilStats.aXYZ,1));
 
 % March from the soma
-txtBar('Marching through current skeleton to calculate lengths ... ');
+fprintf('Marching through current skeleton to calculate lengths ... ');
 while ~isempty(SkelIDsPool)
-    txtBar(100 - 100 * numel(SkelIDsPool)/size(Skel.FilStats.aXYZ,1) +1);
     %length(SkelIDsPool) %how many more skel to deplete?
     if isempty(SourceSkelIDs) %if the previous skel was the dead end, resume from the first entry within the remaining pool.
         SourceSkelIDs = SkelIDsPool(1); 
@@ -71,7 +70,7 @@ while ~isempty(SkelIDsPool)
     end
     SourceSkelIDs = NextSkelIDs; %switch next to source for the next loop.
 end
-txtBar('DONE');
+fprintf('DONE \n');
 
 if debug
     disp(['Farthest skel path distance is: ' max(SkelPathLength2Soma)]);

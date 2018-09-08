@@ -42,9 +42,8 @@ else %soma pt not set in Imaris, just grab ID=1 to start
     SkelIDsPool(1) = [];
 end
 
-txtBar('Generating a finer version of the skeleton ... ');
+fprintf('Generating a finer version of the skeleton ... ');
 while ~isempty(SkelIDsPool)
-    txtBar(100 - 100 * numel(SkelIDsPool)/size(Skel.FilStats.aXYZ,1) +1);
     %length(SkelIDsPool) %how many more skel to deplete?
     if isempty(SourceSkelIDs) %if the previous skel was the dead end, resume from the first entry within the remaining pool.
         SourceSkelIDs = SkelIDsPool(1);
@@ -104,7 +103,7 @@ while ~isempty(SkelIDsPool)
     end
     SourceSkelIDs = NextSkelIDs; %switch next to source for the next loop.
 end
-txtBar('DONE');
+fprintf('DONE\n');
 
 % Convert the finer skel into Skel format.
 if debug

@@ -27,7 +27,11 @@
 %   + Added Local thresholding mode, 30X faster than iterative thresholding
 %   + User can choose between search algorithms
 %   + Simplified object size to a single Max and Min diameter values
-%   + Improved speed of resolving duplicate objects by using ismembc()
+%   + Reverted resolution of duplicates to old method because recursive
+%     intersect becomes too slow when more than 2000 objects are detected
+%   + Cheched that objects are within size limits before watershed
+%   + Different size images (not resolution) allowed in the same experiment
+%   + New Copy objects button creates a new set of objects copy of selected
 %
 %  _*Version 5.3*              created on 2018-09-06 by Luca Della Santina_
 %
