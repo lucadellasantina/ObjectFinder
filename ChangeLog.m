@@ -22,6 +22,11 @@
 %
 % *Change log*
 %
+%  _*Version 5.5*              created on 2018-09-06 by Luca Della Santina_
+%
+%   + Improved speed of both search algos by 10x
+%   + Fixed error when loading multiple images of different size
+%
 %  _*Version 5.4*              created on 2018-09-06 by Luca Della Santina_
 %
 %   + Added Local thresholding mode, 30X faster than iterative thresholding
@@ -32,6 +37,9 @@
 %   + Cheched that objects are within size limits before watershed
 %   + Different size images (not resolution) allowed in the same experiment
 %   + New Copy objects button creates a new set of objects copy of selected
+%   + FitShpere bug, now it can handle reference spheres of all sizes
+%   + Fixed error in volume inspector if no shape properties are available
+%   + Simplified fitSphere to calculate only Oblong and MajorAxisLength
 %
 %  _*Version 5.3*              created on 2018-09-06 by Luca Della Santina_
 %

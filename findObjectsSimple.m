@@ -16,7 +16,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-% *Find objects using a single thresholding aware of local noise*
+% *Find objects using a simple thresholding against local noise*
 
 function Dots = findObjectsSimple(Post, Settings)
 
@@ -135,9 +135,15 @@ parfor block = 1:(NumBx*NumBy*NumBz)
         
     % Label all areas in the block (Igl) that crosses the intensity threshold "i"
     %[Igl,labels] = bwlabeln(Igm>i,6); % shorter but slower
-    CC = bwconncomp(Blocks(block).Igm > i,6); % 10 percent faster
+    
+    CC = bwconncomp(Blocks(block).Igm > i,6);  % 10 percent faster than bwlabeln   
     labels = CC.NumObjects;
     Blocks(block).Igl = labelmatrix(CC);
+    
+    %I = Blocks(block).Igm > i; % custom C++ function, needs debugging
+    %CC = ccl3d(I(:), size(I,1), size(I,2), size(I,3));
+    %labels = double(max(CC));
+    %Blocks(block).Igl = double(reshape(CC,size(I)));
     
     if labels == 0
         continue;
@@ -152,17 +158,18 @@ parfor block = 1:(NumBx*NumBy*NumBz)
     % Find peak location in each labeled object and check object size
     nPixel = hist(Blocks(block).Igl(Blocks(block).Igl>0), 1:labels);
     for p=1:labels
-        pixelIndex = find(Blocks(block).Igl==p);
+        pixelIndex = CC.PixelIdxList{p}; % 50 percent faster
         
         if (nPixel(p) <= maxDotSize) && (nPixel(p) >= minDotSize)
             if sum(Blocks(block).peakMap(pixelIndex))== 0
                 % limit one peak (peakIndex) per labeled area (where Igl==p)
                 peakValue = max(Blocks(block).Igm(pixelIndex));
-                peakIndex = find(Blocks(block).Igl==p & Blocks(block).Igm==peakValue);
-                if numel(peakIndex) > 1
-                    peakIndex = peakIndex(round(numel(peakIndex)/2));
-                end
-                Blocks(block).peakMap(peakIndex) = 1;
+                peakIndex = find(Blocks(block).Igm(pixelIndex)==peakValue);
+                %if numel(peakIndex) > 1
+                %    disp('found multi-peak');
+                %    peakIndex = peakIndex(round(numel(peakIndex)/2));
+                %end
+                Blocks(block).peakMap(pixelIndex(peakIndex)) = 1;
             end
         else
             Blocks(block).Igl(pixelIndex)=0;
@@ -244,8 +251,6 @@ tmpDot.Vox.RawBright = 0;
 tmpDot.Vox.IT        = 0;
 tmpDot.MeanBright    = 0;
 
-%clear tmpDots
-%tmpDots(sum([Blocks.nLabels])) = struct(tmpDot); % Preallocate max number of dots
 tmpDots = struct(tmpDot);
 tmpDotNum = 0;
 
@@ -271,9 +276,9 @@ for block = 1:(NumBx*NumBy*NumBz)
             %disp(['index = ' num2str(peakIndex)]);
             %disp(['threshold = ' num2str(thresholdPeak)]);
         end
-        
+
+        % If watershed was used there should not be any more object with multiple peaks        
         if (nPeaks ~=1)
-            % If watershed was used there should not be any more object with multiple peaks
             continue;
         end        
         [yPeak, xPeak, zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
@@ -294,7 +299,7 @@ for block = 1:(NumBx*NumBy*NumBz)
             tmpDot.Vox.RawBright= Blocks(block).Igm(contourIndex);
             tmpDot.Vox.IT       = Blocks(block).thresholdMap(contourIndex);
             tmpDot.MeanBright   = mean(Blocks(block).Igm(contourIndex));
-            tmpDotNum           = tmpDotNum + 1; % Work on non-preallocated dots
+            tmpDotNum           = tmpDotNum + 1;
             tmpDots(tmpDotNum)  = tmpDot;
         end
     end

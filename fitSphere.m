@@ -24,71 +24,8 @@ function Dots = fitSphere(Dots, Settings)
 
 tic;
 fprintf('Calculating sphericity of each object ... ');
-TSphere           = zeros(31,31,31);    % Create a matrix to hold the sphere pixels
-TSphere2          = zeros(33,33,33);    % Create a slightly bigger sphere to check in the for loop +-1 pixels away from the perimeter 
-TSphere(16,16,16) = 1;                  % Place 1 in the center point of the sphere
-Tdists            = bwdist(TSphere);    % Record the distances of each point from the center of the sphere
-Tvol              = zeros(1,160);       % Tvol(d) stores the number of voxels within the distance of d/10 from the center voxel
-meanFaces         = zeros(1,160);       % Initialize the meanFaces vector
 
-for d=1:160                             % If you go >160, the sphere tries to get voxels outside the 31*31*31 3D matrix.
-    Near          = find(Tdists<(d/10));% Near are tje pixels within d/10 distance from center. Therefore, for distances d=1:10 only the center point will be identified, then d=11 will identify 6 more voxels around the center voxel.
-    Tvol(d)       = size(Near,1);       % Tvol(d) will be the number of voxels within the distance of d/10 from the center voxel
-    TSphere(Near) = 1;                  % Fill voxels of the current sphere with ones
-    Tperim        = bwperim(TSphere,6); % Fill only pixels on the perimether of the sphere
-    NearPerim     = find(Tperim);       % Store voxel number corresponding to perimeter
-    FaceCount     = 0;
-    [NearPerimY, NearPerimX, NearPerimZ] = ind2sub(size(TSphere), NearPerim); % Convert voxel numbers into y-x-z coordinates for the perimeter
-
-    
-    % Explore each voxel at the perimeter, if there is no sphere in the
-    % of the perimeter+-1pixel, then increase FaceCount as the real sphere 
-    % is a smaller/bigger approximation of this ideal one drawn as flat face.
-    % If the sphere ends exactly on the perimeter then numel(FaceCount) == numel(NearPerim)
-    
-    % Create a slightly bigger sphere to check in the for loop +-1 pixels 
-    % away from the perimeter (+0-2 pixels from TSphere2 coordinates)
-    TSphere2(2:end-1,2:end-1,2:end-1) = TSphere; 
-    
-    for n = 1:length(NearPerim) 
-        if TSphere2(NearPerimY(n), NearPerimX(n)+1,NearPerimZ(n)+1) == 0
-            FaceCount = FaceCount+1;
-        end
-        if TSphere2(NearPerimY(n)+2, NearPerimX(n)+1,NearPerimZ(n)+1) == 0
-            FaceCount = FaceCount+1;
-        end
-        if TSphere2(NearPerimY(n)+1, NearPerimX(n),NearPerimZ(n)+1) == 0
-            FaceCount = FaceCount+1;
-        end
-        if TSphere2(NearPerimY(n)+1, NearPerimX(n)+2,NearPerimZ(n)+1) == 0
-            FaceCount = FaceCount+1;
-        end
-        if TSphere2(NearPerimY(n)+1, NearPerimX(n)+1,NearPerimZ(n)) == 0
-            FaceCount = FaceCount+1;
-        end
-        if TSphere2(NearPerimY(n)+1, NearPerimX(n)+1,NearPerimZ(n)+2) == 0
-            FaceCount = FaceCount+1;
-        end
-    end
-    meanFaces(d)=FaceCount/Tvol(d);  % Number of faces of the sphere of that radius (d) divided by its volume.
-end
-
-c = 0;
-for v = 1 : max(Tvol)
-    if ~isempty(find(Tvol==v, 1))
-        c = c+1;
-        tvol(c) = v; % tvol will remove redundancy in Tvol, so tvol would be 1, 7, ...
-        % convert volume to meanfaces        
-        v2f(c) = meanFaces(find(Tvol==v,1)); % find(Tvol==v,1) will take only the 1st one among all Tvol==v, so again removing redundancy in meanFaces
-    end
-end
-RoundFaces = interp1(tvol,v2f,1:max(tvol)); 
-
-%plot(1:max(tvol), RoundFaces, 'o');
-%ylabel('Round faces');
-%xlabel('tvol = number of voxels within the distance of d/10 from the center voxel');
-
-%% Calculate shape properties for each object
+% Calculate shape properties for each object
 for i = 1:Dots.Num
     % Step-1: Calculate reference distances of each dot along longest axes
     Zscaling= Settings.ImInfo.zum / Settings.ImInfo.xyum;
@@ -110,20 +47,9 @@ for i = 1:Dots.Num
         Dots.Shape.SumVar(i)    = sum(latent);  % Sum of distances along three axis
         Dots.Shape.Oblong(i)    = mean([latent(2)/latent(1), latent(3)/latent(1)]); % Average longest distance on the 2nd and 3rd longest axis compared to the longest distance == 1 if perfectly spherical or cubic
     end
-    
-    % Step-2: find surface area for each object
-    % Faces for a given voxel within a punctum will be 0 to 6, meaning the
-    % numbmer of voxels in 6-connectivity neighbors outside the punctum
-    
-    for v = 1 : size(Dots.Vox(i).Pos,1)
-        Conn                 = dist2(Dots.Vox(i).Pos, Dots.Vox(i).Pos(v,:), Zscaling);
-        Dots.Vox(i).Faces(v) = 6-sum(Conn==1);
-    end
-    Dots.Shape.meanFaces(i)  = mean(Dots.Vox(i).Faces);
-    Dots.Shape.Smoothness(i) = Dots.Shape.meanFaces(i) / RoundFaces(Dots.Vol(i)); % Number of faces of the object compared to a sphere
 end
 
-%% Calculate 3D principal axis length of the fitting ellipsoid to objects
+% Calculate 3D principal axis length of the fitting ellipsoid to objects
 Dots.Shape.PrincipalAxisLen = zeros(size(Dots.Pos));
 for i= 1:Dots.Num
     VoxPos = Dots.Vox(i).Pos;

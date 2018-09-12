@@ -564,8 +564,13 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             set(txtSelObjITMax  ,'string',['Score : '       num2str(Dots.ITMax(SelObjID))]);
             set(txtSelObjVol    ,'string',['Volume : '      num2str(Dots.Vol(SelObjID))]);
             set(txtSelObjBright ,'string',['Brightness : '  num2str(ceil(Dots.MeanBright(SelObjID)))]);
-            set(txtSelObjRound  ,'string',['Roundness : '   num2str(Dots.Shape.Oblong(SelObjID))]);
-            set(txtSelObjLength ,'string',['Length : '      num2str(ceil(Dots.Shape.PrincipalAxisLen(SelObjID)))]);
+            try
+                set(txtSelObjRound  ,'string',['Roundness : '   num2str(Dots.Shape.Oblong(SelObjID))]);
+                set(txtSelObjLength ,'string',['Length : '      num2str(ceil(Dots.Shape.PrincipalAxisLen(SelObjID)))]);
+            catch
+                set(txtSelObjRound  ,'string','Roundness : ');
+                set(txtSelObjLength ,'string','Length : '   );
+            end    
             set(txtSelObjValid  ,'string',['Validated : '   num2str(ceil(passI(SelObjID)))]);
             
         else

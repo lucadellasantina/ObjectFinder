@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2423602318" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="812799251" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -14,7 +14,7 @@
     <param.description>Copyright 2016-2018 Luca Della Santina. 
 Licensed under the terms of GNU General Public License v3</param.description>
     <param.screenshot>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_big.png</param.screenshot>
-    <param.version>5.4.3</param.version>
+    <param.version>5.5</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Image Processing Toolbox</item>
@@ -45,8 +45,6 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>/home/luca/Desktop/ObjectFinder/CaV-TRPM1/Dots.mat</file>
-      <file>/home/luca/Desktop/ObjectFinder/CaV-TRPM1/Settings.mat</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Angler-Fish.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Blow-Fish.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Crab.png</file>
@@ -175,7 +173,7 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>4.15.0-33-generic</osver>
+      <osver>4.15.0-34-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>
