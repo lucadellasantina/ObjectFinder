@@ -22,9 +22,14 @@
 %
 % *Change log*
 %
+%  _*Version 5.6*              created on 2018-09-06 by Luca Della Santina_
+%
+%   + findObjects: Improved speed of objects accumulation by 10X
+%   + findObjects: Improved speed of objects accumulation by ~40X
+%
 %  _*Version 5.5*              created on 2018-09-06 by Luca Della Santina_
 %
-%   + Improved speed of both search algos by 10x
+%   + findObjects: Improved speed of search algorithms by 10X
 %   + Fixed error when loading multiple images of different size
 %
 %  _*Version 5.4*              created on 2018-09-06 by Luca Della Santina_

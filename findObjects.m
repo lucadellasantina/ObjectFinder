@@ -248,59 +248,32 @@ tmpDot.Vox.RawBright = 0;
 tmpDot.Vox.IT = 0;
 tmpDot.MeanBright = 0;
 
-%clear tmpDots
-%tmpDots(sum([Blocks.nLabels])) = struct(tmpDot); % Preallocate max number of dots
 tmpDots = struct(tmpDot);
 tmpDotNum = 0;
 
 for block = 1:(NumBx*NumBy*NumBz)
-    wsTMLabels  = Blocks(block).wsTMLabels;
-    wsLabelList = Blocks(block).wsLabelList;
-    nLabels     = Blocks(block).nLabels;
-    
-    for i = 1:nLabels
-        peakIndex = find( (wsTMLabels==wsLabelList(i)) & (Blocks(block).peakMap>0) ); % this line adjusted for watershed HO 6/7/2010
-        thresholdPeak = Blocks(block).thresholdMap(peakIndex);  
-        nPeaks = numel(peakIndex);                
+    VoxelsList  = label2idx(Blocks(block).wsTMLabels);    
 
-        if nPeaks > 1
-            % In case of multiple peaks, get the peak with max threshold
-            peakIndex = peakIndex(find(thresholdPeak==max(thresholdPeak),1));
-            thresholdPeak = max(thresholdPeak);
-            nPeaks = numel(peakIndex);
-        else
-            %disp(['block = ' num2str(block)]);
-            %disp(['i = ' num2str(i)]);
-            %disp(['peaks  =' num2str(nPeaks)]);
-            %disp(['index = ' num2str(peakIndex)]);
-            %disp(['threshold = ' num2str(thresholdPeak)]);
-        end
+    for i = 1:Blocks(block).nLabels
+        Voxels = VoxelsList{i};
         
-        if (nPeaks ~=1) || (thresholdPeak < minFinalDotITMax)
-            % If watershed was used there should not be any more object with multiple peaks
-            continue;
-        end
-        
-        [yPeak, xPeak, zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
+        % Accumulate only if object size is within minDotSize/maxDotSize        
+        if (numel(Voxels) >= minDotSize) && (numel(Voxels) <= maxDotSize)
+            peakIndex           = Voxels(Blocks(block).peakMap(Voxels)>0);
+            peakIndex           = peakIndex(1); % Make sure there is only one peak at this stage
+            [yPeak,xPeak,zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
+            [yPos, xPos, zPos]  = ind2sub(Blocks(block).sizeIgm, Voxels);
 
-        
-        % Accumulate only if object size is within minDotSize/maxDotSize
-        contourIndex = find(wsTMLabels==wsLabelList(i)); % adjusted for watershed
-        
-        if (numel(contourIndex) >= minDotSize) && (numel(contourIndex) <= maxDotSize)
-            [yContour, xContour, zContour] = ind2sub(Blocks(block).sizeIgm, contourIndex);
-
-            tmpDot.Pos          = [yPeak+Blocks(block).startPos(1)-1,    xPeak+Blocks(block).startPos(2)-1,    zPeak+Blocks(block).startPos(3)-1];
-            tmpDot.Vox.Pos      = [yContour+Blocks(block).startPos(1)-1, xContour+Blocks(block).startPos(2)-1, zContour+Blocks(block).startPos(3)-1];
+            tmpDot.Pos          = [yPeak+Blocks(block).startPos(1)-1, xPeak+Blocks(block).startPos(2)-1, zPeak+Blocks(block).startPos(3)-1];
+            tmpDot.Vox.Pos      = [yPos+Blocks(block).startPos(1)-1, xPos+Blocks(block).startPos(2)-1, zPos+Blocks(block).startPos(3)-1];
             tmpDot.Vox.Ind      = sub2ind([size(Post,1) size(Post,2) size(Post,3)], tmpDot.Vox.Pos(:,1), tmpDot.Vox.Pos(:,2), tmpDot.Vox.Pos(:,3));
-            tmpDot.Vol          = numel(contourIndex);
-            tmpDot.ITMax        = thresholdPeak;
-            tmpDot.ItSum        = sum(Blocks(block).thresholdMap(contourIndex));
-            tmpDot.Vox.RawBright= Blocks(block).Igm(contourIndex);
-            tmpDot.Vox.IT       = Blocks(block).thresholdMap(contourIndex);
-            tmpDot.MeanBright   = mean(Blocks(block).Igm(contourIndex));
-            %tmpDotNum = sum([Blocks(1:block).nLabels]) - Blocks(block).nLabels + i; % Work on preallocated max number of dots
-            tmpDotNum           = tmpDotNum + 1; % Work on non-preallocated dots
+            tmpDot.Vol          = numel(Voxels);
+            tmpDot.ITMax        = Blocks(block).thresholdMap(peakIndex);
+            tmpDot.ItSum        = sum(Blocks(block).thresholdMap(Voxels));
+            tmpDot.Vox.RawBright= Blocks(block).Igm(Voxels);
+            tmpDot.Vox.IT       = Blocks(block).thresholdMap(Voxels);
+            tmpDot.MeanBright   = mean(Blocks(block).Igm(Voxels));
+            tmpDotNum           = tmpDotNum + 1;
             tmpDots(tmpDotNum)  = tmpDot;
         end
     end

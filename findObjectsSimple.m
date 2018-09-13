@@ -255,97 +255,34 @@ tmpDots = struct(tmpDot);
 tmpDotNum = 0;
 
 for block = 1:(NumBx*NumBy*NumBz)
-    wsTMLabels  = Blocks(block).wsTMLabels;
-    wsLabelList = Blocks(block).wsLabelList;
-    nLabels     = Blocks(block).nLabels;
-    
-    for i = 1:nLabels
-        peakIndex = find( (wsTMLabels==wsLabelList(i)) & (Blocks(block).peakMap>0) ); % this line adjusted for watershed HO 6/7/2010
-        thresholdPeak = Blocks(block).Igm(peakIndex) / Blocks(block).Gmode; % Calculate ITMax as # times the local noise
-        nPeaks = numel(peakIndex);                
+    VoxelsList  = label2idx(Blocks(block).wsTMLabels);    
 
-        if nPeaks > 1
-            % In case of multiple peaks, get the peak with max threshold
-            peakIndex = peakIndex(find(thresholdPeak==max(thresholdPeak),1));
-            thresholdPeak = max(thresholdPeak);
-            nPeaks = numel(peakIndex);
-        else
-            %disp(['block = ' num2str(block)]);
-            %disp(['i = ' num2str(i)]);
-            %disp(['peaks  =' num2str(nPeaks)]);
-            %disp(['index = ' num2str(peakIndex)]);
-            %disp(['threshold = ' num2str(thresholdPeak)]);
-        end
-
-        % If watershed was used there should not be any more object with multiple peaks        
-        if (nPeaks ~=1)
-            continue;
-        end        
-        [yPeak, xPeak, zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
-
+    for i = 1:Blocks(block).nLabels
+        Voxels = VoxelsList{i};
         
-        % Accumulate only if object size is within minDotSize/maxDotSize
-        contourIndex = find(wsTMLabels==wsLabelList(i)); % adjusted for watershed
-        
-        if (numel(contourIndex) >= minDotSize) && (numel(contourIndex) <= maxDotSize)
-            [yContour, xContour, zContour] = ind2sub(Blocks(block).sizeIgm, contourIndex);
+        % Accumulate only if object size is within minDotSize/maxDotSize        
+        if (numel(Voxels) >= minDotSize) && (numel(Voxels) <= maxDotSize)
+            peakIndex           = Voxels(Blocks(block).peakMap(Voxels)>0);
+            peakIndex           = peakIndex(1); % Make sure there is only one peak at this stage            
+            thresholdPeak       = Blocks(block).Igm(peakIndex) / Blocks(block).Gmode; % Calculate ITMax as # times the local noise
+            [yPeak,xPeak,zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
+            [yPos, xPos, zPos]  = ind2sub(Blocks(block).sizeIgm, Voxels);
 
-            tmpDot.Pos          = [yPeak+Blocks(block).startPos(1)-1,    xPeak+Blocks(block).startPos(2)-1,    zPeak+Blocks(block).startPos(3)-1];
-            tmpDot.Vox.Pos      = [yContour+Blocks(block).startPos(1)-1, xContour+Blocks(block).startPos(2)-1, zContour+Blocks(block).startPos(3)-1];
+            tmpDot.Pos          = [yPeak+Blocks(block).startPos(1)-1, xPeak+Blocks(block).startPos(2)-1, zPeak+Blocks(block).startPos(3)-1];
+            tmpDot.Vox.Pos      = [yPos+Blocks(block).startPos(1)-1, xPos+Blocks(block).startPos(2)-1, zPos+Blocks(block).startPos(3)-1];
             tmpDot.Vox.Ind      = sub2ind([size(Post,1) size(Post,2) size(Post,3)], tmpDot.Vox.Pos(:,1), tmpDot.Vox.Pos(:,2), tmpDot.Vox.Pos(:,3));
-            tmpDot.Vol          = numel(contourIndex);
+            tmpDot.Vol          = numel(Voxels);
             tmpDot.ITMax        = thresholdPeak;
-            tmpDot.ItSum        = sum(Blocks(block).thresholdMap(contourIndex));
-            tmpDot.Vox.RawBright= Blocks(block).Igm(contourIndex);
-            tmpDot.Vox.IT       = Blocks(block).thresholdMap(contourIndex);
-            tmpDot.MeanBright   = mean(Blocks(block).Igm(contourIndex));
+            tmpDot.ItSum        = sum(Blocks(block).thresholdMap(Voxels));
+            tmpDot.Vox.RawBright= Blocks(block).Igm(Voxels);
+            tmpDot.Vox.IT       = Blocks(block).thresholdMap(Voxels);
+            tmpDot.MeanBright   = mean(Blocks(block).Igm(Voxels));
             tmpDotNum           = tmpDotNum + 1;
             tmpDots(tmpDotNum)  = tmpDot;
         end
     end
 end
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
-
-% %% -- STEP 5: resolve empty dots and dots in border between blocks --
-% % Some voxels could be shared by multiple dots because of the overlapping
-% % search blocks approach in Step#1 and Step#2. Remove the smaller orbject.
-% 
-% % Convert tmpDots into the easily accessible fields 
-% fprintf('Resolving duplicate objects in the overlapping regions of search blocks... ');
-% tic;
-% 
-% Dots = struct;
-% iDots = 0;
-% for i = 1:numel(tmpDots)
-%     for j = 1 : i
-%         if tmpDots(i).Vol < tmpDots(j).Vol
-%             % ismembc is faster than ismember but requires ordered arrays
-%             if ismembc(tmpDots(i).Vox.Ind, tmpDots(j).Vox.Ind) 
-%                 tmpDots(i).Vol = 0;
-%                 break
-%             end
-%         end
-%     end
-%     
-%     if tmpDots(i).Vol == 0
-%         continue
-%     else
-%         iDots                       = iDots+1;
-%         Dots.Pos(iDots,:)           = tmpDots(i).Pos;
-%         Dots.Vox(iDots).Pos         = tmpDots(i).Vox.Pos;
-%         Dots.Vox(iDots).Ind         = tmpDots(i).Vox.Ind;
-%         Dots.Vol(iDots)             = tmpDots(i).Vol;
-%         Dots.ITMax(iDots)           = tmpDots(i).ITMax;
-%         Dots.ItSum(iDots)           = tmpDots(i).ItSum;
-%         Dots.Vox(iDots).RawBright   = tmpDots(i).Vox.RawBright;
-%         Dots.Vox(iDots).IT          = tmpDots(i).Vox.IT;
-%         Dots.MeanBright(iDots)      = tmpDots(i).MeanBright;
-%     end
-% end
-% 
-% Dots.ImSize = [size(Post,1) size(Post,2) size(Post,3)];
-% Dots.Num = numel(Dots.Vox); % Recalculate total number of dots
-% fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 5: resolve empty dots and dots in border between blocks --
 % Some voxels could be shared by multiple dots because of the overlapping
