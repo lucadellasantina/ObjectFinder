@@ -23,7 +23,6 @@ function Dots = findObjectsSimple(Post, Settings)
 % Retrieve parameters to use from Settings
 blockSize        = Settings.objfinder.blockSize;
 blockBuffer      = Settings.objfinder.blockBuffer;
-thresholdStep    = Settings.objfinder.thresholdStep;
 maxDotSize       = Settings.objfinder.maxDotSize;
 minDotSize       = Settings.objfinder.minDotSize;
 blockSearch      = Settings.objfinder.blockSearch;
@@ -108,11 +107,6 @@ for block = 1:(NumBx*NumBy*NumBz)
 
     Blocks(block).peakMap       = zeros(Blocks(block).sizeIgm(1),Blocks(block).sizeIgm(2),Blocks(block).sizeIgm(3),'uint8'); % Initialize matrix to map peaks found
     Blocks(block).thresholdMap  = Blocks(block).peakMap; % Initialize matrix to sum passed thresholds
-
-    % Make sure Gmax can be divided by the stepping size of thresholdStep
-    if mod(Blocks(block).Gmax, thresholdStep) ~= mod(Blocks(block).Gmode+1, thresholdStep)
-        Blocks(block).Gmax      = Blocks(block).Gmax+1;
-    end
 
     Blocks(block).startPos      = [yStart, xStart, zStart];
     Blocks(block).endPos        = [yEnd, xEnd, zEnd];

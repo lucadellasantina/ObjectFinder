@@ -22,6 +22,11 @@
 %
 % *Change log*
 %
+%  _*Version 5.8*              created on 2018-09-18 by Luca Della Santina_
+%
+%   + findObjects: Removed thresholdStep, now stepping is one by default
+%   + About tab: added buttons to Homepage, User manual, Report issue
+%
 %  _*Version 5.7*              created on 2018-09-17 by Luca Della Santina_
 %
 %   + findObjects: Improved speed of blocks conflict resolution by ~200X
