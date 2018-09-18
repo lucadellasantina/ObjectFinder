@@ -134,29 +134,23 @@ parfor block = 1:(NumBx*NumBy*NumBz)
     i=ceil(Blocks(block).Gmode * minIntensity)+1;
         
     % Label all areas in the block (Igl) that crosses the intensity threshold "i"
-    %[Igl,labels] = bwlabeln(Igm>i,6); % shorter but slower
-    
     CC = bwconncomp(Blocks(block).Igm > i,6);  % 10 percent faster than bwlabeln   
     labels = CC.NumObjects;
     Blocks(block).Igl = labelmatrix(CC);
     
-    %I = Blocks(block).Igm > i; % custom C++ function, needs debugging
-    %CC = ccl3d(I(:), size(I,1), size(I,2), size(I,3));
-    %labels = double(max(CC));
-    %Blocks(block).Igl = double(reshape(CC,size(I)));
-    
     if labels == 0
-        continue;
-    elseif labels <= 1
-        labels = 2;
+        continue
+    elseif labels < 65536
+        Blocks(block).Igl=uint16(Blocks(block).Igl); % Lower bitdepth if possible
     end
-    if labels < 65536
-        Blocks(block).Igl=uint16(Blocks(block).Igl);
-    end % Reduce bitdepth if possible
- 
     
     % Find peak location in each labeled object and check object size
-    nPixel = hist(Blocks(block).Igl(Blocks(block).Igl>0), 1:labels);
+    if labels == 1
+        nPixel = numel(CC.PixelIdxList{1});
+    else
+        nPixel = hist(Blocks(block).Igl(Blocks(block).Igl>0), 1:labels);
+    end
+    
     for p=1:labels
         pixelIndex = CC.PixelIdxList{p}; % 50 percent faster
         
@@ -263,7 +257,12 @@ for block = 1:(NumBx*NumBy*NumBz)
         % Accumulate only if object size is within minDotSize/maxDotSize        
         if (numel(Voxels) >= minDotSize) && (numel(Voxels) <= maxDotSize)
             peakIndex           = Voxels(Blocks(block).peakMap(Voxels)>0);
-            peakIndex           = peakIndex(1); % Make sure there is only one peak at this stage            
+            if isempty(peakIndex)
+                continue % There is no peak for the object (i.e. flat intensity)
+            else               
+                peakIndex           = peakIndex(1); % Make sure there is only one peak at this stage
+            end
+            
             thresholdPeak       = Blocks(block).Igm(peakIndex) / Blocks(block).Gmode; % Calculate ITMax as # times the local noise
             [yPeak,xPeak,zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
             [yPos, xPos, zPos]  = ind2sub(Blocks(block).sizeIgm, Voxels);
@@ -286,94 +285,76 @@ fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 5: resolve empty dots and dots in border between blocks --
 % Some voxels could be shared by multiple dots because of the overlapping
-% search blocks approach in Step#1 and Step#2. This happens for voxels at
-% the border lines of processing blocks. Disambiguate those voxels by
-% re-assigning them only to the dot that has most voxels in the area.
+% search blocks approach. This happens only for voxels at the border of 
+% processing blocks. Disambiguate those voxels by re-assigning them to 
+% the bigger contending dot.
+%
+% Strategy: keep an ongoing map VoxIDMap of which voxels are occupied by
+% previously iterated dots, resolve only those conflicting with current dot
+
 tic;
 fprintf('Resolving duplicate objects in the overlapping regions of search blocks... ');
-
-VoxMap = uint8(zeros(size(Post)));  % Map of whether a given voxel belongs to an object (value = 1) or not (values = 0)
 VoxIDMap = zeros(size(Post));       % Map of the owners of each voxel (dot IDs)
-[ys, xs, zs] = size(VoxMap);        % Size of the maps
-TotalNumOverlapDots = 0;            % Number of overlapping Dots
-TotalNumOverlapVoxs = 0;            % Number of overlapping Voxels
 
-for i = 1:numel(tmpDots)
-    % Mark voxels belonging to this dot as overlapping if in VoxMap those
-    % voxels were already assigned to another dot (value in VoxMap == 1)
-    OverlapVoxInd = find((VoxMap(tmpDots(i).Vox.Ind) > 0));
+for i = 1:numel(tmpDots)     
+    OverlapVoxIDs = tmpDots(i).Vox.Ind(VoxIDMap(tmpDots(i).Vox.Ind) > 0); % Index of overlapping voxels
+    OverlapDotIDs = VoxIDMap(OverlapVoxIDs);                              % Current Owner of voxels
+    VoxIDMap(tmpDots(i).Vox.Ind) = i;                                     % Claim current Dot voxels on map
+    
+    if isempty(OverlapVoxIDs)
+        continue; 
+    end
 
-    % Resolve overlapping voxels of current dot one-by-one because
-    % they might overlap not all with a unique other dot ID
-    if isempty(OverlapVoxInd)
-        % Mark voxels belonging to this object as taken (value = 1)
-        VoxMap(tmpDots(i).Vox.Ind) = 1;
-        VoxIDMap(tmpDots(i).Vox.Ind) = i;
-    else
-        % Resolve conflict because some voxels are taken by another object
-        TotalNumOverlapDots = TotalNumOverlapDots + 1;
-        TotalNumOverlapVoxs = TotalNumOverlapVoxs + length(OverlapVoxInd);
-        OverlapVoxInds = tmpDots(i).Vox.Ind(OverlapVoxInd);
-        OverlapVoxIDs = VoxIDMap(OverlapVoxInds);
-
-        VoxMap(tmpDots(i).Vox.Ind) = 1;                     % Mark "1" voxels in the image if they belong to the current dot
-        VoxIDMap(tmpDots(i).Vox.Ind) = i;                   % Mark current dot ID# as the owner of those voxels
-        VoxIDMap(tmpDots(i).Vox.Ind(OverlapVoxInd)) = 0;    % Unmark current dot from being the owner of overlapping voxels
-
-        % loop overlapping voxels and assign them either to current dot ID or to the overlapping dot ID
-        [OverlapVoxY, OverlapVoxX, OverlapVoxZ] = ind2sub(size(VoxMap), OverlapVoxInds); % Find XYZ coordinates of overlapping dots
-        for k = 1:length(OverlapVoxInds)
-            SurroudingIDs =  VoxIDMap(max(1,OverlapVoxY(k)-1):min(ys,OverlapVoxY(k)+1), max(1,OverlapVoxX(k)-1):min(xs,OverlapVoxX(k)+1), max(1,OverlapVoxZ(k)-1):min(zs,OverlapVoxZ(k)+1));
-            SurroudingIDs(isnan(SurroudingIDs)) = 0 ; % Convert NaN to 0 if present in the matrix LDS fix 7-25-2017
-
-            % Decide winning object as the one owning most of the surrounding voxels around the ovelapping voxel.
-            WinningID = mode(SurroudingIDs((SurroudingIDs==i) | (SurroudingIDs==OverlapVoxIDs(k))));
-            if WinningID == i
-                LosingID = OverlapVoxIDs(k);
-            else
-                LosingID = i;
-            end
-            
-            VoxIDMap(OverlapVoxInds(k)) = WinningID;    % Assign voxels to winning dot ID#
-            if ~isnan(LosingID)
-                LosingVox = find(tmpDots(LosingID).Vox.Ind == OverlapVoxInds(k)); % Remove losing voxels from losing dot ID#
-                tmpDots(LosingID).Vox.Pos(LosingVox,:) = [];
-                tmpDots(LosingID).Vox.Ind(LosingVox) = [];
-                tmpDots(LosingID).Vox.RawBright(LosingVox) = [];
-                tmpDots(LosingID).Vox.IT(LosingVox) = [];
-                tmpDots(LosingID).Vol = tmpDots(LosingID).Vol - 1;
-
-                % If losing dot has still voxels left, recalculate properties
-                if numel(tmpDots(LosingID).Vox.IT) > 0
-                    tmpDots(LosingID).ITMax = max(tmpDots(LosingID).Vox.IT);
-                    tmpDots(LosingID).ItSum = sum(tmpDots(LosingID).Vox.IT);
-                    tmpDots(LosingID).MeanBright = mean(tmpDots(LosingID).Vox.RawBright);
-                end
-            end
+    % Resolve by assigning all overlapping voxels to the bigger Dot    
+    OverlapDots                           = unique(OverlapDotIDs);
+    for k = 1:numel(OverlapDots)
+        
+        % Decide winner object as the biggest contender of the two
+        if tmpDots(i).Vol > tmpDots(OverlapDots(k)).Vol
+            Winner                        = i;
+            Loser                         = OverlapDots(k);
+        else
+            Winner                        = OverlapDots(k);
+            Loser                         = i;
+        end
+        % Assign all contended voxels to winner
+        ContendedVoxIDs                   = OverlapVoxIDs(OverlapDotIDs==OverlapDots(k));
+        VoxIDMap(ContendedVoxIDs)         = Winner;
+        
+        % Remove voxels from loser
+        idx = find(ismember(ContendedVoxIDs, tmpDots(Loser).Vox.Ind));
+        tmpDots(Loser).Vox.Pos(idx,:)     = [];
+        tmpDots(Loser).Vox.Ind(idx)       = [];
+        tmpDots(Loser).Vox.RawBright(idx) = [];
+        tmpDots(Loser).Vox.IT(idx)        = [];
+        tmpDots(Loser).Vol                = tmpDots(Loser).Vol - numel(idx);
+        
+        % If loser still has voxels left, then recalculate its averages
+        if tmpDots(Loser).Vol > 0
+            tmpDots(Loser).ITMax          = max(tmpDots(Loser).Vox.IT);
+            tmpDots(Loser).ItSum          = sum(tmpDots(Loser).Vox.IT);
+            tmpDots(Loser).MeanBright     = mean(tmpDots(Loser).Vox.RawBright);
         end
     end
 end
+fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
-% Delete dots that have no more voxels left after the previous pruning
-for i = numel(tmpDots):-1:1
-    if numel(tmpDots(i).Vox.IT) == 0
-        tmpDots(i) = [];
-    end
-end
+% Accumulate tmpDots with volume>0 into the old "Dots" structure 
+tic;
+fprintf('Pack detected objects into an easily searchable structure... ');
 
-% Convert tmpDots into the old "Dots" structure 
-% (TODO make this structure deprecated and return directly tmpDots)
+ValidDots = find([tmpDots.Vol] > 0);
 Dots = struct; 
-for i = numel(tmpDots):-1:1
-    Dots.Pos(i,:)           = tmpDots(i).Pos;
-    Dots.Vox(i).Pos         = tmpDots(i).Vox.Pos;
-    Dots.Vox(i).Ind         = tmpDots(i).Vox.Ind;
-    Dots.Vol(i)             = tmpDots(i).Vol;
-    Dots.ITMax(i)           = tmpDots(i).ITMax;
-    Dots.ItSum(i)           = tmpDots(i).ItSum;
-    Dots.Vox(i).RawBright   = tmpDots(i).Vox.RawBright;
-    Dots.Vox(i).IT          = tmpDots(i).Vox.IT;
-    Dots.MeanBright(i)      = tmpDots(i).MeanBright;
+for i = numel(ValidDots):-1:1
+    Dots.Pos(i,:)           = tmpDots(ValidDots(i)).Pos;
+    Dots.Vox(i).Pos         = tmpDots(ValidDots(i)).Vox.Pos;
+    Dots.Vox(i).Ind         = tmpDots(ValidDots(i)).Vox.Ind;
+    Dots.Vol(i)             = tmpDots(ValidDots(i)).Vol;
+    Dots.ITMax(i)           = tmpDots(ValidDots(i)).ITMax;
+    Dots.ItSum(i)           = tmpDots(ValidDots(i)).ItSum;
+    Dots.Vox(i).RawBright   = tmpDots(ValidDots(i)).Vox.RawBright;
+    Dots.Vox(i).IT          = tmpDots(ValidDots(i)).Vox.IT;
+    Dots.MeanBright(i)      = tmpDots(ValidDots(i)).MeanBright;
 end
 
 Dots.ImSize = [size(Post,1) size(Post,2) size(Post,3)];
@@ -382,6 +363,6 @@ fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 clear B* CC contour* cutOff debug Gm* i j k Ig* labels Losing* ans
 clear max* n* Num* Overlap* p peak* Possible* size(Post,2) size(Post,1) size(Post,3) Surrouding*
-clear tmp* threshold* Total* T* v Vox* Winning* ws* x* y* z* DotsToDelete
-clear block blockBuffer blockSize minDotSize minDotSize MultiPeakDotSizeCorrectionFactor
+clear tmp* threshold* Total* T* v Vox* Winning* ws* x* y* z* itMin DotsToDelete
+clear block blockBuffer blockSize minDotSize minFinalDotITMax minDotSize  MultiPeakDotSizeCorrectionFactor
 end

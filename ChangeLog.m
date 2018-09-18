@@ -22,10 +22,15 @@
 %
 % *Change log*
 %
+%  _*Version 5.7*              created on 2018-09-17 by Luca Della Santina_
+%
+%   + findObjects: Improved speed of blocks conflict resolution by ~200X
+%   + findObjects: No more need to delete empty objects after resolution
+%
 %  _*Version 5.6*              created on 2018-09-06 by Luca Della Santina_
 %
 %   + findObjects: Improved speed of objects accumulation by 10X
-%   + findObjects: Improved speed of objects accumulation by ~40X
+%   + findObjects: Improved speed of blocks conflict resolution by ~40X
 %
 %  _*Version 5.5*              created on 2018-09-06 by Luca Della Santina_
 %
