@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="253726675" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3913527000" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -14,7 +14,7 @@
     <param.description>Copyright 2016-2018 Luca Della Santina. 
 Licensed under the terms of GNU General Public License v3</param.description>
     <param.screenshot>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_big.png</param.screenshot>
-    <param.version>5.8</param.version>
+    <param.version>5.9</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Image Processing Toolbox</item>
@@ -28,10 +28,10 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <item>80</item>
     </param.products.id>
     <param.products.version>
-      <item>9.4</item>
-      <item>10.2</item>
+      <item>9.5</item>
+      <item>10.3</item>
       <item>11.1</item>
-      <item>6.12</item>
+      <item>6.13</item>
     </param.products.version>
     <param.platforms />
     <param.output>/home/luca/Dropbox/MATLAB scripts/ObjectFinder</param.output>
@@ -127,44 +127,20 @@ Licensed under the terms of GNU General Public License v3</param.description>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>/home/luca/MATLAB/R2018a</root>
+      <root>/home/luca/MATLAB/R2018b</root>
       <toolboxes>
-        <toolbox name="fixedpoint" />
         <toolbox name="matlabcoder" />
-        <toolbox name="matlabhdlcoder" />
-        <toolbox name="embeddedcoder" />
-        <toolbox name="gpucoder" />
-        <toolbox name="polyspacebugfinder" />
+        <toolbox name="neuralnetwork" />
       </toolboxes>
-      <toolbox>
-        <fixedpoint>
-          <enabled>true</enabled>
-        </fixedpoint>
-      </toolbox>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
       </toolbox>
       <toolbox>
-        <matlabhdlcoder>
+        <neuralnetwork>
           <enabled>true</enabled>
-        </matlabhdlcoder>
-      </toolbox>
-      <toolbox>
-        <embeddedcoder>
-          <enabled>true</enabled>
-        </embeddedcoder>
-      </toolbox>
-      <toolbox>
-        <gpucoder>
-          <enabled>true</enabled>
-        </gpucoder>
-      </toolbox>
-      <toolbox>
-        <polyspacebugfinder>
-          <enabled>true</enabled>
-        </polyspacebugfinder>
+        </neuralnetwork>
       </toolbox>
     </matlab>
     <platform>

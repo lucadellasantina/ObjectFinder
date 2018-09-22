@@ -225,6 +225,9 @@ end
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 4: calculate dots properties and store into a struct array --
+% TODO can we parallelize this by filling up different tmpDots?
+% TODO or perhaps reunite the labels into a single image stack here
+
 tic;
 fprintf('Accumulating properties for each detected object... ');
 
@@ -239,9 +242,21 @@ tmpDot.Vox.RawBright = 0;
 tmpDot.Vox.IT        = 0;
 tmpDot.MeanBright    = 0;
 
-tmpDots = struct(tmpDot);
-tmpDotNum = 0;
+% Count how many valid objects we expect to encounter
+NumValidObjects = 0;
+for block = 1:(NumBx*NumBy*NumBz)
+    VoxelsList  = label2idx(Blocks(block).wsTMLabels);
+    for i = 1:Blocks(block).nLabels
+        NumVoxels = numel(VoxelsList{i});
+        if (NumVoxels >= minDotSize) && (NumVoxels <= maxDotSize)
+            NumValidObjects = NumValidObjects+1;
+        end
+    end
+end
+tmpDots(NumValidObjects) = tmpDot; % Preallocate tmpDots
+%tmpDots = struct(tmpDot); %Without preallocation
 
+tmpDotNum            = 0;
 for block = 1:(NumBx*NumBy*NumBz)
     VoxelsList  = label2idx(Blocks(block).wsTMLabels);    
 
@@ -256,20 +271,18 @@ for block = 1:(NumBx*NumBy*NumBz)
             else               
                 peakIndex           = peakIndex(1); % Make sure there is only one peak at this stage
             end
-            
-            thresholdPeak       = Blocks(block).Igm(peakIndex) / Blocks(block).Gmode; % Calculate ITMax as # times the local noise
+             
             [yPeak,xPeak,zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
             [yPos, xPos, zPos]  = ind2sub(Blocks(block).sizeIgm, Voxels);
 
             tmpDot.Pos          = [yPeak+Blocks(block).startPos(1)-1, xPeak+Blocks(block).startPos(2)-1, zPeak+Blocks(block).startPos(3)-1];
             tmpDot.Vox.Pos      = [yPos+Blocks(block).startPos(1)-1, xPos+Blocks(block).startPos(2)-1, zPos+Blocks(block).startPos(3)-1];
             tmpDot.Vox.Ind      = sub2ind([size(Post,1) size(Post,2) size(Post,3)], tmpDot.Vox.Pos(:,1), tmpDot.Vox.Pos(:,2), tmpDot.Vox.Pos(:,3));
-            tmpDot.Vol          = numel(Voxels);
-            tmpDot.ITMax        = thresholdPeak;
-            tmpDot.ItSum        = sum(Blocks(block).thresholdMap(Voxels));
             tmpDot.Vox.RawBright= Blocks(block).Igm(Voxels);
+            tmpDot.Vol          = numel(Voxels);
             tmpDot.Vox.IT       = Blocks(block).thresholdMap(Voxels);
-            tmpDot.MeanBright   = mean(Blocks(block).Igm(Voxels));
+            tmpDot.ITMax        = Blocks(block).Igm(peakIndex) / Blocks(block).Gmode; % Calculate ITMax as # times the local noise
+
             tmpDotNum           = tmpDotNum + 1;
             tmpDots(tmpDotNum)  = tmpDot;
         end
@@ -322,13 +335,6 @@ for i = 1:numel(tmpDots)
         tmpDots(Loser).Vox.RawBright(idx) = [];
         tmpDots(Loser).Vox.IT(idx)        = [];
         tmpDots(Loser).Vol                = tmpDots(Loser).Vol - numel(idx);
-        
-        % If loser still has voxels left, then recalculate its averages
-        if tmpDots(Loser).Vol > 0
-            tmpDots(Loser).ITMax          = max(tmpDots(Loser).Vox.IT);
-            tmpDots(Loser).ItSum          = sum(tmpDots(Loser).Vox.IT);
-            tmpDots(Loser).MeanBright     = mean(tmpDots(Loser).Vox.RawBright);
-        end
     end
 end
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
@@ -345,10 +351,10 @@ for i = numel(ValidDots):-1:1
     Dots.Vox(i).Ind         = tmpDots(ValidDots(i)).Vox.Ind;
     Dots.Vol(i)             = tmpDots(ValidDots(i)).Vol;
     Dots.ITMax(i)           = tmpDots(ValidDots(i)).ITMax;
-    Dots.ItSum(i)           = tmpDots(ValidDots(i)).ItSum;
     Dots.Vox(i).RawBright   = tmpDots(ValidDots(i)).Vox.RawBright;
     Dots.Vox(i).IT          = tmpDots(ValidDots(i)).Vox.IT;
-    Dots.MeanBright(i)      = tmpDots(ValidDots(i)).MeanBright;
+    Dots.ItSum(i)           = sum(Dots.Vox(i).IT);
+	Dots.MeanBright(i)      = mean(Dots.Vox(i).RawBright);
 end
 
 Dots.ImSize = [size(Post,1) size(Post,2) size(Post,3)];

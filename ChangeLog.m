@@ -22,10 +22,18 @@
 %
 % *Change log*
 %
+%  _*Version 5.9*              created on 2018-09-22 by Luca Della Santina_
+%
+%   + findObjects: Improved speed when found objects are > 1 million
+%   + Added compatilibity with MATLAB R2018b
+%   + Added tooltips for all major UI components
+%
 %  _*Version 5.8*              created on 2018-09-18 by Luca Della Santina_
 %
 %   + findObjects: Removed thresholdStep, now stepping is one by default
 %   + About tab: added buttons to Homepage, User manual, Report issue
+%   + Added tooltips to main UI components
+%   + Upgraded project to MATLAB R2018b
 %
 %  _*Version 5.7*              created on 2018-09-17 by Luca Della Santina_
 %

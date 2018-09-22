@@ -228,6 +228,9 @@ end
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 4: calculate dots properties and store into a struct array --
+% TODO only thing we need to accumulate is tmpDot.Vox.Ind, all rest of the
+% stats can be calculated later after resolving conflicts
+
 tic;
 fprintf('Accumulating properties for each detected object... ');
 
@@ -242,9 +245,21 @@ tmpDot.Vox.RawBright = 0;
 tmpDot.Vox.IT        = 0;
 tmpDot.MeanBright    = 0;
 
-tmpDots              = struct(tmpDot);
-tmpDotNum            = 0;
+% Count how many valid objects we expect to encounter
+NumValidObjects = 0;
+for block = 1:(NumBx*NumBy*NumBz)
+    VoxelsList  = label2idx(Blocks(block).wsTMLabels);
+    for i = 1:Blocks(block).nLabels
+        NumVoxels = numel(VoxelsList{i});
+        if (NumVoxels >= minDotSize) && (NumVoxels <= maxDotSize)
+            NumValidObjects = NumValidObjects+1;
+        end
+    end
+end
+tmpDots(NumValidObjects) = tmpDot; % Preallocate tmpDots
+%tmpDots = struct(tmpDot); %Without preallocation
 
+tmpDotNum            = 0;
 for block = 1:(NumBx*NumBy*NumBz)
     VoxelsList  = label2idx(Blocks(block).wsTMLabels);    
 
@@ -260,20 +275,18 @@ for block = 1:(NumBx*NumBy*NumBz)
                 peakIndex           = peakIndex(1); % Make sure there is only one peak at this stage
             end
             
-            [yPeak,xPeak,zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
-            [yPos, xPos, zPos]  = ind2sub(Blocks(block).sizeIgm, Voxels);
+             [yPeak,xPeak,zPeak] = ind2sub(Blocks(block).sizeIgm, peakIndex);
+             [yPos, xPos, zPos]  = ind2sub(Blocks(block).sizeIgm, Voxels);             
+             
+             tmpDot.Pos          = [yPeak+Blocks(block).startPos(1)-1, xPeak+Blocks(block).startPos(2)-1, zPeak+Blocks(block).startPos(3)-1];
+             tmpDot.Vox.Pos      = [yPos+Blocks(block).startPos(1)-1, xPos+Blocks(block).startPos(2)-1, zPos+Blocks(block).startPos(3)-1];
+             tmpDot.Vox.Ind      = sub2ind([size(Post,1) size(Post,2) size(Post,3)], tmpDot.Vox.Pos(:,1), tmpDot.Vox.Pos(:,2), tmpDot.Vox.Pos(:,3));
+             tmpDot.Vox.RawBright= Blocks(block).Igm(Voxels);
+             tmpDot.Vol          = numel(Voxels);
+             tmpDot.Vox.IT       = Blocks(block).thresholdMap(Voxels);
 
-            tmpDot.Pos          = [yPeak+Blocks(block).startPos(1)-1, xPeak+Blocks(block).startPos(2)-1, zPeak+Blocks(block).startPos(3)-1];
-            tmpDot.Vox.Pos      = [yPos+Blocks(block).startPos(1)-1, xPos+Blocks(block).startPos(2)-1, zPos+Blocks(block).startPos(3)-1];
-            tmpDot.Vox.Ind      = sub2ind([size(Post,1) size(Post,2) size(Post,3)], tmpDot.Vox.Pos(:,1), tmpDot.Vox.Pos(:,2), tmpDot.Vox.Pos(:,3));
-            tmpDot.Vol          = numel(Voxels);
-            tmpDot.ITMax        = Blocks(block).thresholdMap(peakIndex);
-            tmpDot.ItSum        = sum(Blocks(block).thresholdMap(Voxels));
-            tmpDot.Vox.RawBright= Blocks(block).Igm(Voxels);
-            tmpDot.Vox.IT       = Blocks(block).thresholdMap(Voxels);
-            tmpDot.MeanBright   = mean(Blocks(block).Igm(Voxels));
-            tmpDotNum           = tmpDotNum + 1;
-            tmpDots(tmpDotNum)  = tmpDot;
+             tmpDotNum           = tmpDotNum + 1;
+             tmpDots(tmpDotNum)  = tmpDot;
         end
     end
 end
@@ -324,13 +337,6 @@ for i = 1:numel(tmpDots)
         tmpDots(Loser).Vox.RawBright(idx) = [];
         tmpDots(Loser).Vox.IT(idx)        = [];
         tmpDots(Loser).Vol                = tmpDots(Loser).Vol - numel(idx);
-        
-        % If loser still has voxels left, then recalculate its averages
-        if tmpDots(Loser).Vol > 0
-            tmpDots(Loser).ITMax          = max(tmpDots(Loser).Vox.IT);
-            tmpDots(Loser).ItSum          = sum(tmpDots(Loser).Vox.IT);
-            tmpDots(Loser).MeanBright     = mean(tmpDots(Loser).Vox.RawBright);
-        end
     end
 end
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
@@ -346,18 +352,18 @@ for i = numel(ValidDots):-1:1
     Dots.Vox(i).Pos         = tmpDots(ValidDots(i)).Vox.Pos;
     Dots.Vox(i).Ind         = tmpDots(ValidDots(i)).Vox.Ind;
     Dots.Vol(i)             = tmpDots(ValidDots(i)).Vol;
-    Dots.ITMax(i)           = tmpDots(ValidDots(i)).ITMax;
-    Dots.ItSum(i)           = tmpDots(ValidDots(i)).ItSum;
     Dots.Vox(i).RawBright   = tmpDots(ValidDots(i)).Vox.RawBright;
     Dots.Vox(i).IT          = tmpDots(ValidDots(i)).Vox.IT;
-    Dots.MeanBright(i)      = tmpDots(ValidDots(i)).MeanBright;
+	Dots.ITMax(i)           = max(Dots.Vox(i).IT);
+    Dots.ItSum(i)           = sum(Dots.Vox(i).IT);
+	Dots.MeanBright(i)      = mean(Dots.Vox(i).RawBright);
 end
 
 Dots.ImSize = [size(Post,1) size(Post,2) size(Post,3)];
 Dots.Num = numel(Dots.Vox); % Recalculate total number of dots
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
-clear B* CC contour* cutOff debug Gm* i j k Ig* labels Losing* ans
+clear B* CC contour* cutOff debug Gm* i j k Ig* labels Losing* ans NumalidObjects
 clear max* n* Num* Overlap* p peak* Possible* size(Post,2) size(Post,1) size(Post,3) Surrouding*
 clear tmp* threshold* Total* T* v Vox* Winning* ws* x* y* z* itMin DotsToDelete
 clear block blockBuffer blockSize minDotSize minDotSize  MultiPeakDotSizeCorrectionFactor
