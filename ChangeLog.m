@@ -22,6 +22,11 @@
 %
 % *Change log*
 %
+%  _*Version 5.10*              created on 2018-10-04 by Luca Della Santina_
+%
+%   + Support for skeletons created with ImageJ's Simple Neurite Tracer
+%   + Removed need for SkelFiner.mat
+%
 %  _*Version 5.9*              created on 2018-09-22 by Luca Della Santina_
 %
 %   + findObjects: Improved speed when found objects are > 1 million

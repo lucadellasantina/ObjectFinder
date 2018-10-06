@@ -18,9 +18,10 @@
 %
 % *Find objects using an iterative thresholding approach*
 
-function Dots = findObjects(Post, Settings)
+function [Dots, Time] = findObjects(Post, Settings)
 
 % Retrieve parameters to use from Settings
+Time             = 0;
 blockSize        = Settings.objfinder.blockSize;
 blockBuffer      = Settings.objfinder.blockBuffer;
 maxDotSize       = Settings.objfinder.maxDotSize;
@@ -117,8 +118,12 @@ for block = 1:(NumBx*NumBy*NumBz)
 	Blocks(block).nLabels       = 0;
 
 end
-fprintf([num2str(NumBx*NumBy*NumBz) ' blocks, DONE in ' num2str(toc) ' seconds \n']);
-clear xStart xEnd yStart yEnd zStart zEnd T*
+
+tmpTime = toc;
+fprintf([num2str(NumBx*NumBy*NumBz) ' blocks, DONE in ' num2str(tmpTime) ' seconds \n']);
+Time = Time + tmpTime;
+
+clear xStart xEnd yStart yEnd zStart zEnd
 
 %% -- STEP 2: scan the volume and find areas crossing local contrast threshold with a progressively coarser intensity filter --
 tic;
@@ -171,7 +176,10 @@ parfor block = 1:(NumBx*NumBy*NumBz)
     Blocks(block).wsLabelList   = unique(Blocks(block).wsTMLabels);   % wsLabelList = unique labels list used to label the block volume 
     Blocks(block).nLabels       = numel(Blocks(block).wsLabelList);   % nLabels = number of labels = number of objects detected
 end
+
+tmpTime = toc;
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
+Time = Time + tmpTime;
 
 %% -- STEP 3: Find the countour of each dot and split it using watershed if multiple peaks are found within the same dot --
 
@@ -225,7 +233,10 @@ parfor block = 1:(NumBx*NumBy*NumBz)
     Blocks(block).wsTMLabels    = wsTMLabels;  % Store for later
     Blocks(block).wsLabelList   = wsLabelList; % Store for later
 end
-fprintf(['DONE in ' num2str(toc) ' seconds \n']);
+
+tmpTime = toc;
+fprintf(['DONE in ' num2str(tmpTime) ' seconds \n']);
+Time = Time + tmpTime;
 
 %% -- STEP 4: calculate dots properties and store into a struct array --
 % TODO only thing we need to accumulate is tmpDot.Vox.Ind, all rest of the
@@ -290,7 +301,10 @@ for block = 1:(NumBx*NumBy*NumBz)
         end
     end
 end
-fprintf(['DONE in ' num2str(toc) ' seconds \n']);
+
+tmpTime = toc;
+fprintf(['DONE in ' num2str(tmpTime) ' seconds \n']);
+Time = Time + tmpTime;
 
 %% -- STEP 5: resolve empty dots and dots in border between blocks --
 % Some voxels could be shared by multiple dots because of the overlapping
@@ -339,7 +353,10 @@ for i = 1:numel(tmpDots)
         tmpDots(Loser).Vol                = tmpDots(Loser).Vol - numel(idx);
     end
 end
-fprintf(['DONE in ' num2str(toc) ' seconds \n']);
+
+tmpTime = toc;
+fprintf(['DONE in ' num2str(tmpTime) ' seconds \n']);
+Time = Time + tmpTime;
 
 % Accumulate tmpDots with volume>0 into the old "Dots" structure 
 tic;
@@ -361,11 +378,14 @@ end
 
 Dots.ImSize = [size(Post,1) size(Post,2) size(Post,3)];
 Dots.Num = numel(Dots.Vox); % Recalculate total number of dots
-fprintf(['DONE in ' num2str(toc) ' seconds \n']);
+tmpTime = toc;
+fprintf(['DONE in ' num2str(tmpTime) ' seconds \n']);
+
+Time = Time + tmpTime;
 
 clear B* CC contour* cutOff debug Gm* i j k Ig* labels Losing* ans NumalidObjects
 clear max* n* Num* Overlap* p peak* Possible* size(Post,2) size(Post,1) size(Post,3) Surrouding*
-clear tmp* threshold* Total* T* v Vox* Winning* ws* x* y* z* itMin DotsToDelete
+clear tmp* threshold* Total*  v Vox* Winning* ws* x* y* z* itMin DotsToDelete
 clear block blockBuffer blockSize minDotSize minDotSize  MultiPeakDotSizeCorrectionFactor
 clear ContendedVoxIDs idx Loser Winner minIntensity use_watershed ValidDots blockSearch
 end
