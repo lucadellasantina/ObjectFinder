@@ -22,13 +22,22 @@ dotDensity.zStart = 1;                    % Analyze the entire volume
 dotDensity.zEnd = Settings.ImInfo.zNumVox; % Analyze the entire volume
 dotDensity.binSize = (dotDensity.zEnd - dotDensity.zStart)/100; % binning densities every 1 percent of Z-depth
 
-tmpDensity=zeros(1, (dotDensity.zEnd - dotDensity.zStart +1));
-tmpDensityPerc=zeros(1, 100);
-for i = dotDensity.zStart: dotDensity.zEnd -1
-    tmpDensity(i) = numel(find(Grouped.Pos(:,3) == i));
-end
-for i=1:100
-    tmpDensityPerc(i) = tmpDensity(ceil(i*dotDensity.binSize));
+if dotDensity.zEnd == dotDensity.zStart
+    % 2D image (single Z plane)
+    tmpDensity = size(Grouped.Pos, 1);
+    for i=100:-1:1
+        tmpDensityPerc(i) = tmpDensity;
+    end
+else
+    % 3D image (multiple Z planes) 
+    tmpDensity=zeros(1, (dotDensity.zEnd - dotDensity.zStart +1));
+    tmpDensityPerc=zeros(1, 100);
+    for i = dotDensity.zStart: dotDensity.zEnd -1
+        tmpDensity(i) = numel(find(Grouped.Pos(:,3) == i));
+    end
+    for i=1:100
+        tmpDensityPerc(i) = tmpDensity(ceil(i*dotDensity.binSize));
+    end
 end
 
 dotDensity.density = tmpDensity;

@@ -22,6 +22,11 @@
 %
 % *Change log*
 %
+%  _*Version 5.11*              created on 2018-10-07 by Luca Della Santina_
+%
+%   + Support for 2D images
+%   + Fixed error when image files are missing voxel resolution info
+%
 %  _*Version 5.10*              created on 2018-10-04 by Luca Della Santina_
 %
 %   + Support for skeletons created with ImageJ's Simple Neurite Tracer

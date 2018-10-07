@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3081034848" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3855982244" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -10,11 +10,11 @@
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_24.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_16.png</file>
     </param.icons>
-    <param.summary>Find objects in three-dimentional image stacks.</param.summary>
+    <param.summary>Find objects in volumetric image stacks.</param.summary>
     <param.description>Copyright 2016-2018 Luca Della Santina. 
 Licensed under the terms of GNU General Public License v3</param.description>
     <param.screenshot>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_big.png</param.screenshot>
-    <param.version>5.10</param.version>
+    <param.version>5.11</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Image Processing Toolbox</item>
@@ -52,7 +52,6 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-copy.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-delete-2.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Filter.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-FindObjects.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fish-Bone.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherries.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherriesCheck.png</file>
@@ -63,7 +62,6 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-up.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Heatmap.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-HomeFolder.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Image_upload.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Inspect.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-add.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-remove.png</file>
@@ -78,7 +76,6 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Whale-Small-Fish.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Whale-Tail.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-database.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-folder-save.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-monkey.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-stop-hand.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-web-browser.png</file>
@@ -116,6 +113,9 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/saveastiff.m</file>
       <file>${PROJECT_ROOT}/shollAnalysis.m</file>
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/VolumeCut_resources/48px-FindObjects.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/VolumeCut_resources/48px-Image_upload.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/VolumeCut_resources/48px-folder-save.png</file>
       <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>

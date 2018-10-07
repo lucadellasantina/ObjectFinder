@@ -103,7 +103,7 @@ for block = 1:(NumBx*NumBy*NumBz)
     % Search only between max intensity (Gmax) and noise intensity level (Gmode) found in each block
     Blocks(block).Gmode         = mode(Blocks(block).Igm(Blocks(block).Igm>0)); % Most common intensity found in the block (noise level, excluding zero)
     Blocks(block).Gmax          = max(Blocks(block).Igm(:));
-    Blocks(block).sizeIgm       = size(Blocks(block).Igm);
+    Blocks(block).sizeIgm       = [size(Blocks(block).Igm,1), size(Blocks(block).Igm,2), size(Blocks(block).Igm,3)];
 
     Blocks(block).peakMap       = zeros(Blocks(block).sizeIgm(1),Blocks(block).sizeIgm(2),Blocks(block).sizeIgm(3),'uint8'); % Initialize matrix to map peaks found
     Blocks(block).thresholdMap  = Blocks(block).peakMap; % Initialize matrix to sum passed thresholds
@@ -253,8 +253,14 @@ for block = 1:(NumBx*NumBy*NumBz)
         end
     end
 end
-tmpDots(NumValidObjects) = tmpDot; % Preallocate tmpDots
-%tmpDots = struct(tmpDot); %Without preallocation
+
+
+if NumValidObjects == 0
+    Dots = [];
+    return;
+else
+    tmpDots(NumValidObjects) = tmpDot; % Preallocate tmpDots
+end
 
 tmpDotNum            = 0;
 for block = 1:(NumBx*NumBy*NumBz)
