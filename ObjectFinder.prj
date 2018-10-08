@@ -1,20 +1,20 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3855982244" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="4203677157" file="D:\Dropbox\MATLAB scripts\ObjectFinder\ObjectFinder.prj" location="D:\Dropbox\MATLAB scripts\ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
     <param.company />
-    <param.icon>${PROJECT_ROOT}/ObjectFinder_resources/icon_24.png</param.icon>
+    <param.icon>${PROJECT_ROOT}\ObjectFinder_resources\icon_24.png</param.icon>
     <param.icons>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_48.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_24.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_16.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\icon_48.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\icon_24.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\icon_16.png</file>
     </param.icons>
     <param.summary>Find objects in volumetric image stacks.</param.summary>
     <param.description>Copyright 2016-2018 Luca Della Santina. 
 Licensed under the terms of GNU General Public License v3</param.description>
-    <param.screenshot>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_big.png</param.screenshot>
-    <param.version>5.11</param.version>
+    <param.screenshot>${PROJECT_ROOT}\ObjectFinder_resources\app_icon_big.png</param.screenshot>
+    <param.version>5.12</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Image Processing Toolbox</item>
@@ -28,13 +28,13 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <item>80</item>
     </param.products.id>
     <param.products.version>
-      <item>9.5</item>
-      <item>10.3</item>
+      <item>9.4</item>
+      <item>10.2</item>
       <item>11.1</item>
-      <item>6.13</item>
+      <item>6.12</item>
     </param.products.version>
     <param.platforms />
-    <param.output>/home/luca/Dropbox/MATLAB scripts/ObjectFinder</param.output>
+    <param.output>D:\Dropbox\MATLAB scripts\ObjectFinder</param.output>
     <param.guid>912cbc5e-7b98-4c7b-a172-fdd315f64c21</param.guid>
     <unset>
       <param.company />
@@ -42,120 +42,144 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <param.output />
     </unset>
     <fileset.main>
-      <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
+      <file>${PROJECT_ROOT}\ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Angler-Fish.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Blow-Fish.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Crab.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-clear.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-copy.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Edit-delete-2.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Filter.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fish-Bone.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherries.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-3cherriesCheck.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Fruit-cherries.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-bottom.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-down.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-top.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Go-up.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Heatmap.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-HomeFolder.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Inspect.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-add.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-List-remove.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Manual.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Map-Treaure.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Masks.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Measure.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Sholl.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Tentacle.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Text-x-generic_with_pencil.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-View-refresh.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Whale-Small-Fish.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-Whale-Tail.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-database.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-monkey.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-stop-hand.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/48px-web-browser.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/72px-Batch-process.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/Fruit-2cherries-check.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_big.png</file>
-      <file>${PROJECT_ROOT}/ObjectFinder_resources/bug.png</file>
-      <file>${PROJECT_ROOT}/calcDensity.m</file>
-      <file>${PROJECT_ROOT}/calcDotDensityAlongZ.m</file>
-      <file>${PROJECT_ROOT}/calcPathLengthStats.m</file>
-      <file>${PROJECT_ROOT}/calcSkelPathLength.m</file>
-      <file>${PROJECT_ROOT}/colocAutoMask.m</file>
-      <file>${PROJECT_ROOT}/colocAutoNN.m</file>
-      <file>${PROJECT_ROOT}/colocDotStackCutter.m</file>
-      <file>${PROJECT_ROOT}/colocManual.m</file>
-      <file>${PROJECT_ROOT}/colocManualCheckDouble.m</file>
-      <file>${PROJECT_ROOT}/colocRedraw.m</file>
-      <file>${PROJECT_ROOT}/colocVideoFig.m</file>
-      <file>${PROJECT_ROOT}/convertObjectFinderDataV3toV4.m</file>
-      <file>${PROJECT_ROOT}/convertObjectFinderDataV4toV5.m</file>
-      <file>${PROJECT_ROOT}/convertSkelSNT2ml.m</file>
-      <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>
-      <file>${PROJECT_ROOT}/distDotsToSkel.m</file>
-      <file>${PROJECT_ROOT}/exportObjectsToImaris7.m</file>
-      <file>${PROJECT_ROOT}/exportObjectsToImaris8.m</file>
-      <file>${PROJECT_ROOT}/filterObjects.m</file>
-      <file>${PROJECT_ROOT}/findObjects.m</file>
-      <file>${PROJECT_ROOT}/findObjectsSimple.m</file>
-      <file>${PROJECT_ROOT}/fitSphere.m</file>
-      <file>${PROJECT_ROOT}/getFilteredObjects.m</file>
-      <file>${PROJECT_ROOT}/inspectRedraw.m</file>
-      <file>${PROJECT_ROOT}/inspectVideoFig.m</file>
-      <file>${PROJECT_ROOT}/inspectVolume2D.m</file>
-      <file>${PROJECT_ROOT}/loadImage.m</file>
-      <file>${PROJECT_ROOT}/saveastiff.m</file>
-      <file>${PROJECT_ROOT}/shollAnalysis.m</file>
-      <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/VolumeCut_resources/48px-FindObjects.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/VolumeCut_resources/48px-Image_upload.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/VolumeCut_resources/48px-folder-save.png</file>
-      <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
+      <file>${MATLAB_ROOT}\toolbox\local\userpath.m</file>
+      <file>${PROJECT_ROOT}\calcDensity.m</file>
+      <file>${PROJECT_ROOT}\calcDotDensityAlongZ.m</file>
+      <file>${PROJECT_ROOT}\calcPathLengthStats.m</file>
+      <file>${PROJECT_ROOT}\calcSkelPathLength.m</file>
+      <file>${PROJECT_ROOT}\colocAutoMask.m</file>
+      <file>${PROJECT_ROOT}\colocAutoNN.m</file>
+      <file>${PROJECT_ROOT}\colocDotStackCutter.m</file>
+      <file>${PROJECT_ROOT}\colocManual.m</file>
+      <file>${PROJECT_ROOT}\colocManualCheckDouble.m</file>
+      <file>${PROJECT_ROOT}\colocRedraw.m</file>
+      <file>${PROJECT_ROOT}\colocVideoFig.m</file>
+      <file>${PROJECT_ROOT}\convertObjectFinderDataV3toV4.m</file>
+      <file>${PROJECT_ROOT}\convertObjectFinderDataV4toV5.m</file>
+      <file>${PROJECT_ROOT}\convertSkelSNT2ml.m</file>
+      <file>${PROJECT_ROOT}\distDotsToCellBody.m</file>
+      <file>${PROJECT_ROOT}\distDotsToSkel.m</file>
+      <file>${PROJECT_ROOT}\exportObjectsToImaris7.m</file>
+      <file>${PROJECT_ROOT}\exportObjectsToImaris8.m</file>
+      <file>${PROJECT_ROOT}\filterObjects.m</file>
+      <file>${PROJECT_ROOT}\findObjects.m</file>
+      <file>${PROJECT_ROOT}\findObjectsSimple.m</file>
+      <file>${PROJECT_ROOT}\fitSphere.m</file>
+      <file>${PROJECT_ROOT}\getFilteredObjects.m</file>
+      <file>${PROJECT_ROOT}\inspectRedraw.m</file>
+      <file>${PROJECT_ROOT}\inspectVideoFig.m</file>
+      <file>${PROJECT_ROOT}\inspectVolume2D.m</file>
+      <file>${PROJECT_ROOT}\loadImage.m</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Angler-Fish.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Blow-Fish.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Crab.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-database.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit-clear.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit-copy.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit-delete-2.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Filter.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-FindObjects.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fish-Bone.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-folder-save.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fruit-3cherries.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fruit-3cherriesCheck.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fruit-cherries.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-bottom.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-down.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-top.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-up.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Heatmap.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-HomeFolder.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Image_upload.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Inspect.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-List-add.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-List-remove.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Manual.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Map-Treaure.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Masks.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Measure.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-monkey.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Sholl.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-stop-hand.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Tentacle.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Text-x-generic_with_pencil.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-View-refresh.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-web-browser.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Whale-Small-Fish.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Whale-Tail.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\72px-Batch-process.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\app_icon_big.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\bug.png</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources\Fruit-2cherries-check.png</file>
+      <file>${PROJECT_ROOT}\saveastiff.m</file>
+      <file>${PROJECT_ROOT}\shollAnalysis.m</file>
+      <file>${PROJECT_ROOT}\validateObjectWithNeuralNet.m</file>
     </fileset.depfun>
     <fileset.resources>
-      <file>${PROJECT_ROOT}/ImarisXTensions</file>
+      <file>${PROJECT_ROOT}\ImarisXTensions</file>
     </fileset.resources>
     <fileset.package />
     <build-deliverables>
-      <file location="/home/luca/Dropbox/MATLAB scripts" name="ObjectFinder" optional="false">/home/luca/Dropbox/MATLAB scripts/ObjectFinder</file>
+      <file location="D:\Dropbox\MATLAB scripts" name="ObjectFinder" optional="false">D:\Dropbox\MATLAB scripts\ObjectFinder</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>/home/luca/MATLAB/R2018b</root>
+      <root>C:\Program Files\MATLAB\R2018a</root>
       <toolboxes>
+        <toolbox name="fixedpoint" />
         <toolbox name="matlabcoder" />
-        <toolbox name="neuralnetwork" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="polyspacebugfinder" />
       </toolboxes>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
       </toolbox>
       <toolbox>
-        <neuralnetwork>
+        <matlabhdlcoder>
           <enabled>true</enabled>
-        </neuralnetwork>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <polyspacebugfinder>
+          <enabled>true</enabled>
+        </polyspacebugfinder>
       </toolbox>
     </matlab>
     <platform>
-      <unix>true</unix>
+      <unix>false</unix>
       <mac>false</mac>
-      <windows>false</windows>
+      <windows>true</windows>
       <win2k>false</win2k>
       <winxp>false</winxp>
       <vista>false</vista>
-      <linux>true</linux>
+      <linux>false</linux>
       <solaris>false</solaris>
-      <osver>4.15.0-36-generic</osver>
+      <osver>10.0</osver>
       <os32>false</os32>
       <os64>true</os64>
-      <arch>glnxa64</arch>
+      <arch>win64</arch>
       <matlab>true</matlab>
     </platform>
   </configuration>

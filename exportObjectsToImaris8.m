@@ -17,18 +17,25 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 % *Pass objects detected by the ObjectFinder to Imaris version 8 and newer
-function exportObjectsToImaris8(Dots, vImarisLib)
-vServer = vImarisLib.GetServer;
-if vServer
+function exportObjectsToImaris8(Dots)
+try
+    javaaddpath(which('ImarisLib.jar'));
+catch
+    disp('Error: ImarisLib.jar is not in your matlab path, please add path to this file, it located in your Imaris install forlder/XT/matlab/');
+end
+
+vImarisLib = ImarisLib;
+
+try
+    vServer = vImarisLib.GetServer;
     vImaris = vImarisLib.GetApplication(vServer.GetObjectID(0));
     vImaris.SetVisible(true);
-    disp(vImaris.GetVisible);
-else
+catch
     disp('Error: Imaris is not running, please start imaris and then try again.');
     return
 end
 %% Load the imaris file contained in the I folder 
-if isempty(vImarisApplication.GetCurrentFileName)
+if strcmp(vImaris.GetCurrentFileName,'')
     tmpDir  = [pwd filesep 'I' filesep];
     tmpFile = dir([tmpDir '*.ims']);
     vImaris.FileOpen([tmpDir tmpFile(1).name], '');
@@ -66,24 +73,29 @@ if Dots.Settings.Inspect3D.showPassing
     % Add passing objects to Imaris as a set of spots
     vSpotsA         = vImaris.GetFactory.CreateSpots;
     vSpotsA.Set(vSpotsAPosXYZ, vSpotsAPosT, vSpotsARadius);
-    vSpotsA.mName   = sprintf('passing');
-    vSpotsA.SetColor(0.0, 1.0, 0.0, 0.0);
+    vSpotsA.SetName('passing');
+    vRGBA = [0.0, 1.0, 0.0, 0.0];
+    vRGBA = round(vRGBA * 255); % need integer values scaled to range 0-255
+    vRGBA = uint32(vRGBA * [1; 256; 256*256; 256*256*256]); % combine different components (four bytes) into one integer
+    vSpotsA.SetColorRGBA(vRGBA);    
     vImaris.GetSurpassScene.AddChild(vSpotsA, -1);
     pause(1); % This pause is needed to allow Imaris time to load scene
 
     % Import custom spots statistics into Imaris
     try
-        [aNames, aValues, aUnits, aFactors, aFactorNames, aIds] = vSpotsA.GetStatistics;
-        clear aNames; clear aValues; clear aUnits; clear aFactors; clear aIds;
+        vStatistics = vSpotsA.GetStatistics;
+        aNames = cell(vStatistics.mNames);
+        aValues = vStatistics.mValues;
+        aUnits = cell(vStatistics.mUnits);
+        aFactors = cell(vStatistics.mFactors);
+        aFactorNames = cell(vStatistics.mFactorNames);
+        aIds = vStatistics.mIds;
         
         % Add ITmax as score parameter
         for j = 1:length(vSpotsAPosXYZ)
             aNames{j,1}     = strcat('ObjectFinder_Score');
             aValues(j,1)    = single(Dots.ITMax(PassDotIDs(j)));
             aUnits{j,1}     = 'arb';
-            aFactors{1,j}   = 'Spots';
-            aFactors{2,j}   = '';
-            aFactors{3,j}   = '1';
             aIds(j,1)       = int32(j-1);
         end
         vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
@@ -101,7 +113,22 @@ if Dots.Settings.Inspect3D.showPassing
             aValues(j,1)    = single(Dots.MeanBright(PassDotIDs(j)));
         end
         vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+
+        if isfield(Dots.Shape,'Oblong')
+            for j = 1:length(vSpotsAPosXYZ)
+                aNames{j,1}     = strcat('ObjectFinder_Oblongness');
+                aValues(j,1)    = single(Dots.Shape.Oblong(PassDotIDs(j)));
+            end
+            vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+        end
         
+        if isfield(Dots.Shape,'PrincipalAxisLen')
+            for j = 1:length(vSpotsAPosXYZ)
+                aNames{j,1}     = strcat('ObjectFinder_PrincipalAxisLen');
+                aValues(j,1)    = single(Dots.Shape.PrincipalAxisLen(PassDotIDs(j)));
+            end
+            vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+        end        
     catch
         disp('Error pushing custom statistics into Imaris');
         return
@@ -125,21 +152,22 @@ cnt = 0;
 for vChildIndex = 1:vSurpassScene.GetNumberOfChildren
     if vImaris.GetFactory.IsSpots(vSurpassScene.GetChild(vChildIndex - 1))
         cnt = cnt+1;
-        vSpots{cnt} = vSurpassScene.GetChild(vChildIndex - 1);
+        vSpots{cnt} = vImaris.GetFactory.ToSpots(vSurpassScene.GetChild(vChildIndex - 1));
     end
 end
 
 % Choose passing spots
 vSpotsCnt = length(vSpots);
 for n= 1:vSpotsCnt
-    vSpotsName{n} = vSpots{n}.mName;
+    vSpotsName{n} = vSpots{n}.GetName;
 end
 cellstr = cell2struct(vSpotsName,{'names'},vSpotsCnt+2);
-str = {cellstr.names};
+str = string({cellstr.names});
 [vAnswer_iPass,~] = listdlg('ListSize',[200 160], 'PromptString','Validated spots to export back to ObjectFinder', 'SelectionMode','single', 'ListString',str);
+
 if ~isempty(vAnswer_iPass)
     iPassSpots          = vSpots{vAnswer_iPass};
-    [vYesSpotsXYZ,~,~]  = iPassSpots.Get;
+    vYesSpotsXYZ        = iPassSpots.GetPositionsXYZ;
     vYesSpotsXYZ        = double(vYesSpotsXYZ);% has to be double because 2048*2048*69 is larger than 2^24 ( the real limit of single precision... the output of imaris (see:http://stackoverflow.com/questions/4513346/convert-double-to-single-without-loss-of-precision-in-matlab))
     
     % Find the passing Dots identities

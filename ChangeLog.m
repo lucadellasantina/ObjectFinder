@@ -22,6 +22,12 @@
 %
 % *Change log*
 %
+%  _*Version 5.11*              created on 2018-10-08 by Luca Della Santina_
+%
+%   + Support for Imaris 7.2.4+, 8.x, 9.x
+%   + Oblongness and major axis length exported as Imaris spots properties
+%   + Backward compatibility with R2018a restored
+%
 %  _*Version 5.11*              created on 2018-10-07 by Luca Della Santina_
 %
 %   + Support for 2D images

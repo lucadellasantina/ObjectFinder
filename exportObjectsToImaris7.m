@@ -103,7 +103,22 @@ if Dots.Settings.Inspect3D.showPassing
             aValues(j,1)    = single(Dots.MeanBright(PassDotIDs(j)));
         end
         vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+
+        if isfield(Dots.Shape,'Oblong')
+            for j = 1:length(vSpotsAPosXYZ)
+                aNames{j,1}     = strcat('ObjectFinder_Oblongness');
+                aValues(j,1)    = single(Dots.Shape.Oblong(PassDotIDs(j)));
+            end
+            vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+        end
         
+        if isfield(Dots.Shape,'PrincipalAxisLen')
+            for j = 1:length(vSpotsAPosXYZ)
+                aNames{j,1}     = strcat('ObjectFinder_PrincipalAxisLen');
+                aValues(j,1)    = single(Dots.Shape.PrincipalAxisLen(PassDotIDs(j)));
+            end
+            vSpotsA.AddStatistics(aNames,aValues,aUnits,aFactors,aFactorNames,aIds);
+        end               
     catch
         disp('Error pushing custom statistics into Imaris');
         return
