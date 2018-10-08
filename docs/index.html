@@ -20,20 +20,6 @@
     <!-- HEADER -->
     <div id="header_wrap" class="outer">
         <header class="inner">
-          <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="index.html">About</a>
-            <a href="screencast.html">Videos</a>
-            <a href="contact.html">Contact</a>
-          </div>
-
-          <span id="menu_banner" style="cursor:pointer" onclick="openNav()">&#9776;  Menu</span>
-
-          <script>
-            function openNav() {document.getElementById("mySidenav").style.width = "250px";}
-            function closeNav() {document.getElementById("mySidenav").style.width = "0";}
-          </script>
-
           <a id="forkme_banner" href="https://github.com/lucadellasantina/ObjectFinder">View on GitHub</a>
 
           <h2 id="project_title">ObjectFinder</h2>
@@ -101,32 +87,18 @@
         <p>Do you have multiple images to process? Use the automation tab to allow batch processing without user supervision.
         <div style="text-align:center"><img src ="images/Screenshot_timer.png" width="60%"/></div>
 
-        <div style="text-align:center"><h2>How do I install and use ObjectFinder?</h2></div>
+        <div style="text-align:center"><h2>How do I install ObjectFinder?</h2></div>
 
         <div style="text-align:left">
         <ol>
           <li>Download latest ObjectFinder version from the top of this page</li>
           <li>Install ObjectFinder using MATLAB's "Install App" button</li>
           <li>Start ObjectFinder from your Apps list.</li>
+          <li>Head to the <a href="https://github.com/lucadellasantina/ObjectFinder/wiki">user manual</a> to learn about all ObjectFinder functionalities</li>
           <div style="text-align:center"><img src ="images/Screenshot_MatlabApps.png" width="100%"/></div>
        </ol>
 
-       <p>The object recognition process starts with you creating a folder structure for your experiment. Let's assume your experiment folder's name is called "MyExperiment", place all your original image stacks inside the folder "MyExperiment/I/" saved as 3D .tif files (one file per channel).</p>
-       <div style="text-align:center"><img src ="images/Screenshot_folder.png" width="100%"/></div>
-
-       <p>Start Objectfinder and use the main toolbar to perform all the steps of the analysis:</p>
-       <div style="text-align:center"><img src ="images/Screenshot_toolbar.png" width="80%"/></div>
-
-       <ol>
-          <li>"Select Folder" to choose "MyExperiment" as the current working folder to use for analysis.</li>
-          <li>"Choose Images" to tell ObjectFinder which image contains the structures to recognize. You can also specify a 3D binary mask to limit the search only to the masked region.</li>
-          <div style="text-align:center"><img src ="images/Screenshot_ImageSelection.png" width="100%"/></div>
-          <li>"Find Objects" to start the automatic search of objects.</li>
-          <li>"Validate objects" to visually inspect and validate objects from noise.</li>
-       </ol>
-
-         <div style="text-align:center"><h2>System Requirements</h2></div>
-
+       <div style="text-align:center"><h2>System Requirements</h2></div>
         <table width="100%">
           <tr>
             <td>Software:</td>
