@@ -22,7 +22,14 @@
 %
 % *Change log*
 %
-%  _*Version 5.11*              created on 2018-10-08 by Luca Della Santina_
+%  _*Version 5.13*              created on 2018-10-09 by Luca Della Santina_
+%
+%   + Linear density along skeleton is also reported by depth
+%   + Volume occupancy of objects is also reported within mask
+%   + During image selection mask=0 always means no mask
+%   + Fixed bug in automatic colocalization analysis with binary mask
+%
+%  _*Version 5.12*              created on 2018-10-08 by Luca Della Santina_
 %
 %   + Support for Imaris 7.2.4+, 8.x, 9.x
 %   + Oblongness and major axis length exported as Imaris spots properties

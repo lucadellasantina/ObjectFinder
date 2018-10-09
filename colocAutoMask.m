@@ -40,17 +40,7 @@ ColocAuto.ColocFlag = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'ui
 
 for i=1:numel(Grouped.Vox)    
     % Trasverse each valid objects and check if the mask is overlapping
-    %VoxOverlap = numel(find(Colo(Dots.Vox(i).Ind))); %one liner using indexes
-    VoxOverlap = 0;
-    for vox = 1:size(Grouped.Vox(i).Pos, 1)
-        posX = Grouped.Vox(i).Pos(vox,1);
-        posY = Grouped.Vox(i).Pos(vox,2);
-        posZ = Grouped.Vox(i).Pos(vox,3);
-        
-        if Colo(posX, posY, posZ) == 1
-            VoxOverlap = VoxOverlap+1;
-        end
-    end
+    VoxOverlap = numel(find(Colo(Dots.Vox(i).Ind))); %one liner using indexes
     
     % Define also overlap as percent of total object size
     PercOverlap = 100 * VoxOverlap / Grouped.Vol(i); 
