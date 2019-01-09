@@ -22,12 +22,18 @@
 %
 % *Change log*
 %
+%  _*Version 5.14*              created on 2019-01-09 by Luca Della Santina_
+%
+%   + Fixed lstColoDone component was not updated when selecting new folder
+%
 %  _*Version 5.13*              created on 2018-10-09 by Luca Della Santina_
 %
 %   + Linear density along skeleton is also reported by depth
 %   + Volume occupancy of objects is also reported within mask
 %   + During image selection mask=0 always means no mask
 %   + Fixed bug in automatic colocalization analysis with binary mask
+%   + Fixed bug loading 2D images, when Z resolution was missing use XY res
+%   + Fixed bug in labels of NN distribution plots and saved spreadsheets
 %
 %  _*Version 5.12*              created on 2018-10-08 by Luca Della Santina_
 %

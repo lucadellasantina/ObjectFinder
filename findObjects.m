@@ -324,7 +324,11 @@ tic;
 fprintf('Resolving duplicate objects in the overlapping regions of search blocks... ');
 VoxIDMap = zeros(size(Post));       % Map of the owners of each voxel (dot IDs)
 
-for i = 1:numel(tmpDots)     
+for i = 1:numel(tmpDots)
+    if isempty(tmpDots(i).Vol) || (tmpDots(i).Vol==0)
+        continue;
+    end
+        
     OverlapVoxIDs = tmpDots(i).Vox.Ind(VoxIDMap(tmpDots(i).Vox.Ind) > 0); % Index of overlapping voxels
     OverlapDotIDs = VoxIDMap(OverlapVoxIDs);                              % Current Owner of voxels
     VoxIDMap(tmpDots(i).Vox.Ind) = i;                                     % Claim current Dot voxels on map
