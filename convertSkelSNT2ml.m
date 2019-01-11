@@ -118,7 +118,9 @@ while ~isempty(tmpNode)
                 tmpPos.r = 0;
 
                 i = i+1;
-                tmpBranch.points(i, :)= [tmpPos.x, tmpPos.y, tmpPos.z, tmpPos.xd, tmpPos.yd, tmpPos.zd, tmpPos.r];
+                % x and y positions are inverted in the .trces file as
+                % compare to original image stacks, inverting back here
+                tmpBranch.points(i, :)= [tmpPos.y, tmpPos.x, tmpPos.z, tmpPos.yd, tmpPos.xd, tmpPos.zd, tmpPos.r];
             end
             tmpPoint = tmpPoint.getNextSibling;
         end

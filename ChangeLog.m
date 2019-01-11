@@ -22,6 +22,12 @@
 %
 % *Change log*
 %
+%  _*Version 5.15*              created on 2019-01-10 by Luca Della Santina_
+%
+%   + Iverted xy coordinates when importing SNT skeleton.traces files
+%   + Fixed when checking colocalized objects with mask, mask was too dim
+%   + Lamp shows busy yellow light when removing colocalization results
+%
 %  _*Version 5.14*              created on 2019-01-09 by Luca Della Santina_
 %
 %   + Fixed lstColoDone component was not updated when selecting new folder
