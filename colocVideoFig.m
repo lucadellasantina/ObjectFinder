@@ -105,7 +105,6 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
             PostVoxMapCut = colocDotStackCutter(PostVoxMap, Grouped, DotNum, [], CutNumVox);
             
             MaxRawBright = max(Grouped.Vox(DotNum).RawBright);
-            %PostMaxRawBright = single(max(PostCut(:)));
             PostUpperLimit = 200;
             PostScalingFactor = PostUpperLimit/MaxRawBright; % Normalized to brightness of the current object
             PostCutScaled = uint8(single(PostCut)*single(PostScalingFactor));

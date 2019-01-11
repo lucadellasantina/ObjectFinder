@@ -22,11 +22,19 @@
 %
 % *Change log*
 %
+%  _*Version 5.16*              created on 2019-01-11 by Luca Della Santina_
+%
+%   + Inspect manually objects that are detected as NOT colocalized
+%   + Simplified code for calling inspection of colocalized objects
+%   + Uniformed font type across UI panels
+%   + Fixed error if user aborts early inspection of colocalized objects
+%
 %  _*Version 5.15*              created on 2019-01-10 by Luca Della Santina_
 %
 %   + Iverted xy coordinates when importing SNT skeleton.traces files
 %   + Fixed when checking colocalized objects with mask, mask was too dim
 %   + Lamp shows busy yellow light when removing colocalization results
+%   + Fixed error in pool of objects used for autocolocalization with mask
 %
 %  _*Version 5.14*              created on 2019-01-09 by Luca Della Santina_
 %

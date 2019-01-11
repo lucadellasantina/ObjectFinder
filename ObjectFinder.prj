@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3067587813" file="D:\Dropbox\MATLAB scripts\ObjectFinder\ObjectFinder.prj" location="D:\Dropbox\MATLAB scripts\ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1418411653" file="D:\Dropbox\MATLAB scripts\ObjectFinder\ObjectFinder.prj" location="D:\Dropbox\MATLAB scripts\ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -14,7 +14,7 @@
     <param.description>Copyright 2016-2019 Luca Della Santina. 
 Licensed under the terms of GNU General Public License v3</param.description>
     <param.screenshot>${PROJECT_ROOT}\ObjectFinder_resources\app_icon_big.png</param.screenshot>
-    <param.version>5.15</param.version>
+    <param.version>5.16</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Image Processing Toolbox</item>
@@ -55,6 +55,7 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}\colocDotStackCutter.m</file>
       <file>${PROJECT_ROOT}\colocManual.m</file>
       <file>${PROJECT_ROOT}\colocManualCheckDouble.m</file>
+      <file>${PROJECT_ROOT}\colocManualCheckNotColoc.m</file>
       <file>${PROJECT_ROOT}\colocRedraw.m</file>
       <file>${PROJECT_ROOT}\colocVideoFig.m</file>
       <file>${PROJECT_ROOT}\convertObjectFinderDataV3toV4.m</file>
@@ -73,53 +74,13 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}\inspectVideoFig.m</file>
       <file>${PROJECT_ROOT}\inspectVolume2D.m</file>
       <file>${PROJECT_ROOT}\loadImage.m</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Angler-Fish.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Blow-Fish.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Crab.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-database.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit-clear.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit-copy.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit-delete-2.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Filter.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-FindObjects.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fish-Bone.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-folder-save.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fruit-3cherries.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fruit-3cherriesCheck.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fruit-cherries.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-bottom.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-down.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-top.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-up.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Heatmap.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-HomeFolder.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Image_upload.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Inspect.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-List-add.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-List-remove.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Manual.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Map-Treaure.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Masks.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Measure.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-monkey.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Sholl.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-stop-hand.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Tentacle.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Text-x-generic_with_pencil.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-View-refresh.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-web-browser.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Whale-Small-Fish.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Whale-Tail.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\72px-Batch-process.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\app_icon_big.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\bug.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\Fruit-2cherries-check.png</file>
       <file>${PROJECT_ROOT}\saveastiff.m</file>
       <file>${PROJECT_ROOT}\shollAnalysis.m</file>
       <file>${PROJECT_ROOT}\validateObjectWithNeuralNet.m</file>
     </fileset.depfun>
     <fileset.resources>
       <file>${PROJECT_ROOT}\ImarisXTensions</file>
+      <file>${PROJECT_ROOT}\ObjectFinder_resources</file>
     </fileset.resources>
     <fileset.package />
     <build-deliverables>
