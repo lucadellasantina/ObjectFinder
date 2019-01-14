@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%  Copyright (C) 2016-2019 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -21,6 +21,11 @@
 % each individual object and computing its indivudual properties.*
 %
 % *Change log*
+%
+%  _*Version 5.17*              created on 2019-01-13 by Luca Della Santina_
+%
+%   + Inspect2D: improved accuracy in selecting objects with left-click
+%   + Inspect2D: improved accuracy in moving zoom region with left-click
 %
 %  _*Version 5.16*              created on 2019-01-11 by Luca Della Santina_
 %

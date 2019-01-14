@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%  Copyright (C) 2016-2019 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -502,42 +502,48 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
             set(fig_handle, 'Units', 'pixels');
             click_point = get(gca, 'CurrentPoint');
             PosX = ceil(click_point(1,1));
+            PosY = ceil(click_point(1,2));
             if PosX <= size(ImStk,2)
-                % User clicked in the left panel (image navigator)
-                % Note coordinates are inverted, Pos(Y, X, Z)
-                ClickPos = ceil(click_point(1,1:2));
-
                 % Make sure zoom rectangle is within image area
-                ClickPos = [max(CutNumVox(2)/2,ClickPos(1)), max(CutNumVox(1)/2,ClickPos(2))];
-                ClickPos = [min(size(ImStk,2)-1-CutNumVox(2)/2,ClickPos(1)), min(size(ImStk,1)-1-CutNumVox(1)/2,ClickPos(2))];
-
-                Pos = [ClickPos, f];
-                PosZoom = [-1, -1, -1];
+                ClickPos = [max(CutNumVox(2)/2+1, PosX),...
+                            max(CutNumVox(1)/2+1, PosY)];
+                    
+                ClickPos = [min(size(ImStk,2)-CutNumVox(2)/2,ClickPos(1)),...
+                            min(size(ImStk,1)-CutNumVox(1)/2,ClickPos(1))];
+                Pos      = [ClickPos, f];
+                PosZoom  = [-1, -1, -1];
                 scroll(f);
             else
                 % User clicked in the right panel (zoomed region)
                 % Detect coordinates of the point clicked in PosZoom
-                % Note: coordinates are inverted, PosZoom(zoomY, zoomX, Z)
-                PosZoomX = abs(ceil(click_point(1,1)) - size(ImStk,2));
-                PosZoomX = ceil(CutNumVox(2)*PosZoomX/size(ImStk,2));
+                % Note: x,y coordinates are inverted in ImStk
+                % Note: x,y coordinates are inverted in CutNumVox
+                PosZoomX = PosX - size(ImStk,2)-1;
+                PosZoomX = round(PosZoomX * CutNumVox(2)/(size(ImStk,2)-1));
                 
-                PosZoomY = abs(ceil(click_point(1,2)) - size(ImStk,1));
-                PosZoomY = ceil(CutNumVox(1)-CutNumVox(1)*PosZoomY/size(ImStk,1));
+                PosZoomY = size(ImStk,1) - PosY;
+                PosZoomY = CutNumVox(1)-round(PosZoomY*CutNumVox(1)/(size(ImStk,1)-1));
                 
                 % Do different things depending whether left/right-clicked
                 clickType = get(fig_handle, 'SelectionType');
                 if strcmp(clickType, 'alt')
                     % User right-clicked in the right panel (zoomed region)
+                    % Move the view to that position
                     PosZoom = [-1, -1, -1];
-                    Pos = [Pos(1)+PosZoomX-CutNumVox(2)/2, Pos(2)+PosZoomY-CutNumVox(1)/2, f];
+                    Pos     = [Pos(1)+PosZoomX-CutNumVox(2)/2,...
+                               Pos(2)+PosZoomY-CutNumVox(1)/2, f];
 
                     % Make sure zoom rectangle is within image area
-                    Pos = [max(CutNumVox(2)/2,Pos(1)), max(CutNumVox(1)/2,Pos(2)),f];
-                    Pos = [min(size(ImStk,2)-1-CutNumVox(2)/2,Pos(1)), min(size(ImStk,1)-1-CutNumVox(1)/2,Pos(2)),f];
+                    Pos     = [max(CutNumVox(2)/2+1,Pos(1)),...
+                               max(CutNumVox(1)/2+1,Pos(2)), f];
+                    Pos     = [min(size(ImStk,2)-CutNumVox(2)/2,Pos(1)),...
+                               min(size(ImStk,1)-CutNumVox(1)/2,Pos(2)),f];
 
                 elseif strcmp(clickType, 'normal')
+                    % User left-clicked in the riht panel (zoomed region)
+                    % Store the position for selecting objects in there
                     PosZoom = [PosZoomX, PosZoomY, f];
-                    Pos = [Pos(1), Pos(2), f];
+                    Pos     = [Pos(1), Pos(2), f];
                 end
                 scroll(f);
             end
