@@ -22,6 +22,18 @@
 %
 % *Change log*
 %
+%  _*Version 5.18*              created on 2019-01-14 by Luca Della Santina_
+%
+%   + Colocaliz. rates are calculated from raw data and expressed clearly
+%   + Removed need for refresh buttons in the user interface
+%   + Removed log text area from detect tab
+%   + Added current folder, image file to the UI
+%   + Choose images: maintains aspect ratio of each MIP
+%   + Choose images: hidden menu and tool bars
+%   + Choose images: binary masks are stretched between 0 and 255
+%   + Choose images: disabled LaTeX interpreter for panel titles
+%   + Choose images: shows images on multiple rows to optimize space usage
+%
 %  _*Version 5.17*              created on 2019-01-13 by Luca Della Santina_
 %
 %   + Inspect2D: improved accuracy in selecting objects with left-click
