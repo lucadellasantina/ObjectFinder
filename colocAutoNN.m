@@ -28,11 +28,12 @@
 
 function ColocAuto = colocAutoNN(Dots, NN, NumVoxOverlap, NumPercOverlap)
 %%
-Grouped             = getFilteredObjects(Dots, Dots.Filter);
-ColocAuto.Source    = Dots.Name;
-ColocAuto.Fish1     = NN.Name;
-VoxOverlap          = NN.VoxOverlap(find(Dots.Filter.passF));
-VoxOverlapPerc      = NN.VoxOverlapPerc(find(Dots.Filter.passF));
+Grouped                 = getFilteredObjects(Dots, Dots.Filter);
+ColocAuto.Source        = Dots.Name;
+ColocAuto.Fish1         = NN.Name;
+
+VoxOverlap              = NN.VoxOverlap(find(Dots.Filter.passF));
+VoxOverlapPerc          = NN.VoxOverlapPerc(find(Dots.Filter.passF));
 
 AutoColocAnalyzingFlag                      = ones([1,numel(Grouped.Vox)], 'uint8');
 ColocAuto.ListDotIDsManuallyColocAnalyzed   = find(AutoColocAnalyzingFlag == 1);
@@ -55,4 +56,7 @@ ColocAuto.NumFalseDots      = length(find(ColocAuto.ColocFlag == 3));
 ColocAuto.ColocRate         = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc);
 ColocAuto.FalseDotRate      = ColocAuto.NumFalseDots/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
 ColocAuto.ColocRateInclugingFalseDots = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
+ColocAuto.Method            = 'AutoNN';
+ColocAuto.NumVoxOverlap     = NumVoxOverlap;
+ColocAuto.NumPercOverlap    = NumPercOverlap;
 end

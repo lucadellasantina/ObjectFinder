@@ -19,93 +19,45 @@
 % *Find objects using a simple thresholding against local noise*
 
 function Dots = findObjectsSimple(Post, Settings)
-
-% Retrieve parameters to use from Settings
-blockSize        = Settings.objfinder.blockSize;
-blockBuffer      = Settings.objfinder.blockBuffer;
-maxDotSize       = Settings.objfinder.maxDotSize;
-minDotSize       = Settings.objfinder.minDotSize;
-blockSearch      = Settings.objfinder.blockSearch;
-minIntensity     = Settings.objfinder.minIntensity;
-
-% Calculate the block size to Subsample the volume
-if blockSearch
-    if size(Post,2)>blockSize
-        NumBx=round(size(Post,2)/blockSize);
-        Bxc=fix(size(Post,2)/NumBx);
-    else
-        NumBx=1;
-        Bxc=size(Post,2);
-    end
-    
-    if size(Post,1)>blockSize
-        NumBy=round(size(Post,1)/blockSize);
-        Byc=fix(size(Post,1)/NumBy);
-    else
-        NumBy=1;
-        Byc=size(Post,1);
-    end
-    
-    if size(Post,3)>blockSize
-        NumBz=round(size(Post,3)/blockSize);
-        Bzc=fix(size(Post,3)/NumBz);
-    else
-        NumBz=1;
-        Bzc=size(Post,3);
-    end
-else
-    % Just one block
-	NumBx=1;
-    NumBy=1;
-    NumBz=1;
-    Bxc=size(Post,2);
-    Byc=size(Post,1);
-    Bzc=size(Post,3);
-end
-
-%% -- STEP 1: divide the volume into searching blocks for multi-threading
-clear Blocks;
+%% -- STEP 1: divide the image volume into searching blocks for multi-threading
 tic;
 fprintf('Dividing image volume into blocks... ');
+blockSize        = Settings.objfinder.blockSize;
+blockBuffer      = Settings.objfinder.blockBuffer;
+
+% Calculate the number of blocks to subsample the image volume
+if Settings.objfinder.blockSearch
+    NumBx   = max(1, ceil(size(Post,2)/blockSize));
+    NumBy   = max(1, ceil(size(Post,1)/blockSize));
+    NumBz   = max(1, ceil(size(Post,3)/blockSize));
+else
+    NumBx=1;
+    NumBy=1;
+    NumBz=1;
+end
 Blocks(NumBx * NumBy * NumBz) = struct;
 
 % Split full image (Post) into blocks
 for block = 1:(NumBx*NumBy*NumBz)
     [Blocks(block).Bx, Blocks(block).By, Blocks(block).Bz] = ind2sub([NumBx, NumBy, NumBz], block);
-    %disp(['current block = Bx:' num2str(Bx) ', By:' num2str(By) ', Bz:' num2str(Bz)]);
 
-    %Find real territory
-    Txstart=(Blocks(block).Bx-1)*Bxc+1;
-    Tystart=(Blocks(block).By-1)*Byc+1;
-    Tzstart=(Blocks(block).Bz-1)*Bzc+1;
-
-    if Byc, Tyend=Blocks(block).By*Byc; else, Tyend=size(Post,1); end
-    if Bxc, Txend=Blocks(block).Bx*Bxc; else, Txend=size(Post,2); end
-    if Bzc, Tzend=Blocks(block).Bz*Bzc; else, Tzend=size(Post,3); end
-
-    % Find buffered Borders (if last block, extend to image borders)
-    yStart                  = Tystart-blockBuffer;
-    yStart(yStart<1)        = 1;
-    yEnd                    = Tyend+blockBuffer;
-    yEnd(yEnd>size(Post,1)) = size(Post,1);
-    xStart                  = Txstart-blockBuffer;
-    xStart(xStart<1)        = 1;
-    xEnd                    = Txend+blockBuffer;
-    xEnd(xEnd>size(Post,2)) = size(Post,2);
-    zStart                  = Tzstart-blockBuffer;
-    zStart(zStart<1)        = 1;
-    zEnd                    = Tzend+blockBuffer;
-    zEnd(zEnd>size(Post,3)) = size(Post,3);
-
+    % Find boundary coordinates of block + buffered region
+    yStart  = max(1, (Blocks(block).By-1)*blockSize-blockBuffer);
+    xStart  = max(1, (Blocks(block).Bx-1)*blockSize-blockBuffer);
+    zStart  = max(1, (Blocks(block).Bz-1)*blockSize-blockBuffer);
+    yEnd    = min(size(Post,1), Blocks(block).By*blockSize+blockBuffer);
+    xEnd	= min(size(Post,2), Blocks(block).Bx*blockSize+blockBuffer);
+    zEnd    = min(size(Post,3), Blocks(block).Bz*blockSize+blockBuffer);
+    
     % Slice the raw image into the block of interest (Igm)
-    Blocks(block).Igm           = Post(yStart:yEnd,xStart:xEnd,zStart:zEnd);
+    Blocks(block).Igm           = Post(yStart:yEnd, xStart:xEnd, zStart:zEnd);
     
     % Search only between max intensity (Gmax) and noise intensity level (Gmode) found in each block
     Blocks(block).Gmode         = mode(Blocks(block).Igm(Blocks(block).Igm>0)); % Most common intensity found in the block (noise level, excluding zero)
     Blocks(block).Gmax          = max(Blocks(block).Igm(:));
     Blocks(block).sizeIgm       = [size(Blocks(block).Igm,1), size(Blocks(block).Igm,2), size(Blocks(block).Igm,3)];
 
-    Blocks(block).peakMap       = zeros(Blocks(block).sizeIgm(1),Blocks(block).sizeIgm(2),Blocks(block).sizeIgm(3),'uint8'); % Initialize matrix to map peaks found
+    Blocks(block).peakMap       = zeros(Blocks(block).sizeIgm(1), Blocks(block).sizeIgm(2), Blocks(block).sizeIgm(3),'uint8'); % Initialize matrix to map peaks found
     Blocks(block).thresholdMap  = Blocks(block).peakMap; % Initialize matrix to sum passed thresholds
 
     Blocks(block).startPos      = [yStart, xStart, zStart];
@@ -114,56 +66,54 @@ for block = 1:(NumBx*NumBy*NumBz)
     Blocks(block).wsTMLabels    = [];
 	Blocks(block).wsLabelList   = [];
 	Blocks(block).nLabels       = 0;
-
+    
+%     disp(['current block = Bx:' num2str(Blocks(block).Bx) ', By:' num2str(Blocks(block).By) ', Bz:' num2str(Blocks(block).Bz)]);    
+%     disp(['Block coordinates = x:' num2str(xStart) ' : ' num2str(xEnd) ', y:' num2str(yStart) ' : ' num2str(yEnd) ', z:' num2str(zStart) ' : ' num2str(zEnd)]);    
+%     disp(['Noise level: ' num2str(Blocks(block).Gmode) ' Max level: ' num2str(Blocks(block).Gmax)]);
 end
-fprintf([num2str(NumBx*NumBy*NumBz) ' blocks, DONE in ' num2str(toc) ' seconds \n']);
-clear xStart xEnd yStart yEnd zStart zEnd T*
 
+fprintf([num2str(NumBx*NumBy*NumBz) ' blocks, DONE in ' num2str(toc) ' seconds \n']);
+
+clear xStart xEnd yStart yEnd zStart zEnd
 %% -- STEP 2: scan volume to find areas above local contrast threshold --
 tic;
 fprintf('Searching candidate objects using multi-threaded local threshold ... ');
+maxDotSize       = Settings.objfinder.maxDotSize; 
+minDotSize       = Settings.objfinder.minDotSize; 
+minIntensity     = Settings.objfinder.minIntensity;
 
 parfor block = 1:(NumBx*NumBy*NumBz)
-    % Scan volume to find areas crossing contrast threshold of minIntensity times the local noise
-    i=ceil(Blocks(block).Gmode * minIntensity)+1;
+    % Scan volume to find voxels bright minIntensity*the local noise
+    i = ceil(Blocks(block).Gmode * minIntensity)+1;
         
-    % Label all areas in the block (Igl) that crosses the intensity threshold "i"
-    CC = bwconncomp(Blocks(block).Igm > i,6);  % 10 percent faster than bwlabeln   
-    labels = CC.NumObjects;
+    % Label all areas in the block (Igl) that crosses the intensity "i"
+    % bwconncomp+labelmatrix is ~10% faster than using belabeln
+    CC                = bwconncomp(Blocks(block).Igm > i,6);
+    labels            = CC.NumObjects;
     Blocks(block).Igl = labelmatrix(CC);
     
-    if labels == 0
-        continue
-    elseif labels < 65536
-        Blocks(block).Igl=uint16(Blocks(block).Igl); % Lower bitdepth if possible
-    end
-    
     % Find peak location in each labeled object and check object size
-    if labels == 1
-        nPixel = numel(CC.PixelIdxList{1});
-    else
-        nPixel = hist(Blocks(block).Igl(Blocks(block).Igl>0), 1:labels);
+    nPixel = 0; %#ok needed to avoid parfor warning of not-initialized
+    switch labels
+        case 0,     continue
+        case 1,     nPixel = numel(CC.PixelIdxList{1});
+        otherwise,  nPixel = hist(Blocks(block).Igl(Blocks(block).Igl>0), 1:labels);
     end
     
-    for p=1:labels
-        pixelIndex = CC.PixelIdxList{p}; % 50 percent faster
-        
+    for p = 1:labels
+        pixelIndex = CC.PixelIdxList{p}; % 50% faster than find(Igl==p)
         if (nPixel(p) <= maxDotSize) && (nPixel(p) >= minDotSize)
-            if sum(Blocks(block).peakMap(pixelIndex))== 0
-                % limit one peak (peakIndex) per labeled area (where Igl==p)
-                peakValue = max(Blocks(block).Igm(pixelIndex));
-                peakIndex = find(Blocks(block).Igm(pixelIndex)==peakValue);
-                %if numel(peakIndex) > 1
-                %    disp('found multi-peak');
-                %    peakIndex = peakIndex(round(numel(peakIndex)/2));
-                %end
-                Blocks(block).peakMap(pixelIndex(peakIndex)) = 1;
-            end
+            peakValue = max(Blocks(block).Igm(pixelIndex));
+            peakIndex = Blocks(block).Igm(pixelIndex)==peakValue;
+            Blocks(block).peakMap(pixelIndex(peakIndex)) = 1;
         else
-            Blocks(block).Igl(pixelIndex)=0;
+            Blocks(block).Igl(pixelIndex) = 0;
         end
-    end
-    Blocks(block).thresholdMap(Blocks(block).Igl>0) = Blocks(block).thresholdMap(Blocks(block).Igl>0)+1; % +1 to all voxels that passed this iteration
+    end % for all labels
+    
+    % Add +1 to the threshold of all voxels that passed this iteration
+    ValidVox = Blocks(block).Igl>0;
+    Blocks(block).thresholdMap(ValidVox) = Blocks(block).thresholdMap(ValidVox)+1;
 
     Blocks(block).wsTMLabels    = Blocks(block).Igl;                  % wsTMLabels = block volume labeled with same numbers for the voxels that belong to same object
     Blocks(block).wsLabelList   = unique(Blocks(block).wsTMLabels);   % wsLabelList = unique labels list used to label the block volume 
@@ -183,45 +133,24 @@ else
 end
 
 parfor block = 1:(NumBx*NumBy*NumBz)
-    ys = Blocks(block).sizeIgm(1);  % retrieve values
-    xs = Blocks(block).sizeIgm(2);  % retrieve values
-    zs = Blocks(block).sizeIgm(3);  % retrieve values
-    
-    wsThresholdMapBin = uint8(Blocks(block).thresholdMap>0);         % binary map of threshold
-    wsThresholdMapBinOpen = imdilate(wsThresholdMapBin, ones(3,3,3));% dilate Bin map with a 3x3x3 kernel (dilated perimeter acts like ridges between background and ROIs)
-    wsThresholdMapComp = imcomplement(Blocks(block).thresholdMap);   % complement (invert) image. Required because watershed() separate holes, not mountains. imcomplement creates complement using the entire range of the class, so for uint8, 0 becomes 255 and 255 becomes 0, but for double 0 becomes 1 and 255 becomes -254.
-    wsTMMod = wsThresholdMapComp.*wsThresholdMapBinOpen;             % Force background outside of dilated region to 0, and leaves walls of 255 between puncta and background.
-    
     if use_watershed
-        wsTMLabels = watershed(wsTMMod, 6);                          % 6 voxel connectivity watershed, this will fill background with 1, ridges with 0 and puncta with 2,3,4,... in double format
-    else
-        wsTMMod = Blocks(block).thresholdMap;                        % 6 voxel connectivity without watershed on the original threshold map.        
-        wsTMLabels = bwlabeln(wsTMMod,6);
-    end
+        wsTMapBin       = uint8(Blocks(block).thresholdMap>0);      % Binary map of thresholded voxels
+        wsTMapBinOpen   = imdilate(wsTMapBin, ones(3,3,3));         % Dilate map with a 3x3x3 kernel (dilated perimeter acts like ridges between background and ROIs)
+        wsTMapComp      = imcomplement(Blocks(block).thresholdMap); % Complement (invert) image. Required because watershed() separate holes, not mountains. imcomplement creates complement using the entire range of the class, so for uint8, 0 becomes 255 and 255 becomes 0, but for double 0 becomes 1 and 255 becomes -254.
+        wsTMMod         = wsTMapComp.*wsTMapBinOpen;                % Force background outside of dilated region to 0, and leaves walls of 255 between puncta and background.
+        wsTMLabels      = watershed(wsTMMod, 6);                    % 6 voxel connectivity watershed (faces), this will fill background with 1, ridges with 0 and puncta with 2,3,4,... in double format
+        wsBkgLabel      = mode(double(wsTMLabels(:)));              % calculate background level
+        wsTMLabels(wsTMLabels == wsBkgLabel) = 0;                   % seems that sometimes Background can get into puncta... so the next line was not good enough to remove all the background labels.
+    else                          
+        wsTMLabels = bwlabeln(Blocks(block).thresholdMap, 6);   % 6 voxel connectivity without watershed on the original threshold map.
+    end    
     
-    wsBackgroundLabel = mode(double(wsTMLabels(:)));                 % calculate background level
-    wsTMLabels(wsTMLabels == wsBackgroundLabel) = 0;                 % seems that sometimes Background can get into puncta... so the next line was not good enough to remove all the background labels.
-    wsTMLabels= double(wsTMLabels).*double(wsThresholdMapBin);       % masking out non-puncta voxels, this makes background and dilated voxels to 0. This also prevents trough voxels from being added back somehow with background. HO 6/4/2010
-    wsTMLZeros= find(wsTMLabels==0 & Blocks(block).thresholdMap>0);  % find zeros of watersheds inside of thresholdmap (add back the zero ridges in thresholdMap to their most similar neighbors)
-    
-    if ~isempty(wsTMLZeros) % if exist zeros in the map
-        [wsTMLZerosY, wsTMLZerosX, wsTMLZerosZ] = ind2sub(size(Blocks(block).thresholdMap),wsTMLZeros); %6/4/2010 HO
-        for j = 1:length(wsTMLZeros) % create a dilated matrix to examine neighbor connectivity around the zero position
-            tempZMID =  wsTMLabels(max(1,wsTMLZerosY(j)-1):min(ys,wsTMLZerosY(j)+1), max(1,wsTMLZerosX(j)-1):min(xs,wsTMLZerosX(j)+1), max(1,wsTMLZerosZ(j)-1):min(zs,wsTMLZerosZ(j)+1)); %HO 6/4/2010
-            nZeroID = mode(tempZMID(tempZMID~=0)); % find most common neighbor value (watershed) not including zero
-            wsTMLabels(wsTMLZeros(j)) = nZeroID;   % re-define zero with new watershed ID (this process will act similar to watershed by making new neighboring voxels feed into the decision of subsequent zero voxels)
-        end
-    end
-    
-    wsTMLabels                  = uint16(wsTMLabels);
     wsLabelList                 = unique(wsTMLabels);
-    wsLabelList(1)              = []; % Remove background (labeled 0)
-    nLabels                     = length(wsLabelList);
-    
-    Blocks(block).nLabels       = nLabels;     % Store for later
-    Blocks(block).wsTMLabels    = wsTMLabels;  % Store for later
-    Blocks(block).wsLabelList   = wsLabelList; % Store for later
+    Blocks(block).wsTMLabels    = uint16(wsTMLabels);
+    Blocks(block).wsLabelList   = wsLabelList(2:end); % Remove background (1st label)
+    Blocks(block).nLabels       = length(wsLabelList(2:end));
 end
+
 fprintf(['DONE in ' num2str(toc) ' seconds \n']);
 
 %% -- STEP 4: calculate dots properties and store into a struct array --
@@ -254,8 +183,8 @@ for block = 1:(NumBx*NumBy*NumBz)
     end
 end
 
-
 if NumValidObjects == 0
+    disp('No valid objects');    
     Dots = [];
     return;
 else

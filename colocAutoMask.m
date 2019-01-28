@@ -30,13 +30,13 @@ function ColocAuto = colocAutoMask(Dots, Filter, Colo, FileName, NumVoxOverlap, 
 %%
 Grouped = getFilteredObjects(Dots, Filter);
 [~, fName, ~] = fileparts(FileName);
-ColocAuto.Source = Dots.Name;
-ColocAuto.Fish1 = fName;
+ColocAuto.Source        = Dots.Name;
+ColocAuto.Fish1         = fName;
 
-AutoColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
+AutoColocAnalyzingFlag  = ones([1,numel(Grouped.Vox)], 'uint8');
 ColocAuto.ListDotIDsManuallyColocAnalyzed = find(AutoColocAnalyzingFlag == 1);
 ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
-ColocAuto.ColocFlag = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
+ColocAuto.ColocFlag     = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
 
 for i=1:numel(Grouped.Vox)    
     % Trasverse each valid objects and check if the mask is overlapping
@@ -58,4 +58,8 @@ ColocAuto.NumFalseDots      = length(find(ColocAuto.ColocFlag == 3));
 ColocAuto.ColocRate         = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc);
 ColocAuto.FalseDotRate      = ColocAuto.NumFalseDots/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
 ColocAuto.ColocRateInclugingFalseDots = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
+ColocAuto.Method            = 'AutoMask';
+ColocAuto.NumVoxOverlap     = NumVoxOverlap;
+ColocAuto.NumPercOverlap    = NumPercOverlap;
+
 end

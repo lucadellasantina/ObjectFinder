@@ -509,7 +509,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                             max(CutNumVox(1)/2+1, PosY)];
                     
                 ClickPos = [min(size(ImStk,2)-CutNumVox(2)/2,ClickPos(1)),...
-                            min(size(ImStk,1)-CutNumVox(1)/2,ClickPos(1))];
+                            min(size(ImStk,1)-CutNumVox(1)/2,ClickPos(2))];
                 Pos      = [ClickPos, f];
                 PosZoom  = [-1, -1, -1];
                 scroll(f);

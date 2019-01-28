@@ -22,7 +22,25 @@
 %
 % *Change log*
 %
-%  _*Version 5.18*              created on 2019-01-14 by Luca Della Santina_
+%  _*Version 6.0*             created on 2019-01-28 by Luca Della Santina_
+%
+%   + Added confirmation dialog for all Clear buttons to ensure user's will
+%   + Colocalzation: saved fields "Method, NumVoxOverlap, NumPercOverlap"
+%   + Removed itMin parameter for search
+%   + Fixed watershed postprocessing was removing very bright puncta
+%   + findObjects code cleaning in calculating block size
+%   + Removed delayed execution timer when not in batch-mode
+%   + Removed Local thresholding search method
+%   + Simplified UI of Detect and Automate tabs
+%   + Added calculator to convert volume into diameter of equivalent sphere
+%   + Fixed button Clear colocalization was missing "Yes" option
+%   + Batch processing was highlighting the wrong item as being processed
+%   + Fixed Automate bug where Dots kept accumulating across experiments
+%   + Fixed Automate bug not refreshing current experiment at batch end
+%   + Choose images: arrange MIPs into N(2x3) panels
+%   + Isnpect2D: Fixed wrong mouse location reading when mozing zoom region
+%
+%  _*Version 5.18*             created on 2019-01-14 by Luca Della Santina_
 %
 %   + Colocaliz. rates are calculated from raw data and expressed clearly
 %   + Removed need for refresh buttons in the user interface

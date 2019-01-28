@@ -18,7 +18,7 @@
 %
 % *Find objects using an iterative thresholding approach*
 
-function Dots = findObjects(Post, Settings)
+function Dots = findObjectsLegacy(Post, Settings)
 %% -- STEP 1: divide the image volume into searching blocks for multi-threading
 tic;
 fprintf('Dividing image volume into blocks... ');

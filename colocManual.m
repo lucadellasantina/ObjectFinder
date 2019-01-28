@@ -41,26 +41,31 @@ if exist([pwd filesep 'ColocManual.mat'],'file')
     end
 else
     if isempty(Colo2)
-        ColocManual.Source = Dots.Name;
-        ColocManual.Fish1 = fName;
+        ColocManual.Source  = Dots.Name;
+        ColocManual.Fish1   = fName;
     
         ManualColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
         ColocManual.ListDotIDsManuallyColocAnalyzed = find(ManualColocAnalyzingFlag == 1);
         ColocManual.TotalNumDotsManuallyColocAnalyzed = length(ColocManual.ListDotIDsManuallyColocAnalyzed);
         ColocManual.ColocFlag = zeros([1,ColocManual.TotalNumDotsManuallyColocAnalyzed], 'uint8');
-
+        ColocManual.Method            = 'Manual';
+        ColocManual.NumVoxOverlap     = 0;
+        ColocManual.NumPercOverlap    = 0;
         ColocManual2 = struct;
     else
         [~, fName2, ~] = fileparts(FileName2);
 
-        ColocManual.Source = Dots.Name;
-        ColocManual.Fish1 = fName;
+        ColocManual.Source  = Dots.Name;
+        ColocManual.Fish1   = fName;       
 
         ManualColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
         ColocManual.ListDotIDsManuallyColocAnalyzed = find(ManualColocAnalyzingFlag == 1);
         ColocManual.TotalNumDotsManuallyColocAnalyzed = length(ColocManual.ListDotIDsManuallyColocAnalyzed);
         ColocManual.ColocFlag = zeros([1,ColocManual.TotalNumDotsManuallyColocAnalyzed], 'uint8');
-
+        ColocManual.Method            = 'Manual';
+        ColocManual.NumVoxOverlap     = 0;
+        ColocManual.NumPercOverlap    = 0;
+        
         ColocManual2 = ColocManual;
         ColocManual2.Fish1 = fName2;
     end    
