@@ -22,6 +22,12 @@
 %
 % *Change log*
 %
+%  _*Version 6.1*             created on 2019-01-29 by Luca Della Santina_
+%
+%   + Detect: User can select whether to estimate local / global noise
+%   + New button to purge a set of objects from invalid objects
+%   + getFilteredObjects now return a Dots struct with all fields
+%
 %  _*Version 6.0*             created on 2019-01-28 by Luca Della Santina_
 %
 %   + Added confirmation dialog for all Clear buttons to ensure user's will

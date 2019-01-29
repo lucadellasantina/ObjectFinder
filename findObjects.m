@@ -21,9 +21,9 @@
 function Dots = findObjects(Post, Settings)
 %% -- STEP 1: divide the image volume into searching blocks for multi-threading
 tic;
-fprintf('Dividing image volume into blocks... ');
-blockSize        = Settings.objfinder.blockSize;
-blockBuffer      = Settings.objfinder.blockBuffer;
+fprintf('Dividing image volume into blocks and estimating noise level... ');
+blockSize   = Settings.objfinder.blockSize;
+blockBuffer = Settings.objfinder.blockBuffer;
 
 % Calculate the number of blocks to subsample the image volume
 if Settings.objfinder.blockSearch
@@ -31,9 +31,9 @@ if Settings.objfinder.blockSearch
     NumBy   = max(1, ceil(size(Post,1)/blockSize));
     NumBz   = max(1, ceil(size(Post,3)/blockSize));
 else
-    NumBx=1;
-    NumBy=1;
-    NumBz=1;
+    NumBx   = 1;
+    NumBy   = 1;
+    NumBz   = 1;
 end
 Blocks(NumBx * NumBy * NumBz) = struct;
 
@@ -52,8 +52,14 @@ for block = 1:(NumBx*NumBy*NumBz)
     % Slice the raw image into the block of interest (Igm)
     Blocks(block).Igm           = Post(yStart:yEnd, xStart:xEnd, zStart:zEnd);
     
-    % Search only between max intensity (Gmax) and noise intensity level (Gmode) found in each block
-    Blocks(block).Gmode         = mode(Blocks(block).Igm(Blocks(block).Igm>0)); % Most common intensity found in the block (noise level, excluding zero)
+    % Estimate either local / glocal noise level Gmode according to setting
+    if Settings.objfinder.localNoise
+        % Noise level as the most common intensity found in the block (excluding zero)
+        Blocks(block).Gmode     = mode(Blocks(block).Igm(Blocks(block).Igm>0)); 
+    else
+        % Noise level as the common intensity found in the entire image (excluding zero)
+        Blocks(block).Gmode     = mode(Post(Post>0)); 
+    end
     Blocks(block).Gmax          = max(Blocks(block).Igm(:));
     Blocks(block).sizeIgm       = [size(Blocks(block).Igm,1), size(Blocks(block).Igm,2), size(Blocks(block).Igm,3)];
 

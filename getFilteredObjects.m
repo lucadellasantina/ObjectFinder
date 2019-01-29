@@ -21,13 +21,17 @@ function[Passing] = getFilteredObjects(Objects, Filter)
 Passing.Name        = Objects.Name;
 Passing.ImSize      = Objects.ImSize;
 Passing.Settings    = Objects.Settings;
-Passing.idx         = find(Filter.passF);
 Passing.Pos         = Objects.Pos(Filter.passF, :);
 Passing.Vox         = Objects.Vox(Filter.passF);
 Passing.Vol         = Objects.Vol(Filter.passF);
 Passing.ITMax       = Objects.ITMax(Filter.passF);
 Passing.ItSum       = Objects.ItSum(Filter.passF);
 Passing.MeanBright  = Objects.MeanBright(Filter.passF);
+Passing.Density     = Objects.Density;
+Passing.NN          = Objects.NN;
+Passing.Coloc       = Objects.Coloc;
+Passing.Skel        = Objects.Skel;
+Passing.Shape       = Objects.Shape;
 
 if isfield(Objects.Shape,'Oblong')
     Passing.Shape.Oblong = Objects.Shape.Oblong(Filter.passF);
@@ -35,7 +39,6 @@ end
 if isfield(Objects.Shape,'PrincipalAxisLen')
     Passing.Shape.PrincipalAxisLen = Objects.Shape.PrincipalAxisLen(Filter.passF,:);
 end
-
 if isfield(Objects.Skel,'Dist2CB')
     Passing.Skel.Dist2CB = Objects.Skel.Dist2CB(Filter.passF,:);
 end
@@ -45,5 +48,9 @@ end
 if isfield(Objects.Skel,'ClosestSkelDist')
     Passing.Skel.ClosestSkelDist = Objects.Skel.ClosestSkelDist(Filter.passF);
 end
+
+Passing.Filter       = Filter;
+Passing.Filter.passF = ones(numel(find(Filter.passF)),1);
+Passing.Num          = numel(Passing.Filter.passF);
 
 end
