@@ -60,7 +60,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     
     % Primary filter parameter controls
     txtFilter       = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.800,.085,.02],'String','Primary filter type'); %#ok, unused variable   
-    cmbFilterType   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.750,.060,.04],'String', {'Disabled', 'Score','Volume','Brightness','Roundness','Major Axis Length'},'Callback', @cmbFilterType_changed);  
+    cmbFilterType   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.750,.060,.04],'String', {'Disabled', 'Score','Volume','Brightness','Roundness','Major Axis Length','Z position'},'Callback', @cmbFilterType_changed);  
     cmbFilterDir    = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.750,.025,.04],'String', {'>=', '<='}, 'Visible', 'off'  ,'callback',@cmbFilterDir_changed);            
     btnMinus        = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.715,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus_clicked);    
     txtThresh       = uicontrol('Style','edit'      ,'Units','normalized','Position',[.932,.715,.036,.04],'String',num2str(thresh),'Visible', 'off' ,'CallBack',@txtThresh_changed);
@@ -68,7 +68,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
 
     % Secondary filter parameter controls
     txtFilter2      = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.680,.085,.02],'String','Secondary filter type'); %#ok, unused variable   
-    cmbFilterType2  = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.630,.060,.04],'String',{'Disabled','Score','Volume','Brightness','Roundness','Major Axis Length'},'Callback', @cmbFilterType2_changed);
+    cmbFilterType2  = uicontrol('Style','popup'     ,'Units','normalized','Position',[.907,.630,.060,.04],'String',{'Disabled','Score','Volume','Brightness','Roundness','Major Axis Length', 'Z position'},'Callback', @cmbFilterType2_changed);
     cmbFilter2Dir   = uicontrol('Style','popup'     ,'Units','normalized','Position',[.970,.630,.025,.04],'String',{'>=', '<='}, 'Visible', 'off'   ,'callback',@cmbFilterDir_changed);                 
     btnMinus2       = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.595,.025,.04],'String','-','Visible','off'              ,'CallBack',@btnMinus2_clicked);    
     txtThresh2      = uicontrol('Style','edit'      ,'Units','normalized','Position',[.932,.595,.036,.04],'String',num2str(thresh2),'Visible','off' ,'CallBack',@txtThresh2_changed);
@@ -222,6 +222,18 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 set(txtThresh,'Visible','on');
                 set(btnPlus,'Visible','on');
                 set(btnMinus,'Visible','on');                
+            case 7 % Z position
+                try
+                    new_thresh = Filter.FilterOpts.Thresholds.Zposition;
+                    set(cmbFilterDir,'Value',Filter.FilterOpts.Thresholds.ZpositionDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh = f; % Default value is current Z position
+                end
+                set(cmbFilterDir,'Visible','on');
+                set(txtThresh,   'Visible','on');
+                set(btnPlus,     'Visible','on');
+                set(btnMinus,    'Visible','on');                
         end
         applyFilter(new_thresh, thresh2);
         set(txtThresh,'string',num2str(new_thresh));        
@@ -295,6 +307,18 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 set(txtThresh2,'Visible','on');
                 set(btnPlus2,'Visible','on');
                 set(btnMinus2,'Visible','on');                
+            case 7 % Z Position
+                try
+                    new_thresh2 = Filter.FilterOpts.Thresholds.Zposition;
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.ZpositionDir);
+                catch
+                    disp('Threshold value or direction not specified on file, using default average value');
+                    new_thresh2 = f; % Deafult value is current Z position
+                end
+                set(cmbFilter2Dir,'Visible','on');
+                set(txtThresh2,'Visible','on');
+                set(btnPlus2,'Visible','on');
+                set(btnMinus2,'Visible','on');                
         end
         applyFilter(thresh, new_thresh2);
         set(txtThresh2,'string',num2str(new_thresh2));        
@@ -350,6 +374,14 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 end
                 Filter.FilterOpts.Thresholds.PrincipalAxisLenDir  = cmbFilterDir.Value;
                 Filter.FilterOpts.Thresholds.PrincipalAxisLen     = new_thresh;
+            case 7 % Z position
+                if cmbFilterDir.Value == 1
+                    passI = Dots.Pos(:,3) >= new_thresh;
+                else    
+                    passI = Dots.Pos(:,3) <= new_thresh;
+                end
+                Filter.FilterOpts.Thresholds.Zposition  = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.Zposition  = new_thresh;
         end
         
         % Apply secondary filter criteria if selected
@@ -394,6 +426,14 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 end
                 Filter.FilterOpts.Thresholds.PrincipalAxisLenDir  = cmbFilter2Dir.Value;
                 Filter.FilterOpts.Thresholds.PrincipalAxisLen     = new_thresh2;
+            case 7 % Z position
+                if cmbFilter2Dir.Value == 1
+                    passI = passI & (Dots.Pos(:,3) >= new_thresh2);
+                else    
+                    passI = passI & (Dots.Pos(:,3) <= new_thresh2);
+                end
+                Filter.FilterOpts.Thresholds.Zposition  = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds.Zposition  = new_thresh2;                
         end      
         
         set(txtValidObjs,'string',['Valid Objects: ' num2str(numel(find(passI)))]);
