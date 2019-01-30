@@ -22,6 +22,11 @@
 %
 % *Change log*
 %
+%  _*Version 6.2*             created on 2019-01-29 by Luca Della Santina_
+%
+%   + Detect: If objects set already exists, Ask user then oveerwrite them
+%   + Inspect2D: Objects can be filtered according to their Z position
+%
 %  _*Version 6.1*             created on 2019-01-29 by Luca Della Santina_
 %
 %   + Detect: User can select whether to estimate local / global noise
