@@ -22,6 +22,13 @@
 %
 % *Change log*
 %
+%  _*Version 6.3*             created on 2019-01-29 by Luca Della Santina_
+%
+%   + Automate: fixed bug preventing to batch-calculate shape properties
+%   + Automate: added ability to load all experiments from a root folder
+%   + Automate: added option to specify new images for the analysis
+%   + Automate: added option to propagate settings of 1st folder to all
+%
 %  _*Version 6.2*             created on 2019-01-29 by Luca Della Santina_
 %
 %   + Detect: If objects set already exists, Ask user then oveerwrite them
