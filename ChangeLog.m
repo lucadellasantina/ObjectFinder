@@ -22,6 +22,16 @@
 %
 % *Change log*
 %
+%  _*Version 6.4*             created on 2019-02-03 by Luca Della Santina_
+%
+%   + Automation of colocalization with mask or objects
+%   + Automate colocalization with objects calculates NN distance if needed
+%   + Automate now displays the short-name of each processed folder
+%   + Automate  overwrote if an existing set with same name exists
+%   + Fixed mask filename was wrongly printed on screen
+%   + Fixed error in Automate if user canceled selection of a folder
+%   + Fixed Automation log scrolling disabled
+%
 %  _*Version 6.3*             created on 2019-01-29 by Luca Della Santina_
 %
 %   + Automate: fixed bug preventing to batch-calculate shape properties
