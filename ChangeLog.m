@@ -22,6 +22,11 @@
 %
 % *Change log*
 %
+%  _*Version 6.4*             created on 2019-02-18 by Luca Della Santina_
+%
+%   + Batch colocalization analysis allows to save results in a table
+%   + Fixed error when manual colocalization analysis window is closed
+%
 %  _*Version 6.4*             created on 2019-02-03 by Luca Della Santina_
 %
 %   + Automation of colocalization with mask or objects
