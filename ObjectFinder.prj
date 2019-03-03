@@ -1,20 +1,20 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2225557537" file="D:\Dropbox\MATLAB scripts\ObjectFinder\ObjectFinder.prj" location="D:\Dropbox\MATLAB scripts\ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3918167825" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
     <param.company />
-    <param.icon>${PROJECT_ROOT}\ObjectFinder_resources\icon_24.png</param.icon>
+    <param.icon>${PROJECT_ROOT}/ObjectFinder_resources/icon_24.png</param.icon>
     <param.icons>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\icon_48.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\icon_24.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\icon_16.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_48.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_24.png</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_16.png</file>
     </param.icons>
     <param.summary>Find objects in volumetric image stacks.</param.summary>
     <param.description>Copyright 2016-2019 Luca Della Santina. 
 Licensed under the terms of GNU General Public License v3</param.description>
-    <param.screenshot>${PROJECT_ROOT}\ObjectFinder_resources\app_icon_big.png</param.screenshot>
-    <param.version>6.5</param.version>
+    <param.screenshot>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_big.png</param.screenshot>
+    <param.version>6.6.4</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Image Processing Toolbox</item>
@@ -34,7 +34,7 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <item>6.12</item>
     </param.products.version>
     <param.platforms />
-    <param.output>D:\Dropbox\MATLAB scripts\ObjectFinder</param.output>
+    <param.output>/home/luca/Dropbox/MATLAB scripts/ObjectFinder</param.output>
     <param.guid>912cbc5e-7b98-4c7b-a172-fdd315f64c21</param.guid>
     <unset>
       <param.company />
@@ -42,105 +42,75 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <param.output />
     </unset>
     <fileset.main>
-      <file>${PROJECT_ROOT}\ObjectFinder.mlapp</file>
+      <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>${MATLAB_ROOT}\toolbox\local\userpath.m</file>
-      <file>${PROJECT_ROOT}\calcDensity.m</file>
-      <file>${PROJECT_ROOT}\calcDotDensityAlongZ.m</file>
-      <file>${PROJECT_ROOT}\calcPathLengthStats.m</file>
-      <file>${PROJECT_ROOT}\calcSkelPathLength.m</file>
-      <file>${PROJECT_ROOT}\colocAutoMask.m</file>
-      <file>${PROJECT_ROOT}\colocAutoNN.m</file>
-      <file>${PROJECT_ROOT}\colocDotStackCutter.m</file>
-      <file>${PROJECT_ROOT}\colocManual.m</file>
-      <file>${PROJECT_ROOT}\colocManualCheckDouble.m</file>
-      <file>${PROJECT_ROOT}\colocManualCheckNotColoc.m</file>
-      <file>${PROJECT_ROOT}\colocRedraw.m</file>
-      <file>${PROJECT_ROOT}\colocVideoFig.m</file>
-      <file>${PROJECT_ROOT}\convertObjectFinderDataV3toV4.m</file>
-      <file>${PROJECT_ROOT}\convertObjectFinderDataV4toV5.m</file>
-      <file>${PROJECT_ROOT}\convertSkelSNT2ml.m</file>
-      <file>${PROJECT_ROOT}\DiameterCalculator.mlapp</file>
-      <file>${PROJECT_ROOT}\distDotsToCellBody.m</file>
-      <file>${PROJECT_ROOT}\distDotsToSkel.m</file>
-      <file>${PROJECT_ROOT}\exportObjectsToImaris7.m</file>
-      <file>${PROJECT_ROOT}\exportObjectsToImaris8.m</file>
-      <file>${PROJECT_ROOT}\filterObjects.m</file>
-      <file>${PROJECT_ROOT}\findObjects.m</file>
-      <file>${PROJECT_ROOT}\fitSphere.m</file>
-      <file>${PROJECT_ROOT}\getFilteredObjects.m</file>
-      <file>${PROJECT_ROOT}\inspectRedraw.m</file>
-      <file>${PROJECT_ROOT}\inspectVideoFig.m</file>
-      <file>${PROJECT_ROOT}\inspectVolume2D.m</file>
-      <file>${PROJECT_ROOT}\loadImage.m</file>
-      <file>${PROJECT_ROOT}\saveastiff.m</file>
-      <file>${PROJECT_ROOT}\shollAnalysis.m</file>
-      <file>${PROJECT_ROOT}\validateObjectWithNeuralNet.m</file>
+      <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
+      <file>${PROJECT_ROOT}/calcDensity.m</file>
+      <file>${PROJECT_ROOT}/calcDotDensityAlongZ.m</file>
+      <file>${PROJECT_ROOT}/calcPathLengthStats.m</file>
+      <file>${PROJECT_ROOT}/calcSkelPathLength.m</file>
+      <file>${PROJECT_ROOT}/colocAutoMask.m</file>
+      <file>${PROJECT_ROOT}/colocAutoNN.m</file>
+      <file>${PROJECT_ROOT}/colocDotStackCutter.m</file>
+      <file>${PROJECT_ROOT}/colocManual.m</file>
+      <file>${PROJECT_ROOT}/colocManualCheckDouble.m</file>
+      <file>${PROJECT_ROOT}/colocManualCheckNotColoc.m</file>
+      <file>${PROJECT_ROOT}/colocRedraw.m</file>
+      <file>${PROJECT_ROOT}/colocVideoFig.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV3toV4.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV4toV5.m</file>
+      <file>${PROJECT_ROOT}/convertSkelSNT2ml.m</file>
+      <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>
+      <file>${PROJECT_ROOT}/distDotsToSkel.m</file>
+      <file>${PROJECT_ROOT}/exportObjectsToImaris7.m</file>
+      <file>${PROJECT_ROOT}/exportObjectsToImaris8.m</file>
+      <file>${PROJECT_ROOT}/filterObjects.m</file>
+      <file>${PROJECT_ROOT}/findObjects.m</file>
+      <file>${PROJECT_ROOT}/fitSphere.m</file>
+      <file>${PROJECT_ROOT}/getFilteredObjects.m</file>
+      <file>${PROJECT_ROOT}/inspectRedraw.m</file>
+      <file>${PROJECT_ROOT}/inspectVideoFig.m</file>
+      <file>${PROJECT_ROOT}/inspectVolume2D.m</file>
+      <file>${PROJECT_ROOT}/loadImage.m</file>
+      <file>${PROJECT_ROOT}/saveastiff.m</file>
+      <file>${PROJECT_ROOT}/shollAnalysis.m</file>
+      <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
+      <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>
-      <file>${PROJECT_ROOT}\ImarisXTensions</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources</file>
+      <file>${PROJECT_ROOT}/ImarisXTensions</file>
+      <file>${PROJECT_ROOT}/ObjectFinder_resources</file>
     </fileset.resources>
     <fileset.package />
     <build-deliverables>
-      <file location="D:\Dropbox\MATLAB scripts" name="ObjectFinder" optional="false">D:\Dropbox\MATLAB scripts\ObjectFinder</file>
+      <file location="/home/luca/Dropbox/MATLAB scripts" name="ObjectFinder" optional="false">/home/luca/Dropbox/MATLAB scripts/ObjectFinder</file>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2018a</root>
+      <root>/home/luca/MATLAB/R2018a</root>
       <toolboxes>
-        <toolbox name="fixedpoint" />
         <toolbox name="matlabcoder" />
-        <toolbox name="matlabhdlcoder" />
-        <toolbox name="embeddedcoder" />
-        <toolbox name="gpucoder" />
-        <toolbox name="polyspacebugfinder" />
       </toolboxes>
-      <toolbox>
-        <fixedpoint>
-          <enabled>true</enabled>
-        </fixedpoint>
-      </toolbox>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
       </toolbox>
-      <toolbox>
-        <matlabhdlcoder>
-          <enabled>true</enabled>
-        </matlabhdlcoder>
-      </toolbox>
-      <toolbox>
-        <embeddedcoder>
-          <enabled>true</enabled>
-        </embeddedcoder>
-      </toolbox>
-      <toolbox>
-        <gpucoder>
-          <enabled>true</enabled>
-        </gpucoder>
-      </toolbox>
-      <toolbox>
-        <polyspacebugfinder>
-          <enabled>true</enabled>
-        </polyspacebugfinder>
-      </toolbox>
     </matlab>
     <platform>
-      <unix>false</unix>
+      <unix>true</unix>
       <mac>false</mac>
-      <windows>true</windows>
+      <windows>false</windows>
       <win2k>false</win2k>
       <winxp>false</winxp>
       <vista>false</vista>
-      <linux>false</linux>
+      <linux>true</linux>
       <solaris>false</solaris>
-      <osver>10.0</osver>
+      <osver>4.15.0-45-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
-      <arch>win64</arch>
+      <arch>glnxa64</arch>
       <matlab>true</matlab>
     </platform>
   </configuration>

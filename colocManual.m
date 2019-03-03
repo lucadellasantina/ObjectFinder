@@ -28,9 +28,8 @@
 % depends on: colocDotStackCutter.m  colocVideoFig.m
 % -------------------------------------------------------------------------
 
-function Coloc = colocManual(Dots, Filter, Post, Colo, FileName, Colo2, FileName2)
+function Coloc = colocManual(Dots, Post, Colo, FileName, Colo2, FileName2)
 %%
-Grouped = getFilteredObjects(Dots, Filter);
 [~, fName, ~] = fileparts(FileName);
 if exist([pwd filesep 'ColocManual.mat'],'file')
     load([pwd filesep 'ColocManual.mat'], 'ColocManual'); % Load a previously unfinished analysis
@@ -44,13 +43,14 @@ else
         ColocManual.Source  = Dots.Name;
         ColocManual.Fish1   = fName;
     
-        ManualColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
-        ColocManual.ListDotIDsManuallyColocAnalyzed = find(ManualColocAnalyzingFlag == 1);
-        ColocManual.TotalNumDotsManuallyColocAnalyzed = length(ColocManual.ListDotIDsManuallyColocAnalyzed);
-        ColocManual.ColocFlag = zeros([1,ColocManual.TotalNumDotsManuallyColocAnalyzed], 'uint8');
+        ColocManual.ListDotIDsManuallyColocAnalyzed = 1:numel(Dots.Filter.passF);
+        ColocManual.TotalNumDotsManuallyColocAnalyzed = numel(Dots.Filter.passF);
+        ColocManual.ColocFlag = zeros([1,numel(Dots.Filter.passF)], 'uint8');
+        ColocManual.ColocFlag(find(Dots.Filter.passF == 0)) = 3; %#ok Mark invalid dots as 3 = non-dot
         ColocManual.Method            = 'Manual';
         ColocManual.NumVoxOverlap     = 0;
         ColocManual.NumPercOverlap    = 0;
+        
         ColocManual2 = struct;
     else
         [~, fName2, ~] = fileparts(FileName2);
@@ -58,10 +58,10 @@ else
         ColocManual.Source  = Dots.Name;
         ColocManual.Fish1   = fName;       
 
-        ManualColocAnalyzingFlag = ones([1,numel(Grouped.Vox)], 'uint8');
-        ColocManual.ListDotIDsManuallyColocAnalyzed = find(ManualColocAnalyzingFlag == 1);
-        ColocManual.TotalNumDotsManuallyColocAnalyzed = length(ColocManual.ListDotIDsManuallyColocAnalyzed);
-        ColocManual.ColocFlag = zeros([1,ColocManual.TotalNumDotsManuallyColocAnalyzed], 'uint8');
+        ColocManual.ListDotIDsManuallyColocAnalyzed = 1:numel(Dots.Filter.passF);
+        ColocManual.TotalNumDotsManuallyColocAnalyzed = numel(Dots.Filter.passF);
+        ColocManual.ColocFlag = zeros([1,numel(Dots.Filter.passF)], 'uint8');
+        ColocManual.ColocFlag(find(Dots.Filter.passF == 0)) = 3; %#ok Mark invalid dots as 3 = non-dot
         ColocManual.Method            = 'Manual';
         ColocManual.NumVoxOverlap     = 0;
         ColocManual.NumPercOverlap    = 0;
@@ -71,7 +71,7 @@ else
     end    
 end
 
-Coloc = colocVideoFig(@(frm, ImStk) colocRedraw(frm, ImStk, 'gray(256)'), ColocManual, Grouped, Post, Colo, Colo2, ColocManual2);
+Coloc = colocVideoFig(@(frm, ImStk) colocRedraw(frm, ImStk, 'gray(256)'), ColocManual, Dots, Post, Colo, Colo2, ColocManual2);
 end
 
 

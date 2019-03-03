@@ -23,7 +23,7 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
 	check_callback(redraw_func);
     Coloc = struct;
     
-    size_video = [0 0.03 0.87 0.97]; % default video window size within the open window (set same as the original videofig) HO 2/17/2011
+    size_video = [0 0.03 0.87 0.97]; % default video window size
     click = 0;
     [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
     num_frames = size(ImStk,3);
@@ -48,16 +48,26 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
 	scroll_handle = patch([0 1 1 0] * scroll_bar_width, [0 0 1 1], [.8 .8 .8], 'Parent',scroll_axes_handle, 'EdgeColor','none', 'ButtonDownFcn', @on_click);
 	
     % Add GUI conmponents
-    set(gcf,'units', 'normalized', 'position', [0.25 0.1 0.455 0.72]);
     if isempty(Colo2)
+        set(gcf,'units', 'normalized', 'position', [0.25 0.1 0.455 0.72]);        
+        lblRefChan   = uicontrol('Style','text'  ,'Units','normalized','position',[.017,.050,.400,.020],'String',['Reference channel: ' ColocManual.Source]); %#ok, unused variable
+        lblCurrObjs  = uicontrol('Style','text'  ,'Units','normalized','position',[.017,.970,.400,.020],'String',['Current ' ColocManual.Source ' (green)']); %#ok, unused variable
         lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.050,.400,.020],'String',['Colocalizing channel: ' ColocManual.Fish1]); %#ok, unused variable
         lblOverlay   = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.970,.400,.020],'String',[ColocManual.Source ' (green),' ColocManual.Fish1 ' (magenta)']); %#ok, unused variable
     else
-        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.050,.400,.020],'String',['Colocalizing red: ' ColocManual.Fish1 ' blue: ' ColocManual2.Fish1]); %#ok, unused variable
-        lblOverlay   = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.970,.400,.020],'String',[ColocManual.Source ' (green), ' ColocManual.Fish1 ' (red), ' ColocManual2.Fish1 ' (blue)']); %#ok, unused variable
+        set(gcf,'units', 'normalized', 'position', [0.05 0.1 0.9 0.72]);        
+        lblRefChan   = uicontrol('Style','text'  ,'Units','normalized','position',[.010,.050,.200,.020],'String',['Reference channel: ' ColocManual.Source]); %#ok, unused variable
+        lblCurrObjs  = uicontrol('Style','text'  ,'Units','normalized','position',[.010,.970,.200,.020],'String',['Current ' ColocManual.Source ' (green)']); %#ok, unused variable
+
+        lblColoOlay  = uicontrol('Style','text'  ,'Units','normalized','position',[.225,.050,.200,.020],'String',['Colocalizing channel: ' ColocManual.Fish1]); %#ok, unused variable
+        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.225,.970,.200,.020],'String',[ColocManual.Source ' (green), ' ColocManual.Fish1 ' (magenta)']); %#ok, unused variable
+
+        lblColoOlay  = uicontrol('Style','text'  ,'Units','normalized','position',[.440,.050,.200,.020],'String',['Colocalizing channel: ' ColocManual2.Fish1]); %#ok, unused variable
+        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.440,.970,.200,.020],'String',[ColocManual.Source ' (green), ' ColocManual2.Fish1 ' (magenta)']); %#ok, unused variable
+
+        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.655,.050,.200,.020],'String',['Colocalizing red: ' ColocManual.Fish1 ' blue: ' ColocManual2.Fish1]); %#ok, unused variable
+        lblOverlay   = uicontrol('Style','text'  ,'Units','normalized','position',[.655,.970,.200,.020],'String',[ColocManual.Source ' (green), ' ColocManual.Fish1 ' (red), ' ColocManual2.Fish1 ' (blue)']); %#ok, unused variable
     end
-    lblRefChan   = uicontrol('Style','text'      ,'Units','normalized','position',[.017,.050,.400,.020],'String',['Reference channel: ' ColocManual.Source]); %#ok, unused variable
-    lblCurrObjs  = uicontrol('Style','text'      ,'Units','normalized','position',[.017,.970,.400,.020],'String',['Current ' ColocManual.Source ' (green)']); %#ok, unused variable
 
     pnlSettings  = uipanel(  'Title',' '         ,'Units','normalized','Position',[.865,.005,.133,.990]); %#ok, unused variable    
     lblObjNum    = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.950,.110,.020],'String','Objects'); %#ok, unused variable
@@ -124,29 +134,51 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
             ZeroCut = uint8(zeros(size(PostCut)));
             
             if ~isempty(Colo2)
-                ImStk1 = cat(4, ZeroCut, PostCutScaled.*PostVoxMapCut, ZeroCut);
-                ImStk2 = cat(4, ColoCutScaled, PostCutScaled.*PostVoxMapCut, Colo2CutScaled);
+                % First row of panels (left to right positins)
+                ImStk1 = cat(4, ZeroCut,        PostCutScaled.*PostVoxMapCut, ZeroCut);
+                ImStk2 = cat(4, ColoCutScaled,  PostCutScaled.*PostVoxMapCut, ColoCutScaled);
+                ImStk3 = cat(4, Colo2CutScaled, PostCutScaled.*PostVoxMapCut, Colo2CutScaled);             
+                ImStk4 = cat(4, ColoCutScaled,  PostCutScaled.*PostVoxMapCut, Colo2CutScaled);
+                
+                % Second row of panels (left to right positions)
+                ImStk5 = cat(4, PostCutScaled,  PostCutScaled,  PostCutScaled);
+                ImStk6 = cat(4, ColoCutScaled,  ColoCutScaled,  ColoCutScaled);
+                ImStk7 = cat(4, Colo2CutScaled, Colo2CutScaled, Colo2CutScaled);
+                ImStk8 = cat(4, ColoCutScaled,  ZeroCut,        Colo2CutScaled);                
+
+                % Separate left from right panels with a vertical line
+                ImStk1(1:end, end, 1:end, 1:3) = 60;
+                ImStk2(1:end, end, 1:end, 1:3) = 60;
+                ImStk3(1:end, end, 1:end, 1:3) = 60;
+                ImStk5(1:end, end, 1:end, 1:3) = 60;
+                ImStk6(1:end, end, 1:end, 1:3) = 60;
+                ImStk7(1:end, end, 1:end, 1:3) = 60;
+
+                % Separate top from bottom panels with a horizontal line
+                ImStk5(1, 1:end, 1:end, 1:3) = 60;
+                ImStk6(1, 1:end, 1:end, 1:3) = 60;
+                ImStk7(1, 1:end, 1:end, 1:3) = 60;
+                ImStk8(1, 1:end, 1:end, 1:3) = 60;
+
+                ImStk = cat(1, cat(2, ImStk1, ImStk2, ImStk3, ImStk4),  cat(2, ImStk5, ImStk6, ImStk7, ImStk8));
             else
-                ImStk1 = cat(4, ZeroCut, PostCutScaled.*PostVoxMapCut, ZeroCut);                
-                ImStk2 = cat(4, ColoCutScaled, PostCutScaled.*PostVoxMapCut, ColoCutScaled);
+                % 4-panel figure, first row of columns (left to right positions
+                ImStk1 = cat(4, ZeroCut,        PostCutScaled.*PostVoxMapCut, ZeroCut);                
+                ImStk2 = cat(4, ColoCutScaled,  PostCutScaled.*PostVoxMapCut, ColoCutScaled);
+                % 4-panel figure, recond row of columns (left to right)
+                ImStk3 = cat(4, PostCutScaled,  PostCutScaled, PostCutScaled);
+                ImStk4 = cat(4, ColoCutScaled,  ColoCutScaled, ColoCutScaled);
+                
+                % Separate left from right panels with a vertical line
+                ImStk1(1:end, end, 1:end, 1:3) = 60;
+                ImStk3(1:end, end, 1:end, 1:3) = 60;
+                % Separate top from bottom panels with a vertical line
+                ImStk3(1, 1:end, 1:end, 1:3) = 60;
+                ImStk4(1, 1:end, 1:end, 1:3) = 60;
+
+                ImStk = cat(1, cat(2, ImStk1, ImStk2),  cat(2, ImStk3, ImStk4));
             end
 
-            ImStk3 = cat(4, PostCutScaled, PostCutScaled, PostCutScaled);
-            if ~isempty(Colo2)
-                ImStk4 = cat(4, ColoCutScaled, ZeroCut, Colo2CutScaled);
-            else
-                ImStk4 = cat(4, ColoCutScaled, ColoCutScaled, ColoCutScaled);
-            end
-            
-
-            % Separate left and right panels visually with a vertical line
-            ImStk1(1:end, end, 1:end, 1:3) = 60;
-            ImStk3(1:end, end, 1:end, 1:3) = 60;
-            % Separate top and bottom panels visually with a vertical line
-            ImStk3(1, 1:end, 1:end, 1:3) = 60;
-            ImStk4(1, 1:end, 1:end, 1:3) = 60;
-
-            ImStk = cat(1, cat(2, ImStk1, ImStk2),  cat(2, ImStk3, ImStk4));
         else
             % Add stats so that you can remember ColocFlag of 1 is coloc, etc.
             ColocManual.NumDotsColoc = length(find(ColocManual.ColocFlag == 1));

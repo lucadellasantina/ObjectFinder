@@ -18,6 +18,9 @@
 %
 function[Passing] = getFilteredObjects(Objects, Filter)
 
+% Ensure that filter is a binary mask
+Filter.passF = logical(Filter.passF);
+
 Passing.Name        = Objects.Name;
 Passing.ImSize      = Objects.ImSize;
 Passing.Settings    = Objects.Settings;

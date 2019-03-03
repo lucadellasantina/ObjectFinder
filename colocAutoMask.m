@@ -26,29 +26,32 @@
 %                    the binary mask to consider the object as colocalized
 %
 
-function ColocAuto = colocAutoMask(Dots, Filter, Colo, FileName, NumVoxOverlap, NumPercOverlap)
+function ColocAuto = colocAutoMask(Dots, Colo, FileName, NumVoxOverlap, NumPercOverlap)
 %%
-Grouped = getFilteredObjects(Dots, Filter);
 [~, fName, ~] = fileparts(FileName);
 ColocAuto.Source        = Dots.Name;
 ColocAuto.Fish1         = fName;
 
-AutoColocAnalyzingFlag  = ones([1,numel(Grouped.Vox)], 'uint8');
+AutoColocAnalyzingFlag  = ones([1,numel(Dots.Vox)], 'uint8');
 ColocAuto.ListDotIDsManuallyColocAnalyzed = find(AutoColocAnalyzingFlag == 1);
 ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
 ColocAuto.ColocFlag     = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
 
-for i=1:numel(Grouped.Vox)    
-    % Trasverse each valid objects and check if the mask is overlapping
-    VoxOverlap = numel(find(Colo(Grouped.Vox(i).Ind))); %one liner using indexes
-    
-    % Define also overlap as percent of total object size
-    PercOverlap = 100 * VoxOverlap / Grouped.Vol(i); 
-    
-    if (VoxOverlap >= NumVoxOverlap) && (PercOverlap >= NumPercOverlap)
-        ColocAuto.ColocFlag(i) = 1; % Colocalized
+for i=1:numel(Dots.Vox)
+    if Dots.Filter.passF(i)
+        % Trasverse each valid objects and check if the mask is overlapping
+        VoxOverlap = numel(find(Colo(Dots.Vox(i).Ind))); %one liner using indexes
+        
+        % Define also overlap as percent of total object size
+        PercOverlap = 100 * VoxOverlap / Dots.Vol(i);
+        
+        if (VoxOverlap >= NumVoxOverlap) && (PercOverlap >= NumPercOverlap)
+            ColocAuto.ColocFlag(i) = 1; % Colocalized
+        else
+            ColocAuto.ColocFlag(i) = 2; % Not Colocalized
+        end
     else
-        ColocAuto.ColocFlag(i) = 2; % Not Colocalized
+        ColocAuto.ColocFlag(i) = 3; % Invalid dot (filter==0)
     end
 end
 

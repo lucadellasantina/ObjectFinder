@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%  Copyright (C) 2016-2019 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -16,50 +16,53 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-% *Colocalization - Automatic overlap analysis between nearest neighbors*
+% *Colocalization - Automatic overlap analysis between engulfing/engilfed*
 % Required parameters
-%    Dots = list of recognized objects
-%    NN = Nearest neighbors of Dots to analyze
-%    NumVoxOverlap =  Number of overlapping voxels between each objet and
+%    Dots           = Reference engulfing objects
+%    DotsEngulfed   = Destination engulfed objects
+%    NumVoxOverlap  = Number of overlapping voxels between each objet and
 %                     the binary mask to consider the object as colocalized
 %    NumPercOverlap = Number of overlapping voxels between each objet and
 %                     the binary mask expressed as percentage of Dots size
 %                     to consider the object as colocalized
 
-function ColocAuto = colocAutoNN(Dots, NN, NumVoxOverlap, NumPercOverlap)
+function ColocAuto = colocAutoEngulf(Dots, DotsEngulfed, NumVoxOverlap, NumPercOverlap)
 %%
 ColocAuto.Source        = Dots.Name;
-ColocAuto.Fish1         = NN.Name;
-
-VoxOverlap              = NN.VoxOverlap(find(Dots.Filter.passF));
-VoxOverlapPerc          = NN.VoxOverlapPerc(find(Dots.Filter.passF));
+ColocAuto.Fish1         = DotsEngulfed.Name;
 
 AutoColocAnalyzingFlag                      = ones([1,numel(Dots.Vox)], 'uint8');
 ColocAuto.ListDotIDsManuallyColocAnalyzed   = find(AutoColocAnalyzingFlag == 1);
 ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
 ColocAuto.ColocFlag                         = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
 
-% Trasverse each valid object and check if Nearest Neighbor is 
-% overlappedthe above the voxel and percent thresholds
-for i=1:numel(Dots.Vox)
-    if Dots.Filter.passF(i)
-        if (VoxOverlap(i) >= NumVoxOverlap) && (VoxOverlapPerc(i) >= NumPercOverlap)
-            ColocAuto.ColocFlag(i) = 1; % Colocalized
-        else
-            ColocAuto.ColocFlag(i) = 2; % Not Colocalized
+% Trasverse each reference object and count how many objects are engulfed
+% *IMPORTANT*: ColocAuto here stores the absolute number DotsEngifled that 
+% each reference object in Dots is engulfing more than passed threshold
+
+for idx_src = 1:numel(Dots.Vox)
+    ColocAuto.ColocFlag(idx_src) = 0; % Invalid dot (filter==0)
+    if ~Dots.Filter.passF(idx_src), continue; end
+   
+    for idx_dst = 1:numel(DotsEngulfed.Vox)
+        if ~DotsEngulfed.Filter.passF(idx_dst), continue; end
+        
+        VoxOverlap     = size(intersect(Dots.Vox(idx_src).Pos, DotsEngulfed.Vox(idx_dst).Pos,'rows'),1);
+        VoxOverlapPerc = 100 * VoxOverlap / DotsEngulfed.Vol(idx_dst); % Store voxel overlap as percent of source object volume
+        
+        if (VoxOverlap >= NumVoxOverlap) && (VoxOverlapPerc >= NumPercOverlap)
+            ColocAuto.ColocFlag(idx_src) = ColocAuto.ColocFlag(idx_src) + 1; % Add one more engulfed
         end
-    else
-        ColocAuto.ColocFlag(i) = 3; % Invalid dot (filter==0)
     end
 end
 
-ColocAuto.NumDotsColoc      = length(find(ColocAuto.ColocFlag == 1));
-ColocAuto.NumDotsNonColoc   = length(find(ColocAuto.ColocFlag == 2));
-ColocAuto.NumFalseDots      = length(find(ColocAuto.ColocFlag == 3));
+ColocAuto.NumDotsColoc      = length(find(ColocAuto.ColocFlag > 0));
+ColocAuto.NumDotsNonColoc   = length(find(ColocAuto.ColocFlag == 0));
+ColocAuto.NumFalseDots      = 0;
 ColocAuto.ColocRate         = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc);
 ColocAuto.FalseDotRate      = ColocAuto.NumFalseDots/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
 ColocAuto.ColocRateInclugingFalseDots = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
-ColocAuto.Method            = 'AutoNN';
+ColocAuto.Method            = 'AutoEngulf';
 ColocAuto.NumVoxOverlap     = NumVoxOverlap;
 ColocAuto.NumPercOverlap    = NumPercOverlap;
 end

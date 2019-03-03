@@ -22,10 +22,27 @@
 %
 % *Change log*
 %
-%  _*Version 6.4*             created on 2019-02-18 by Luca Della Santina_
+%  _*Version 7.0*             created on 2019-03-yy by Luca Della Santina_
+%
+%   + TODO When block search is disabled no objects are found
+%   + TODO use a rnd generator to choose vals made by 2 Mercen twisters
+%
+%   + Simulate tab allows permutation-based simulations/hypothesis testing 
+%   + All reports now generate new figure windows
+%   + Fixed calculation of colocalization rates to exclude invalid objects
+%   + Fixed error when colocalization old and new data were mixed
+%   + Saving colocalized objs as new set now recalculates density
+%   + Manual double-colocalization has now 8 panels with all combinations
+%   + New engulfed colocalization allows counting of engulfed objects
+%
+%  _*Version 6.5*             created on 2019-02-18 by Luca Della Santina_
 %
 %   + Batch colocalization analysis allows to save results in a table
 %   + Fixed error when manual colocalization analysis window is closed
+%   + If no Z-resolution is present in TIF file, use ImageJ default of '1'
+%   + Fixed bug in colocalization analysis not storing all dots
+%   + Added confirmation dialog before removing objects or coloc analysis
+%   + Fixed getFilteredObject bug when filter is not stored as booleans
 %
 %  _*Version 6.4*             created on 2019-02-03 by Luca Della Santina_
 %
