@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%  Copyright (C) 2016-2019 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -16,9 +16,9 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-% *Find objects using an iterative thresholding approach*
+% *Find objects using an iterative thresholding with std noise estimation*
 
-function Dots = findObjects(Post, Settings)
+function Dots = findTrachoma(Post, Settings)
 %% -- STEP 1: divide the image volume into searching blocks for multi-threading
 tic;
 fprintf('Dividing image volume into blocks and estimating noise level... ');
@@ -62,11 +62,11 @@ for block = 1:(NumBx*NumBy*NumBz)
     
     % Estimate either local / glocal noise level Gmode according to setting
     if Settings.objfinder.localNoise
-        % Noise level as the most common intensity found in the block (excluding zero)
-        Blocks(block).Gmode     = mode(Blocks(block).Igm(Blocks(block).Igm>0)); 
+        % Noise level as the standard deviation of intensity found in block
+        Blocks(block).Gmode     = uint8(ceil(std(single(Blocks(block).Igm(:))))); 
     else
         % Noise level as the common intensity found in the entire image (excluding zero)
-        Blocks(block).Gmode     = mode(Post(Post>0)); 
+        Blocks(block).Gmode     = uint8(ceil(std(single(Post(:))))); 
     end
     Blocks(block).Gmax          = max(Blocks(block).Igm(:));
     Blocks(block).sizeIgm       = [size(Blocks(block).Igm,1), size(Blocks(block).Igm,2), size(Blocks(block).Igm,3)];
@@ -81,9 +81,9 @@ for block = 1:(NumBx*NumBy*NumBz)
 	Blocks(block).wsLabelList   = [];
 	Blocks(block).nLabels       = 0;
     
-%     disp(['current block = Bx:' num2str(Blocks(block).Bx) ', By:' num2str(Blocks(block).By) ', Bz:' num2str(Blocks(block).Bz)]);    
-%     disp(['Block coordinates = x:' num2str(xStart) ' : ' num2str(xEnd) ', y:' num2str(yStart) ' : ' num2str(yEnd) ', z:' num2str(zStart) ' : ' num2str(zEnd)]);    
-%     disp(['Noise level: ' num2str(Blocks(block).Gmode) ' Max level: ' num2str(Blocks(block).Gmax)]);
+     disp(['current block = Bx:' num2str(Blocks(block).Bx) ', By:' num2str(Blocks(block).By) ', Bz:' num2str(Blocks(block).Bz)]);    
+     disp(['Block coordinates = x:' num2str(xStart) ' : ' num2str(xEnd) ', y:' num2str(yStart) ' : ' num2str(yEnd) ', z:' num2str(zStart) ' : ' num2str(zEnd)]);    
+     disp(['Noise level: ' num2str(Blocks(block).Gmode) ' Max level: ' num2str(Blocks(block).Gmax)]);
 end
 
 fprintf([num2str(NumBx*NumBy*NumBz) ' blocks, DONE in ' num2str(toc) ' seconds \n']);

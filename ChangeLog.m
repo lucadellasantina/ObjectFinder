@@ -24,7 +24,6 @@
 %
 %  _*Version 7.0*             created on 2019-03-yy by Luca Della Santina_
 %
-%   + TODO When block search is disabled no objects are found
 %   + TODO use a rnd generator to choose vals made by 2 Mercen twisters
 %
 %   + Simulate tab allows permutation-based simulations/hypothesis testing 
@@ -34,6 +33,11 @@
 %   + Saving colocalized objs as new set now recalculates density
 %   + Manual double-colocalization has now 8 panels with all combinations
 %   + New engulfed colocalization allows counting of engulfed objects
+%   + NeuralNet Training: new button to add all subfolders of a root folder
+%   + findObjects: fixed no object was found when block search was disabled 
+%   + Fixed error in calling colocalizeMask from automate tab
+%   + Dots.mat is now saved in v7.3 format to allow >2Gb files
+%   + Import NeuralNet model from Keras, Caffe, ONNX, MATLAB formats
 %
 %  _*Version 6.5*             created on 2019-02-18 by Luca Della Santina_
 %
