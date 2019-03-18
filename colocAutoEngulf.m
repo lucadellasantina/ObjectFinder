@@ -47,7 +47,7 @@ for idx_src = 1:numel(Dots.Vox)
     for idx_dst = 1:numel(DotsEngulfed.Vox)
         if ~DotsEngulfed.Filter.passF(idx_dst), continue; end
         
-        VoxOverlap     = size(intersect(Dots.Vox(idx_src).Pos, DotsEngulfed.Vox(idx_dst).Pos,'rows'),1);
+        VoxOverlap     = numel(intersect(Dots.Vox(idx_src).Ind, DotsEngulfed.Vox(idx_dst).Ind));
         VoxOverlapPerc = 100 * VoxOverlap / DotsEngulfed.Vol(idx_dst); % Store voxel overlap as percent of source object volume
         
         if (VoxOverlap >= NumVoxOverlap) && (VoxOverlapPerc >= NumPercOverlap)

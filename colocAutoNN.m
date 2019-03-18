@@ -31,9 +31,6 @@ function ColocAuto = colocAutoNN(Dots, NN, NumVoxOverlap, NumPercOverlap)
 ColocAuto.Source        = Dots.Name;
 ColocAuto.Fish1         = NN.Name;
 
-VoxOverlap              = NN.VoxOverlap(find(Dots.Filter.passF));
-VoxOverlapPerc          = NN.VoxOverlapPerc(find(Dots.Filter.passF));
-
 AutoColocAnalyzingFlag                      = ones([1,numel(Dots.Vox)], 'uint8');
 ColocAuto.ListDotIDsManuallyColocAnalyzed   = find(AutoColocAnalyzingFlag == 1);
 ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
@@ -43,7 +40,7 @@ ColocAuto.ColocFlag                         = zeros([1,ColocAuto.TotalNumDotsMan
 % overlappedthe above the voxel and percent thresholds
 for i=1:numel(Dots.Vox)
     if Dots.Filter.passF(i)
-        if (VoxOverlap(i) >= NumVoxOverlap) && (VoxOverlapPerc(i) >= NumPercOverlap)
+        if (NN.VoxOverlap(i) >= NumVoxOverlap) && (NN.VoxOverlapPerc(i) >= NumPercOverlap)
             ColocAuto.ColocFlag(i) = 1; % Colocalized
         else
             ColocAuto.ColocFlag(i) = 2; % Not Colocalized

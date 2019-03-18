@@ -49,5 +49,6 @@ function convertObjectFinderDataV5toV7
         saveObjects(Dots(i));
     end
     
-    delete('Dots.mat');
+    delete('Dots.mat'); % Dots are now stored inside /objects/ folder
+    delete('Colo.mat'); % No more need to store colo image, done in memory
 end
