@@ -22,7 +22,10 @@
 %
 % *Change log*
 %
-%  _*Version 7.0*             created on 2019-03-yy by Luca Della Santina_
+%  TODO investigate bug in NN calculation
+%  TODO only load coloc and not Dots when showing coloc statistics
+%
+%  _*Version 7.0*             created on 2019-03-18 by Luca Della Santina_
 %
 %   + New objects storage format in /objects/ folder instead of Dots.mat    
 %   + New engulfed colocalization allows counting of engulfed objects

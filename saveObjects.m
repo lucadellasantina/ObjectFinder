@@ -39,7 +39,7 @@ function saveObjects(Dots, FieldName)
         [warnMsg, ~] = lastwarn;
         if ~isempty(warnMsg)
             disp('Objects are bigger than 2Gb, will be saved using larger file format, be patient...')
-            save(FileName, '-struct', Dots, '-v7.3', '-nocompression');
+            save(FileName, '-struct', 'Dots', '-v7.3', '-nocompression');
         end
     else
         % Save only a specific FieldName on disk
