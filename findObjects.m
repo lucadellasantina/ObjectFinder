@@ -61,12 +61,25 @@ for block = 1:(NumBx*NumBy*NumBz)
     Blocks(block).Igm           = Post(yStart:yEnd, xStart:xEnd, zStart:zEnd);
     
     % Estimate either local / glocal noise level Gmode according to setting
-    if Settings.objfinder.localNoise
-        % Noise level as the most common intensity found in the block (excluding zero)
-        Blocks(block).Gmode     = mode(Blocks(block).Igm(Blocks(block).Igm>0)); 
-    else
-        % Noise level as the common intensity found in the entire image (excluding zero)
-        Blocks(block).Gmode     = mode(Post(Post>0)); 
+    switch Settings.objfinder.noiseEstimator
+        case'mode'
+            % Estimates noise as the most common instensity in the data
+            if Settings.objfinder.localNoise                
+                % Noise level as the most common intensity found in the block (excluding zero)
+                Blocks(block).Gmode     = mode(Blocks(block).Igm(Blocks(block).Igm>0));
+            else
+                % Noise level as the common intensity found in the entire image (excluding zero)
+                Blocks(block).Gmode     = mode(Post(Post>0));
+            end
+        case 'std'
+            % Estimates noise is the variability across intensities in the data
+            if Settings.objfinder.localNoise
+                % Noise level as the standard deviation of intensity in the block
+                Blocks(block).Gmode     = uint8(ceil(std(single(Blocks(block).Igm(:)))));
+            else
+                % Noise level as the standard deviation of intensity in the entire image
+                Blocks(block).Gmode     = uint8(ceil(std(single(Post(:)))));
+            end         
     end
     Blocks(block).Gmax          = max(Blocks(block).Igm(:));
     Blocks(block).sizeIgm       = [size(Blocks(block).Igm,1), size(Blocks(block).Igm,2), size(Blocks(block).Igm,3)];

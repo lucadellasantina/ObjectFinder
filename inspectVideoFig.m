@@ -56,6 +56,9 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.930,.085,.02],'String',['Valid: ' num2str(numel(find(passI)))]);
     txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.900,.085,.02],'String',['Total: ' num2str(numel(passI))]); %#ok, unused variable
     chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.912,.870,.085,.02],'String','Show (spacebar)', 'Value',1     ,'Callback',@chkShowObjects_changed);
+    txtZoom         = uicontrol('Style','text'      ,'Units','normalized','position',[.925,.230,.050,.02],'String','Zoom level:'); %#ok, unused variable
+    btnZoomOut      = uicontrol('Style','Pushbutton','Units','normalized','position',[.920,.170,.030,.05],'String','-'                              ,'Callback',@btnZoomOut_clicked); %#ok, unused variable
+    btnZoomIn       = uicontrol('Style','Pushbutton','Units','normalized','position',[.950,.170,.030,.05],'String','+'                              ,'Callback',@btnZoomIn_clicked); %#ok, unused variable
     btnSave         = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.010,.088,.05],'String','Save current objects'           ,'Callback',@btnSave_clicked); %#ok, unused variable    
     
     % Primary filter parameter controls
@@ -109,6 +112,17 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     end
 
     function chkShowObjects_changed(src,event) %#ok, unused arguments
+        scroll(f);
+    end
+
+    function btnZoomOut_clicked(src, event) %#ok, unused arguments
+        ImSize = [Dots.Settings.ImInfo.xNumVox, Dots.Settings.ImInfo.yNumVox];
+        CutNumVox    = [min(CutNumVox(1)*2, ImSize(1)), min(CutNumVox(2)*2, ImSize(2))];
+        scroll(f);
+    end
+
+    function btnZoomIn_clicked(src, event) %#ok, unused arguments
+        CutNumVox    = [max(CutNumVox(1)/2, 32), max(CutNumVox(2)/2,32)];
         scroll(f);
     end
 
@@ -451,6 +465,7 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     end
     
     function key_press(src, event) %#ok, unused arguments
+        %event.Key % displays the name of the pressed key
         switch event.Key  % Process shortcut keys
             case 'space'
                 chkShowObjects.Value = ~chkShowObjects.Value;
@@ -485,14 +500,10 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
                 else
                     scroll(f + big_scroll);
                 end
-            case 'home'
-                scroll(1);
-            case 'end'
-                scroll(num_frames);
-            case 'return'
-                %play(1/play_fps)
-            case 'backspace'
-                %play(5/play_fps)
+            case 'home'  , scroll(1);
+            case 'end'   , scroll(num_frames);
+            case 'equal' , btnZoomIn_clicked;
+            case 'hyphen', btnZoomOut_clicked;
             otherwise
                 if ~isempty(key_func)
                     key_func(event.Key);  % call custom key handler

@@ -22,8 +22,14 @@
 %
 % *Change log*
 %
-%  TODO investigate bug in NN calculation
-%  TODO only load coloc and not Dots when showing coloc statistics
+%
+%  _*Version 7.1*             created on 2019-03-23 by Luca Della Santina_
+%
+%   + New Noise Estimator combobox allow chosing mode|std noise estimation
+%   + New Noise Estimator: Standard devidation
+%   + New Simple settings dialog asks user simple questions for settings
+%   + inspect2D allows to Zoom in/out using +/- shortcuts and buttons
+%   + loadObjects allows to load only some fields from file
 %
 %  _*Version 7.0*             created on 2019-03-18 by Luca Della Santina_
 %
