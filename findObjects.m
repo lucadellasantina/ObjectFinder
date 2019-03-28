@@ -74,11 +74,16 @@ for block = 1:(NumBx*NumBy*NumBz)
         case 'std'
             % Estimates noise is the variability across intensities in the data
             if Settings.objfinder.localNoise
-                % Noise level as the standard deviation of intensity in the block
                 Blocks(block).Gmode     = uint8(ceil(std(single(Blocks(block).Igm(:)))));
             else
-                % Noise level as the standard deviation of intensity in the entire image
                 Blocks(block).Gmode     = uint8(ceil(std(single(Post(:)))));
+            end         
+        case 'min'
+            % Estimates noise as the absolute minimum intensity in the data
+            if Settings.objfinder.localNoise
+                Blocks(block).Gmode     = min(Blocks(block).Igm(Blocks(block).Igm(:)));
+            else
+                Blocks(block).Gmode     = min(Post(:));
             end         
     end
     Blocks(block).Gmax          = max(Blocks(block).Igm(:));

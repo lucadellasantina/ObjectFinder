@@ -118,11 +118,13 @@ function [fig_handle, axes_handle, scroll_bar_handles, scroll_func] = ...
     function btnZoomOut_clicked(src, event) %#ok, unused arguments
         ImSize = [Dots.Settings.ImInfo.xNumVox, Dots.Settings.ImInfo.yNumVox];
         CutNumVox    = [min(CutNumVox(1)*2, ImSize(1)), min(CutNumVox(2)*2, ImSize(2))];
+        PosZoom = [-1, -1, -1];
         scroll(f);
     end
 
     function btnZoomIn_clicked(src, event) %#ok, unused arguments
-        CutNumVox    = [max(CutNumVox(1)/2, 32), max(CutNumVox(2)/2,32)];
+        CutNumVox    = [max(round(CutNumVox(1)/2,0), 32), max(round(CutNumVox(2)/2,0),32)];
+        PosZoom = [-1, -1, -1];
         scroll(f);
     end
 

@@ -27,18 +27,25 @@ for i = 1:length(Dots.Vox)
     % Reconstruct the image of current object from raw brightness values
     minPt = min(Dots.Vox(i).Pos(:,1:3));
     maxPt = max(Dots.Vox(i).Pos(:,1:3));
-    imMat = zeros(maxPt-minPt+1);
+    imMat = zeros(maxPt-minPt+1, 'uint8');
     for j=1:size(Dots.Vox(i).Pos, 1)
         pt = Dots.Vox(i).Pos(j,:) - minPt + 1;
         imMat(pt(1),pt(2),pt(3)) = Dots.Vox(i).RawBright(j);
     end
-
-    % Create maximum intensity projections along cardinal axes
-    z = imresize(squeeze(max(imMat,[],3)), [sz(1) sz(2)]);
-    y = imresize(squeeze(max(imMat,[],1)), [sz(1) sz(2)]);
-    x = imresize(squeeze(max(imMat,[],2)), [sz(1) sz(2)]);
-    I = cat(3,z,y,x); % Encode each MIP as a R-G-B color
     
+    % Treat differently 2D vs 3D images
+    if size(imMat, 3) == 1
+        % 2D image: Resize image and encode as RGB
+        x = imresize(imMat, [sz(1) sz(2)]);
+        I = cat(3,x,x,x);
+    else
+        % 3D image: Create MIPs along cardinal axes, resize and combine into RGB
+        z = imresize(squeeze(max(imMat,[],3)), [sz(1) sz(2)]);
+        y = imresize(squeeze(max(imMat,[],1)), [sz(1) sz(2)]);
+        x = imresize(squeeze(max(imMat,[],2)), [sz(1) sz(2)]);
+        I = cat(3,z,y,x);
+    end
+
     % Classify using pretrained neural network
     Filter.passF(i) = (classify(NeuralNet.netTransfer, I) == 'Object');
 end

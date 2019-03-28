@@ -22,6 +22,16 @@
 %
 % *Change log*
 %
+%  _*Version 7.2*             created on 2019-03-28 by Luca Della Santina_
+%
+%   + Support for TIF files larger than 4GB
+%   + New noise estimator: Minimum intensity
+%   + NeuralNet allows processing of 2D images
+%   + NeuralNet allows training data augmentation
+%   + NeuralNet allows choosing which objects to accumulate
+%   + NeuralNet allows accumulating all objects found in folders
+%   + Fixed normalization for preview of binary mask files
+%   + Fixed Find objects disabled when new folder is selected
 %
 %  _*Version 7.1*             created on 2019-03-23 by Luca Della Santina_
 %
