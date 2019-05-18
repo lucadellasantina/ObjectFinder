@@ -22,6 +22,22 @@
 %
 % *Change log*
 %
+% TODO: measure colocalization as within certain distance from objects/skel
+% TODO: make user choose among available skeletons
+% TODO: measure distance from closest skeleton
+% TODO: rewrite file format for NeuralNet and simulations using fields
+% TODO: understand why skeleton and dots locations don't match anymore
+%
+%  _*Version 7.3*             created on 2019-05-15 by Luca Della Santina_
+%
+%   + Colocalization: Plot distribution of engulfed objects
+%   + Colocalization: Plot locaion of colocalized objects on skeleton
+%   + Colocalization summary now displayed in a table
+%   + Colocalization summary can be saved into an Excel spreadsheet
+%   + filterObjects: Fixed error when Shape properties are not present 
+%   + load images: Fixed black MIP display of 0-1 mask tif files
+%   + findObjects: Fixed no objects if searching in a binary image
+%
 %  _*Version 7.2*             created on 2019-03-28 by Luca Della Santina_
 %
 %   + Support for TIF files larger than 4GB

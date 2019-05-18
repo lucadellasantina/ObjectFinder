@@ -122,7 +122,7 @@ parfor block = 1:(NumBx*NumBy*NumBz)
         
         % Label all areas in the block (Igl) that crosses the intensity "i" 
         % bwconncomp+labelmatrix is ~10% faster than using belabeln
-        CC                = bwconncomp(Blocks(block).Igm > i,6);
+        CC                = bwconncomp(Blocks(block).Igm >= i,6);
         labels            = CC.NumObjects;
         Blocks(block).Igl = labelmatrix(CC);
         

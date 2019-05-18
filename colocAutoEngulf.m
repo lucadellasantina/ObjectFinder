@@ -37,7 +37,7 @@ ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuall
 ColocAuto.ColocFlag                         = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
 
 % Trasverse each reference object and count how many objects are engulfed
-% *IMPORTANT*: ColocAuto here stores the absolute number DotsEngifled that 
+% *IMPORTANT*: ColocAuto here stores the absolute number DotsEngufled that 
 % each reference object in Dots is engulfing more than passed threshold
 
 for idx_src = 1:numel(Dots.Vox)
@@ -48,7 +48,7 @@ for idx_src = 1:numel(Dots.Vox)
         if ~DotsEngulfed.Filter.passF(idx_dst), continue; end
         
         VoxOverlap     = numel(intersect(Dots.Vox(idx_src).Ind, DotsEngulfed.Vox(idx_dst).Ind));
-        VoxOverlapPerc = 100 * VoxOverlap / DotsEngulfed.Vol(idx_dst); % Store voxel overlap as percent of source object volume
+        VoxOverlapPerc = 100 * VoxOverlap / DotsEngulfed.Vol(idx_dst); % Store voxel overlap as percent of engulfed object volume
         
         if (VoxOverlap >= NumVoxOverlap) && (VoxOverlapPerc >= NumPercOverlap)
             ColocAuto.ColocFlag(idx_src) = ColocAuto.ColocFlag(idx_src) + 1; % Add one more engulfed

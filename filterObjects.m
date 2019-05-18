@@ -88,10 +88,10 @@ if isfield(FilterOpts, 'Thresholds')
     threshpass = Dots.ITMax >= FilterOpts.Thresholds.ITMax;
     threshpass = threshpass & (Dots.Vol >= FilterOpts.Thresholds.Vol);
     threshpass = threshpass & (Dots.MeanBright >= FilterOpts.Thresholds.MeanBright);
-    if isfield(FilterOpts.Thresholds, 'Oblong')
+    if isfield(FilterOpts.Thresholds, 'Oblong') && isfield(Dots.Shape, 'Oblong')
         threshpass = threshpass & (Dots.Shape.Oblong >= FilterOpts.Thresholds.Oblong);
     end
-    if isfield(FilterOpts.Thresholds, 'PrincipalAxisLen')
+    if isfield(FilterOpts.Thresholds, 'PrincipalAxisLen') && isfield(Dots.Shape, 'PrincipalAxisLen')
         threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' >= FilterOpts.Thresholds.PrincipalAxisLen);
     end    
     pass = pass & threshpass; % Exclude objects not passing the thresholds
