@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%  Copyright (C) 2016-2019 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -26,7 +26,7 @@
 %                     the binary mask expressed as percentage of Dots size
 %                     to consider the object as colocalized
 
-function ColocAuto = colocAutoNN(Dots, NN, NumVoxOverlap, NumPercOverlap)
+function ColocAuto = colocAutoNN(Dots, NN, NumVoxOverlap, NumPercOverlap, WithinDist)
 %%
 ColocAuto.Source        = Dots.Name;
 ColocAuto.Fish1         = NN.Name;
@@ -40,7 +40,7 @@ ColocAuto.ColocFlag                         = zeros([1,ColocAuto.TotalNumDotsMan
 % overlappedthe above the voxel and percent thresholds
 for i=1:numel(Dots.Vox)
     if Dots.Filter.passF(i)
-        if (NN.VoxOverlap(i) >= NumVoxOverlap) && (NN.VoxOverlapPerc(i) >= NumPercOverlap)
+        if (NN.VoxOverlap(i) >= NumVoxOverlap) && (NN.VoxOverlapPerc(i) >= NumPercOverlap) && (NN.Dist(i) <= WithinDist)
             ColocAuto.ColocFlag(i) = 1; % Colocalized
         else
             ColocAuto.ColocFlag(i) = 2; % Not Colocalized

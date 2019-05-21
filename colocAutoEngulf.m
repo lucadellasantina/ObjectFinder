@@ -26,7 +26,7 @@
 %                     the binary mask expressed as percentage of Dots size
 %                     to consider the object as colocalized
 
-function ColocAuto = colocAutoEngulf(Dots, DotsEngulfed, NumVoxOverlap, NumPercOverlap)
+function ColocAuto = colocAutoEngulf(Dots, DotsEngulfed, NumVoxOverlap, NumPercOverlap, WithinDist)
 %%
 ColocAuto.Source        = Dots.Name;
 ColocAuto.Fish1         = DotsEngulfed.Name;
@@ -49,8 +49,10 @@ for idx_src = 1:numel(Dots.Vox)
         
         VoxOverlap     = numel(intersect(Dots.Vox(idx_src).Ind, DotsEngulfed.Vox(idx_dst).Ind));
         VoxOverlapPerc = 100 * VoxOverlap / DotsEngulfed.Vol(idx_dst); % Store voxel overlap as percent of engulfed object volume
+        PeakDistxy     = hypot( (Dots.Pos(idx_src,1)-Dots.Pos(idx_dst,1))*xyum, (Dots.Pos(idx_src,2)-Dots.Pos(idx_dst,2))*xyum);
+        PeakDistxyz    = hypot( PeakDistxy, (Dots.Pos(idx_src,3)-Dots.Pos(idx_dst,3))*zum); % calculate separately along Z because this dimension has different pixel size
         
-        if (VoxOverlap >= NumVoxOverlap) && (VoxOverlapPerc >= NumPercOverlap)
+        if (VoxOverlap >= NumVoxOverlap) && (VoxOverlapPerc >= NumPercOverlap) && (PeakDistxyz <= WithinDist)
             ColocAuto.ColocFlag(idx_src) = ColocAuto.ColocFlag(idx_src) + 1; % Add one more engulfed
         end
     end

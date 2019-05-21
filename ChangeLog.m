@@ -22,11 +22,25 @@
 %
 % *Change log*
 %
-% TODO: measure colocalization as within certain distance from objects/skel
-% TODO: make user choose among available skeletons
+% TODO: make "skeletons' folder and allow user to choose which skeleton
 % TODO: measure distance from closest skeleton
-% TODO: rewrite file format for NeuralNet and simulations using fields
+% TODO: measure colocalization as within certain distance from objects/skel
 % TODO: understand why skeleton and dots locations don't match anymore
+% TODO: Allow processing of 12/16-bit images
+% TODO: Make heatmaps plots with finer convolution disk
+%
+%  _*Version 7.4*             created on 2019-05-21 by Luca Della Santina_
+%
+%   + New simulations folder and handling using same logic as objects
+%   + New within distance parameter for colocalization between object sets
+%   + Colocalization: larger UI space for lists of objects and images
+%   + Colocaliation NN: if NN distance is not available, calculates it
+%   + calcNN: fixed bug due to missing initialization of p2overlap vector
+%   + Report tab now displays average stats in a table
+%   + Improved app startup time
+%   + Improved experiment loading time
+%   + Removed use of Settings.TPN
+%   + Select folder now resets app.Dots and app.Sim
 %
 %  _*Version 7.3*             created on 2019-05-15 by Luca Della Santina_
 %
@@ -427,9 +441,3 @@
 %  % filterObjects(TPN) skips questions and just reprocess Imaris dots
 %  % Stored ImageInfo (size,res) inside Grouped.InInfo for plotting
 %
-% _*TODO*_
-%
-%  Allow processing of 12/16-bit images
-%  Make heatmaps plots with finer convolution disk (too coarse right now)
-%  Resolve minDotsize vs minFnalDotSize (current minDotSize fixed at 3px)
-%  Implement stepping=1 through gmode instead (current stepping of 2)
