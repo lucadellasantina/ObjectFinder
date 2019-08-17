@@ -22,6 +22,7 @@
 %
 % *Change log*
 %
+% TODO: Add colocalization between objects and mask based on center distance
 % TODO: Bug in inspectObjects2D selecting dots position not accurate
 % TODO: make "skeletons' folder and allow user to choose which skeleton
 % TODO: measure distance from closest skeleton
@@ -39,6 +40,7 @@
 %   + Button to save Objects report summary as a table in reports folder
 %   + Visual feedback of progress using dialogs throughout the app
 %   + Removed stop button in automate, using cancellable progress dialog
+%   + Ensured zoomed regions is always within image borders
 %
 %  _*Version 7.4*             created on 2019-05-21 by Luca Della Santina_
 %

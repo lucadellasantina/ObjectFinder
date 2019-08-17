@@ -139,9 +139,11 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
         scroll(frame, 'right');
     end
 
-    function btnZoomOut_clicked(src, event) %#ok, unused arguments
+    function btnZoomOut_clicked(src, event) %#ok, unused arguments        
+        % Ensure new zoomed region is still within image borders
         CutNumVox = [min(CutNumVox(1)*2, size(Post,1)), min(CutNumVox(2)*2, size(Post, 2))];
-        PosRect   = [max(1,Pos(1)-CutNumVox(2)/2), max(1,Pos(2)-CutNumVox(1)/2)];        
+        Pos       = [min(Pos(1),size(ImStk,2)-CutNumVox(2)/2), min(Pos(2),size(ImStk,1)-CutNumVox(1)/2), frame];       
+        PosRect   = [max(1,Pos(1)-CutNumVox(2)/2), max(1,Pos(2)-CutNumVox(1)/2)];
         PosZoom   = [-1, -1, -1];
         scroll(frame, 'left');
         scroll(frame, 'right');
@@ -814,7 +816,7 @@ if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,2)) && (Pos(2) < size(Pos
     
     % Find indeces of valid and rejected objects within the zoomed area
     valIcut = Filter;
-    rejIcut  = ~Filter;
+    rejIcut = ~Filter;
     for i = 1:numel(valIcut)
         valIcut(i) = valIcut(i) && Dots.Pos(i,1)>fxmin && Dots.Pos(i,1)<fxmax && Dots.Pos(i,2)>fymin && Dots.Pos(i,2)<fymax;
         rejIcut(i) = rejIcut(i) && Dots.Pos(i,1)>fxmin && Dots.Pos(i,1)<fxmax && Dots.Pos(i,2)>fymin && Dots.Pos(i,2)<fymax;
@@ -840,7 +842,7 @@ if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,2)) && (Pos(2) < size(Pos
         end
     end
     
-    if numel(SelectedObjIDs)>1 || SelectedObjIDs > 0
+    if ~isempty(SelectedObjIDs) && (numel(SelectedObjIDs)>1 || SelectedObjIDs > 0)
         % If user requested objects within the zoomed region, select them
         
         SelObjID = SelectedObjIDs;        
