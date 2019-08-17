@@ -25,7 +25,7 @@ pass = ones(1,Dots.Num); % Initialize vector of passing objects
 
 % added the following if-end to remove dots facing outside the mask or image. 1/14/2010 HO
 if FilterOpts.EdgeDotCut
-    load([Settings.TPN 'Mask.mat'], 'Mask');
+    load([pwd filesep 'Mask.mat'], 'Mask');
     Mask = bwperim(uint8(Mask), 6); % this operation will leave mask voxels facing 0 or outside the image as 1, and change the other mask voxels to 0.
     VoxIDMap = zeros(Dots.ImSize);
     for i=1:Dots.Num
@@ -39,7 +39,7 @@ if FilterOpts.EdgeDotCut
     end
     NonEdgeDots = ones(1,Dots.Num);
     NonEdgeDots(1, EdgeDotIDs)=0;
-    save([Settings.TPN 'data' filesep 'NonEdgeDots.mat'],'NonEdgeDots');
+    save([pwd filesep 'data' filesep 'NonEdgeDots.mat'],'NonEdgeDots');
     pass = pass & NonEdgeDots; % Exclude edge dots
 end
 
@@ -54,7 +54,7 @@ if FilterOpts.SingleZDotCut
     SingleZDotIDs = zVoxNum==1;
     NonSingleZDots = ones(1,Dots.Num);
     NonSingleZDots(1, SingleZDotIDs)=0;
-    save([Settings.TPN 'data' filesep 'NonSingleZDots.mat'],'NonSingleZDots');
+    save([pwd filesep 'data' filesep 'NonSingleZDots.mat'],'NonSingleZDots');
     pass = pass & NonSingleZDots; % Exclude single Z dots
 end
 
@@ -78,7 +78,7 @@ if FilterOpts.xyStableDots
             xyStableDots(i)=0;                                      % False if not aligned
         end
     end
-    save([Settings.TPN 'data' filesep 'xyStableDots.mat'],'xyStableDots');
+    save([pwd filesep 'data' filesep 'xyStableDots.mat'],'xyStableDots');
     pass = pass & xyStableDots;                                     % Trim moving dots away
     fprintf('Dots excluded because moving during aquisition: %u\n', numel(xyStableDots) - numel(find(xyStableDots)));
 end

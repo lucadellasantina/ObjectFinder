@@ -180,6 +180,7 @@ if sum(size(x1) > 1) ~= 1 || sum(size(y1) > 1) ~= 1 || ...
 		length(x1) ~= length(y1)
 	error('X1 and Y1 must be equal-length vectors of at least 2 points.')
 end
+
 % x2 and y2 must be vectors with same number of points (at least 2).
 if sum(size(x2) > 1) ~= 1 || sum(size(y2) > 1) ~= 1 || ...
 		length(x2) ~= length(y2)

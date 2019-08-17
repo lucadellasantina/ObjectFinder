@@ -29,6 +29,11 @@ function saveObjects(Dots, FieldName)
     if ~isfield(Dots, 'UID')
         Dots.UID = generateUID;
     end
+    
+    if ~exist([pwd filesep 'objects'], 'dir')
+        mkdir([pwd filesep 'objects']);
+    end
+    
     FileName = [pwd filesep 'objects' filesep Dots.UID '.mat'];
     
     lastwarn('') % Clear last warning message

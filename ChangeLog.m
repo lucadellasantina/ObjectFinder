@@ -22,6 +22,7 @@
 %
 % *Change log*
 %
+% TODO: Bug in inspectObjects2D selecting dots position not accurate
 % TODO: make "skeletons' folder and allow user to choose which skeleton
 % TODO: measure distance from closest skeleton
 % TODO: measure colocalization as within certain distance from objects/skel
@@ -29,11 +30,22 @@
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
 %
+%  _*Version 7.5*             created on 2019-08-17 by Luca Della Santina_
+%
+%   + Rewrote inspectVolume2D to be fater and contained in a single .m file
+%   + Fixed saveobjects error if /objects folder does not exist
+%   + Enclose tool allows polygon selection of multiple objects on screen
+%   + Change Validation can change multiple objects at the same time
+%   + Button to save Objects report summary as a table in reports folder
+%   + Visual feedback of progress using dialogs throughout the app
+%   + Removed stop button in automate, using cancellable progress dialog
+%
 %  _*Version 7.4*             created on 2019-05-21 by Luca Della Santina_
 %
 %   + New simulations folder and handling using same logic as objects
 %   + New within distance parameter for colocalization between object sets
 %   + Colocalization: larger UI space for lists of objects and images
+%   + Colocalization: better selection of Objects/Images logic
 %   + Colocaliation NN: if NN distance is not available, calculates it
 %   + calcNN: fixed bug due to missing initialization of p2overlap vector
 %   + Report tab now displays average stats in a table
@@ -41,6 +53,11 @@
 %   + Improved experiment loading time
 %   + Removed use of Settings.TPN
 %   + Select folder now resets app.Dots and app.Sim
+%   + Allow to plot skeleton and sholl analysis when no Objects are created
+%   + Fixed soma location circle position when plotting a skeleton
+%   + Sholl analysis asks user to define the stepping size in microns
+%   + Fixed error when loading settings for multiple batch folders 
+%   + Fixed updating the list of available images for batch colocalization
 %
 %  _*Version 7.3*             created on 2019-05-15 by Luca Della Santina_
 %

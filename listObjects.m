@@ -17,16 +17,19 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [ObjNames, ObjUIDs] = listObjects
+function [ObjNames, ObjUIDs] = listObjects(folder)
 %% List available object names and UIDs
+switch nargin
+    case 0, folder = pwd;
+end
 
 ObjNames = {};
 ObjUIDs  = {};
 
-files = dir('objects');         % List the content of /Objects folder
+files = dir([folder filesep 'objects']);         % List the content of /Objects folder
     files = files(~[files.isdir]);  % Keep only files, discard subfolders
     for d = 1:numel(files)
-        load([pwd filesep 'objects' filesep files(d).name],'Name', 'UID');
+        load([folder filesep 'objects' filesep files(d).name],'Name', 'UID');
         if isempty(ObjNames)
             ObjNames = {Name};
             ObjUIDs  = {UID};
