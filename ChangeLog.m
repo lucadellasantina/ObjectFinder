@@ -41,6 +41,7 @@
 %   + Visual feedback of progress using dialogs throughout the app
 %   + Removed stop button in automate, using cancellable progress dialog
 %   + Ensured zoomed regions is always within image borders
+%   + Fixed wait mouse pointer while computing lasso selection region
 %
 %  _*Version 7.4*             created on 2019-05-21 by Luca Della Santina_
 %

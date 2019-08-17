@@ -88,7 +88,6 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
 	axes_handle     = axes('Position',[0 0.03 0.90 1]);
 	frame_handle    = 0;
     rect_handle     = 0;    
-    brushSize       = 20;
     brush           = rectangle(axes_handle,'Curvature', [1 1],'EdgeColor', [1 1 0],'LineWidth',2,'LineStyle','-');
     animatedLine    = animatedline('LineWidth', 1, 'Color', 'blue');
     cmbAction_assign(actionType);
@@ -145,16 +144,14 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
         Pos       = [min(Pos(1),size(ImStk,2)-CutNumVox(2)/2), min(Pos(2),size(ImStk,1)-CutNumVox(1)/2), frame];       
         PosRect   = [max(1,Pos(1)-CutNumVox(2)/2), max(1,Pos(2)-CutNumVox(1)/2)];
         PosZoom   = [-1, -1, -1];
-        scroll(frame, 'left');
-        scroll(frame, 'right');
+        scroll(frame, 'both');
     end
 
     function btnZoomIn_clicked(src, event) %#ok, unused arguments
         CutNumVox = [max(round(CutNumVox(1)/2,0), 32), max(round(CutNumVox(2)/2,0),32)];
         PosRect   = [max(1,Pos(1)-CutNumVox(2)/2), max(1,Pos(2)-CutNumVox(1)/2)];        
         PosZoom   = [-1, -1, -1];
-        scroll(frame, 'left');
-        scroll(frame, 'right');
+        scroll(frame, 'both');
     end
 
     function btnSave_clicked(src, event) %#ok, unused arguments
@@ -629,8 +626,10 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                     set(fig_handle, 'Pointer', 'arrow');
                     return;
                 end
-                
-                if PosX <= size(ImStk,2)
+
+                if exist('oldPointer', 'var') && strcmp(oldPointer, 'watch')
+                    return;
+                elseif PosX <= size(ImStk,2)
                     % Mouse in Left Panel, display a hand
                     set(fig_handle, 'Pointer', 'fleur');
                 elseif PosX <= size(ImStk,2)*2
@@ -639,9 +638,8 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                     set(fig_handle, 'Pointer', 'custom', 'PointerShapeCData', PCData, 'PointerShapeHotSpot', PHotSpot);
                 else
                     % Display the default arrow everywhere else
-                    set(fig_handle, 'Pointer', 'arrow');                    
+                    set(fig_handle, 'Pointer', 'arrow');
                 end
-                
             case 1 % Clicked on the scroll bar, move to new frame                
                 set(fig_handle, 'Units', 'normalized');
                 click_point = get(fig_handle, 'CurrentPoint');
@@ -680,12 +678,13 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                     % Detect coordinates of the point clicked in PosZoom
                     % Note: x,y coordinates are inverted in ImStk
                     % Note: x,y coordinates are inverted in CutNumVox
+
                     PosZoomX = PosX - size(ImStk,2)-1;
                     PosZoomX = round(PosZoomX * CutNumVox(2)/(size(ImStk,2)-1));
                     
                     PosZoomY = size(ImStk,1) - PosY;
                     PosZoomY = CutNumVox(1)-round(PosZoomY*CutNumVox(1)/(size(ImStk,1)-1));
-                    
+
                     % Do different things depending whether left/right-clicked
                     clickType = get(fig_handle, 'SelectionType');
                     
@@ -806,11 +805,11 @@ PostVoxMapCut   = PostCut;
 if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,2)) && (Pos(2) < size(Post,1))
     % Find borders of the area to zoom according to passed mouse position
     % Pos(2), NaviRectSize(2) is X      
-    fxmin = max(ceil(Pos(2) - NaviRectSize(2)/2), 1);
+    fxmin = max(ceil(Pos(2) - NaviRectSize(2)/2)+1, 1);
     fxmax = min(ceil(Pos(2) + NaviRectSize(2)/2), size(Post,2));
     fxpad = NaviRectSize(2) - (fxmax - fxmin); % padding if out of image
 
-    fymin = max(ceil(Pos(1) - NaviRectSize(1)/2), 1);
+    fymin = max(ceil(Pos(1) - NaviRectSize(1)/2)+1, 1);
     fymax = min(ceil(Pos(1) + NaviRectSize(1)/2), size(Post,1));
     fypad = NaviRectSize(1) - (fymax - fymin); % padding if out of image
     
@@ -924,7 +923,7 @@ else
             CData(:, size(CData,2)/2+1:size(CData,2),:) = PostCutResized; % redraw right panel
             set(image_handle, 'CData', CData);   
             set(navi_handle, 'Position',[fymin,fxmin,NaviRectSize(2),NaviRectSize(1)]);
-        case 'left'
+        case 'left'            
             set(navi_handle, 'Position',[fymin,fxmin,NaviRectSize(2),NaviRectSize(1)]);
         case 'right'
             CData = get(image_handle, 'CData');
