@@ -42,6 +42,7 @@
 %   + Removed stop button in automate, using cancellable progress dialog
 %   + Ensured zoomed regions is always within image borders
 %   + Fixed wait mouse pointer while computing lasso selection region
+%   + Improved Colocalization analysis loading time
 %
 %  _*Version 7.4*             created on 2019-05-21 by Luca Della Santina_
 %
