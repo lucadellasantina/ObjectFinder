@@ -17,24 +17,24 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function Dots = loadObjects(ObjName, FieldNames)
+function Dots = loadObjects(UID, FieldNames)
 %% Load objects matching ObjName
 if nargin <2
     FieldNames = {};
 end
 
 files = dir('objects');         % List the content of /Objects folder
-    files = files(~[files.isdir]);  % Keep only files, discard subfolders
+files = files(~[files.isdir]);  % Keep only files, discard subfolders
     
-    for d = 1:numel(files)
-        load([pwd filesep 'objects' filesep files(d).name],'Name');
-        if strcmp(Name, ObjName)
-            if isempty(FieldNames)
-                Dots = load([pwd filesep 'objects' filesep files(d).name]);
-            else
-                Dots = load([pwd filesep 'objects' filesep files(d).name], FieldNames{:});                
-            end
-            return;
+for d = 1:numel(files)
+    [~, fName, ~] = fileparts(files(d).name);
+    if strcmp(fName, UID)
+        if isempty(FieldNames)
+            Dots = load([pwd filesep 'objects' filesep files(d).name]);
+        else
+            Dots = load([pwd filesep 'objects' filesep files(d).name], FieldNames{:});
         end
+        return;
     end
+end
 end

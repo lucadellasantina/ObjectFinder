@@ -34,8 +34,8 @@ files = dir([folder filesep 'objects']);         % List the content of /Objects 
             ObjNames = {Name};
             ObjUIDs  = {UID};
         else
-            ObjNames{end+1} = Name;
-            ObjUIDs{end+1} = UID;
+            ObjNames{end+1} = Name; %#ok
+            ObjUIDs{end+1}  = UID;  %#ok
         end
     end
 end

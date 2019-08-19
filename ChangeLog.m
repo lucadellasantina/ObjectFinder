@@ -31,6 +31,14 @@
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
 %
+%  _*Version 7.6*             created on 2019-08-19 by Luca Della Santina_
+%
+%   + Unambiguos tracking of objects by UID
+%   + Faster objects loading time
+%   + NeuralNets database handling via UID, similar to objects 
+%   + New experiment button allows graphic creation of home folder
+%   + Fixed lost focus of main window when modal dialogs are created
+%
 %  _*Version 7.5*             created on 2019-08-17 by Luca Della Santina_
 %
 %   + Rewrote inspectVolume2D to be fater and contained in a single .m file
