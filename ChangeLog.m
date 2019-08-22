@@ -31,6 +31,13 @@
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
 %
+%  _*Version 7.7*             created on 2019-08-21 by Luca Della Santina_
+%
+%   + Improved image loading / saving time
+%   + Better visual feedback of progress using dialogs
+%   + Improved speed of adding multiple folder for batch processing
+%   + Bugfixes
+%
 %  _*Version 7.6*             created on 2019-08-19 by Luca Della Santina_
 %
 %   + Unambiguos tracking of objects by UID

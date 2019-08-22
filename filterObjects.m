@@ -16,7 +16,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function[Filter] = filterObjects(Settings, Dots, FilterOpts)
+function [Filter] = filterObjects(Dots, FilterOpts)
 % Filter objects according to FilterOpts
 Filter.FilterOpts = FilterOpts;
 
@@ -25,21 +25,23 @@ pass = ones(1,Dots.Num); % Initialize vector of passing objects
 
 % added the following if-end to remove dots facing outside the mask or image. 1/14/2010 HO
 if FilterOpts.EdgeDotCut
-    load([pwd filesep 'Mask.mat'], 'Mask');
+    if isfield(Dots.Settings.ImInfo, 'MaskChName') && ~isempty(Dots.Settings.ImInfo.MaskChName)
+        Mask = loadImage(Dots.Settings.ImInfo.MaskChName);
+    end
+    
     Mask = bwperim(uint8(Mask), 6); % this operation will leave mask voxels facing 0 or outside the image as 1, and change the other mask voxels to 0.
     VoxIDMap = zeros(Dots.ImSize);
     for i=1:Dots.Num
         VoxIDMap(Dots.Vox(i).Ind)=i;
     end
+    
     EdgeVoxIDMap = Mask.*VoxIDMap; %contour voxels located at the edge of the mask or image remains, and shows the dot ID#, other voxels are all 0.
-    clear D;
     EdgeDotIDs = unique(EdgeVoxIDMap);
     if EdgeDotIDs(1) == 0
         EdgeDotIDs(1)=[];
     end
     NonEdgeDots = ones(1,Dots.Num);
     NonEdgeDots(1, EdgeDotIDs)=0;
-    save([pwd filesep 'data' filesep 'NonEdgeDots.mat'],'NonEdgeDots');
     pass = pass & NonEdgeDots; % Exclude edge dots
 end
 
@@ -54,7 +56,6 @@ if FilterOpts.SingleZDotCut
     SingleZDotIDs = zVoxNum==1;
     NonSingleZDots = ones(1,Dots.Num);
     NonSingleZDots(1, SingleZDotIDs)=0;
-    save([pwd filesep 'data' filesep 'NonSingleZDots.mat'],'NonSingleZDots');
     pass = pass & NonSingleZDots; % Exclude single Z dots
 end
 
@@ -78,7 +79,6 @@ if FilterOpts.xyStableDots
             xyStableDots(i)=0;                                      % False if not aligned
         end
     end
-    save([pwd filesep 'data' filesep 'xyStableDots.mat'],'xyStableDots');
     pass = pass & xyStableDots;                                     % Trim moving dots away
     fprintf('Dots excluded because moving during aquisition: %u\n', numel(xyStableDots) - numel(find(xyStableDots)));
 end

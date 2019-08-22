@@ -17,7 +17,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function Image = loadImage(FileName)
+function [Image, ImInfo, MIP] = loadImage(FileName)
     PathName = [pwd filesep 'I' filesep];
     if ~isempty(FileName)
         fileInfo = dir([PathName FileName]);
@@ -32,6 +32,8 @@ function Image = loadImage(FileName)
             end
             Image = uint8(Image);
         end
+        
+        MIP = squeeze(max(Image,[],3)); % Create a MIP of each image to display
     end
 end
 
