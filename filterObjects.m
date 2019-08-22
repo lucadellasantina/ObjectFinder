@@ -23,7 +23,7 @@ Filter.FilterOpts = FilterOpts;
 % Apply Exclusion Criteria to Puncta
 pass = ones(1,Dots.Num); % Initialize vector of passing objects
 
-% added the following if-end to remove dots facing outside the mask or image. 1/14/2010 HO
+% Remove dots facing outside the mask or image
 if FilterOpts.EdgeDotCut
     if isfield(Dots.Settings.ImInfo, 'MaskChName') && ~isempty(Dots.Settings.ImInfo.MaskChName)
         Mask = loadImage(Dots.Settings.ImInfo.MaskChName);
@@ -46,8 +46,6 @@ if FilterOpts.EdgeDotCut
 end
 
 % SingleZDotCut: exclude dots whose voxels spread only in one Z plane.
-% This is not necessary for PSD95 dots but sometimes works well with
-% CtBP2 dots which include very dim noisy dots and speckling noise.
 if FilterOpts.SingleZDotCut
     zVoxNum = zeros(1,Dots.Num);
     for i=1:Dots.Num
@@ -83,21 +81,108 @@ if FilterOpts.xyStableDots
     fprintf('Dots excluded because moving during aquisition: %u\n', numel(xyStableDots) - numel(find(xyStableDots)));
 end
 
-% User-defined thresholds for ITMax, Vol and MeanBright
+% Apply user-defined thresholds for each parameter
 if isfield(FilterOpts, 'Thresholds')
-    threshpass = Dots.ITMax >= FilterOpts.Thresholds.ITMax;
-    threshpass = threshpass & (Dots.Vol >= FilterOpts.Thresholds.Vol);
-    threshpass = threshpass & (Dots.MeanBright >= FilterOpts.Thresholds.MeanBright);
-    if isfield(FilterOpts.Thresholds, 'Oblong') && isfield(Dots.Shape, 'Oblong')
-        threshpass = threshpass & (Dots.Shape.Oblong >= FilterOpts.Thresholds.Oblong);
+    if FilterOpts.Thresholds.ITMaxDir == 1
+        threshpass = Dots.ITMax >= FilterOpts.Thresholds.ITMax;
+    else
+        threshpass = Dots.ITMax <= FilterOpts.Thresholds.ITMax;
     end
+    
+    if FilterOpts.Thresholds.VolDir == 1
+        threshpass = threshpass & (Dots.Vol >= FilterOpts.Thresholds.Vol);
+    else
+        threshpass = threshpass & (Dots.Vol <= FilterOpts.Thresholds.Vol);
+    end
+
+    if FilterOpts.Thresholds.MeanBrightDir == 1
+        threshpass = threshpass & (Dots.MeanBright >= FilterOpts.Thresholds.MeanBright);
+    else
+        threshpass = threshpass & (Dots.MeanBright <= FilterOpts.Thresholds.MeanBright);
+    end
+    
+    if FilterOpts.Thresholds.MeanBrightDir == 1
+        threshpass = threshpass & (Dots.MeanBright >= FilterOpts.Thresholds.MeanBright);
+    else
+        threshpass = threshpass & (Dots.MeanBright <= FilterOpts.Thresholds.MeanBright);
+    end
+    
+    if isfield(FilterOpts.Thresholds, 'Oblong') && isfield(Dots.Shape, 'Oblong')
+        if FilterOpts.Thresholds.OblongDir == 1
+            threshpass = threshpass & (Dots.Shape.Oblong >= FilterOpts.Thresholds.Oblong);
+        else
+            threshpass = threshpass & (Dots.Shape.Oblong <= FilterOpts.Thresholds.Oblong);
+        end
+    end
+    
     if isfield(FilterOpts.Thresholds, 'PrincipalAxisLen') && isfield(Dots.Shape, 'PrincipalAxisLen')
-        threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' >= FilterOpts.Thresholds.PrincipalAxisLen);
-    end    
-    pass = pass & threshpass; % Exclude objects not passing the thresholds
+        if FilterOpts.Thresholds.PrincipalAxisLenhDir == 1
+            threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' >= FilterOpts.Thresholds.PrincipalAxisLen);
+        else
+            threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' <= FilterOpts.Thresholds.PrincipalAxisLen);
+        end
+    end 
+    
+    if isfield(FilterOpts.Thresholds, 'Zposition')
+        if FilterOpts.Thresholds.ZpositionDir == 1
+            threshpass = threshpass & (Dots.Pos(:,3) >= FilterOpts.Thresholds.Zposition);
+        else
+            threshpass = threshpass & (Dots.Pos(:,3) <= FilterOpts.Thresholds.Zposition);
+        end
+    end
+    
+    pass = pass & threshpass; % Exclude objects not passing all thresholds
+end
+
+if isfield(FilterOpts, 'Thresholds2')
+    if FilterOpts.Thresholds2.ITMaxDir == 1
+        threshpass = Dots.ITMax >= FilterOpts.Thresholds2.ITMax;
+    else
+        threshpass = Dots.ITMax <= FilterOpts.Thresholds2.ITMax;
+    end
+    
+    if FilterOpts.Thresholds2.VolDir == 1
+        threshpass = threshpass & (Dots.Vol >= FilterOpts.Thresholds2.Vol);
+    else
+        threshpass = threshpass & (Dots.Vol <= FilterOpts.Thresholds2.Vol);
+    end
+    
+    if FilterOpts.Thresholds2.MeanBrightDir == 1
+        threshpass = threshpass & (Dots.MeanBright >= FilterOpts.Thresholds2.MeanBright);
+    else
+        threshpass = threshpass & (Dots.MeanBright <= FilterOpts.Thresholds2.MeanBright);
+    end
+    
+    if isfield(FilterOpts.Thresholds2, 'Oblong') && isfield(Dots.Shape, 'Oblong')
+        if FilterOpts.Thresholds2.OblongDir == 1
+            threshpass = threshpass & (Dots.Shape.Oblong >= FilterOpts.Thresholds2.Oblong);
+        else
+            threshpass = threshpass & (Dots.Shape.Oblong <= FilterOpts.Thresholds2.Oblong);
+        end
+    end
+    
+    if isfield(FilterOpts.Thresholds2, 'PrincipalAxisLen') && isfield(Dots.Shape, 'PrincipalAxisLen')
+        if FilterOpts.Thresholds2.PrincipalAxisLenhDir == 1
+            threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' >= FilterOpts.Thresholds2.PrincipalAxisLen);
+        else
+            threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' <= FilterOpts.Thresholds2.PrincipalAxisLen);
+        end
+    end
+    
+    if isfield(FilterOpts.Thresholds2, 'Zposition')
+        if FilterOpts.Thresholds2.ZpositionDir == 1
+            threshpass = threshpass & (Dots.Pos(:,3) >= FilterOpts.Thresholds2.Zposition);
+        else
+            threshpass = threshpass & (Dots.Pos(:,3) <= FilterOpts.Thresholds2.Zposition);
+        end
+    end
+ 
+    
+    pass = pass & threshpass; % Exclude objects not passing all thresholds
 end
 
 Filter.passF=pass';
+
 disp(['Number of objects initially detected: ' num2str(Dots.Num)]);
 disp(['Number of objects validated after filtering: ' num2str(length(find(Filter.passF)))]);
 end

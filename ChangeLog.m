@@ -31,6 +31,12 @@
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
 %
+%  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
+%
+%   + Multiple thresholds enabled in batch processing and filterObjects()
+%   + New Z position threshold available for validation 
+%   + Bugfixes in filterObjects
+%
 %  _*Version 7.7*             created on 2019-08-21 by Luca Della Santina_
 %
 %   + Improved image loading / saving time

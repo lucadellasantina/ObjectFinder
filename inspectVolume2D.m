@@ -434,48 +434,48 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                 else
                     passI = passI & (Dots.ITMax <= new_thresh2)';
                 end
-                Filter.FilterOpts.Thresholds.ITMaxDir = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds.ITMax    = new_thresh2;
+                Filter.FilterOpts.Thresholds2.ITMaxDir = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.ITMax    = new_thresh2;
             case 3 % Volume
                 if cmbFilter2Dir.Value == 1
                     passI = passI & (Dots.Vol >= new_thresh2)';
                 else
                     passI = passI & (Dots.Vol <= new_thresh2)';
                 end
-                Filter.FilterOpts.Thresholds.VolDir = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds.Vol    = new_thresh2;
+                Filter.FilterOpts.Thresholds2.VolDir = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.Vol    = new_thresh2;
             case 4 % Brighness
                 if cmbFilter2Dir.Value == 1
                     passI = passI & (Dots.MeanBright >= new_thresh2)';
                 else    
                     passI = passI & (Dots.MeanBright <= new_thresh2)';
                 end
-                Filter.FilterOpts.Thresholds.MeanBrightDir  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds.MeanBright     = new_thresh2;
+                Filter.FilterOpts.Thresholds2.MeanBrightDir  = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.MeanBright     = new_thresh2;
             case 5 % Oblongness
                 if cmbFilter2Dir.Value == 1
                     passI = passI & (Dots.Shape.Oblong >= new_thresh2)';
                 else    
                     passI = passI & (Dots.Shape.Oblong <= new_thresh2)';
                 end
-                Filter.FilterOpts.Thresholds.OblongDir  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds.Oblong     = new_thresh2;
+                Filter.FilterOpts.Thresholds2.OblongDir  = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.Oblong     = new_thresh2;
             case 6 % Principal axis length
                 if cmbFilter2Dir.Value == 1
                     passI = passI & (Dots.Shape.PrincipalAxisLen(:,1)' >= new_thresh2)';
                 else    
                     passI = passI & (Dots.Shape.PrincipalAxisLen(:,1)' <= new_thresh2)';
                 end
-                Filter.FilterOpts.Thresholds.PrincipalAxisLenDir  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds.PrincipalAxisLen     = new_thresh2;
+                Filter.FilterOpts.Thresholds2.PrincipalAxisLenDir  = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.PrincipalAxisLen     = new_thresh2;
             case 7 % Z position
                 if cmbFilter2Dir.Value == 1
                     passI = passI & (Dots.Pos(:,3) >= new_thresh2);
                 else    
                     passI = passI & (Dots.Pos(:,3) <= new_thresh2);
                 end
-                Filter.FilterOpts.Thresholds.Zposition  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds.Zposition  = new_thresh2;                
+                Filter.FilterOpts.Thresholds2.Zposition  = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.Zposition  = new_thresh2;                
         end      
         
         set(txtValidObjs,'string',['Valid Objects: ' num2str(numel(find(passI)))]);
