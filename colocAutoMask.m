@@ -26,7 +26,7 @@
 %                    the binary mask to consider the object as colocalized
 %
 
-function ColocAuto = colocAutoMask(Dots, Colo, FileName, NumVoxOverlap, NumPercOverlap)
+function ColocAuto = colocAutoMask(Dots, Colo, FileName, NumVoxOverlap, NumPercOverlap, CenterMustOverlap)
 %%
 [~, fName, ~] = fileparts(FileName);
 ColocAuto.Source        = Dots.Name;
@@ -37,8 +37,14 @@ ColocAuto.ListDotIDsManuallyColocAnalyzed = find(AutoColocAnalyzingFlag == 1);
 ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
 ColocAuto.ColocFlag     = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
 
+ImgSize = [Dots.Settings.ImInfo.yNumVox, Dots.Settings.ImInfo.xNumVox, Dots.Settings.ImInfo.zNumVox];
+
 for i=1:numel(Dots.Vox)
     if Dots.Filter.passF(i)
+        % Check if center of the object overlaps with mask first
+        if CenterMustOverlap && ~Colo(sub2ind(ImgSize, Dots.Pos(i,1), Dots.Pos(i,2), Dots.Pos(i,3)))
+            continue
+        end
         % Trasverse each valid objects and check if the mask is overlapping
         VoxOverlap = numel(find(Colo(Dots.Vox(i).Ind))); %one liner using indexes
         

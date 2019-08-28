@@ -36,6 +36,7 @@
 %   + Multiple thresholds enabled in batch processing and filterObjects()
 %   + New Z position threshold available for validation 
 %   + Bugfixes in filterObjects
+%   + New colocalization with mask option checkbox: centroid must overlap
 %
 %  _*Version 7.7*             created on 2019-08-21 by Luca Della Santina_
 %
