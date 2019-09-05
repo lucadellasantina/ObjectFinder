@@ -41,10 +41,20 @@ ImgSize = [Dots.Settings.ImInfo.yNumVox, Dots.Settings.ImInfo.xNumVox, Dots.Sett
 
 for i=1:numel(Dots.Vox)
     if Dots.Filter.passF(i)
-        % Check if center of the object overlaps with mask first
-        if CenterMustOverlap && ~Colo(sub2ind(ImgSize, Dots.Pos(i,1), Dots.Pos(i,2), Dots.Pos(i,3)))
-            continue
+        if CenterMustOverlap        
+            % Calculate brightness peak position because Dots.Pos(i,:) might not
+            % be any of the actual pixels listed in Dots.Vox(i).Pos
+            BrightPeakPos = Dots.Vox(i).Ind(Dots.Vox(i).RawBright == max(Dots.Vox(i).RawBright));
+            if size(BrightPeakPos,1) > 1
+                BrightPeakPos = BrightPeakPos(1,:);
+            end
+        
+            if ~Colo(BrightPeakPos)
+                ColocAuto.ColocFlag(i) = 2; % Not Colocalized
+                continue
+            end
         end
+        
         % Trasverse each valid objects and check if the mask is overlapping
         VoxOverlap = numel(find(Colo(Dots.Vox(i).Ind))); %one liner using indexes
         
