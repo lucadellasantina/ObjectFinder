@@ -26,48 +26,47 @@
 %                    the binary mask to consider the object as colocalized
 %
 
-function ColocAuto = colocAutoMask(Dots, Colo, FileName, NumVoxOverlap, NumPercOverlap, CenterMustOverlap)
+function ColocAuto = colocAutoMask(srcDots, Colo, FileName, NumVoxOverlap, NumPercOverlap, CenterMustOverlap)
 %%
 [~, fName, ~] = fileparts(FileName);
-ColocAuto.Source        = Dots.Name;
+ColocAuto.Source        = srcDots.Name;
 ColocAuto.Fish1         = fName;
 
-AutoColocAnalyzingFlag  = ones([1,numel(Dots.Vox)], 'uint8');
+AutoColocAnalyzingFlag  = ones([1,numel(srcDots.Vox)], 'uint8');
 ColocAuto.ListDotIDsManuallyColocAnalyzed = find(AutoColocAnalyzingFlag == 1);
 ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
 ColocAuto.ColocFlag     = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
 
-ImgSize = [Dots.Settings.ImInfo.yNumVox, Dots.Settings.ImInfo.xNumVox, Dots.Settings.ImInfo.zNumVox];
-
-for i=1:numel(Dots.Vox)
-    if Dots.Filter.passF(i)
-        if CenterMustOverlap        
-            % Calculate brightness peak position because Dots.Pos(i,:) might not
-            % be any of the actual pixels listed in Dots.Vox(i).Pos
-            BrightPeakPos = Dots.Vox(i).Ind(Dots.Vox(i).RawBright == max(Dots.Vox(i).RawBright));
-            if size(BrightPeakPos,1) > 1
-                BrightPeakPos = BrightPeakPos(1,:);
-            end
-        
-            if ~Colo(BrightPeakPos)
-                ColocAuto.ColocFlag(i) = 2; % Not Colocalized
-                continue
-            end
-        end
-        
-        % Trasverse each valid objects and check if the mask is overlapping
-        VoxOverlap = numel(find(Colo(Dots.Vox(i).Ind))); %one liner using indexes
-        
-        % Define also overlap as percent of total object size
-        PercOverlap = 100 * VoxOverlap / Dots.Vol(i);
-        
-        if (VoxOverlap >= NumVoxOverlap) && (PercOverlap >= NumPercOverlap)
-            ColocAuto.ColocFlag(i) = 1; % Colocalized
-        else
-            ColocAuto.ColocFlag(i) = 2; % Not Colocalized
-        end
-    else
+for i=1:numel(srcDots.Vox)
+    if ~srcDots.Filter.passF(i)
         ColocAuto.ColocFlag(i) = 3; % Invalid dot (filter==0)
+        continue
+    end
+    
+    if CenterMustOverlap
+        % Calculate brightness peak position because srcDots.Pos(i,:) might not
+        % be any of the actual pixels listed in srcDots.Vox(i).Pos
+        BrightPeakPos = srcDots.Vox(i).Ind(srcDots.Vox(i).RawBright == max(srcDots.Vox(i).RawBright));
+        if size(BrightPeakPos,1) > 1
+            BrightPeakPos = BrightPeakPos(1,:);
+        end
+        
+        if ~Colo(BrightPeakPos)
+            ColocAuto.ColocFlag(i) = 2; % Not Colocalized
+            continue
+        end
+    end
+    
+    % Trasverse each valid objects and check if the mask is overlapping
+    VoxOverlap = numel(find(Colo(srcDots.Vox(i).Ind))); %one liner using indexes
+    
+    % Define also overlap as percent of total object size
+    PercOverlap = 100 * VoxOverlap / srcDots.Vol(i);
+    
+    if (VoxOverlap >= NumVoxOverlap) && (PercOverlap >= NumPercOverlap)
+        ColocAuto.ColocFlag(i) = 1; % Colocalized
+    else
+        ColocAuto.ColocFlag(i) = 2; % Not Colocalized
     end
 end
 

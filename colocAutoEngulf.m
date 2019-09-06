@@ -18,39 +18,56 @@
 %
 % *Colocalization - Automatic overlap analysis between engulfing/engilfed*
 % Required parameters
-%    Dots           = Reference engulfing objects
-%    DotsEngulfed   = Destination engulfed objects
+%    srcDots        = Reference engulfing objects
+%    dstDots        = Destination objects engulfed by srcDots
 %    NumVoxOverlap  = Number of overlapping voxels between each objet and
 %                     the binary mask to consider the object as colocalized
 %    NumPercOverlap = Number of overlapping voxels between each objet and
 %                     the binary mask expressed as percentage of Dots size
 %                     to consider the object as colocalized
 
-function ColocAuto = colocAutoEngulf(Dots, DotsEngulfed, NumVoxOverlap, NumPercOverlap, WithinDist)
+function ColocAuto = colocAutoEngulf(srcDots, dstDots, NumVoxOverlap, NumPercOverlap, WithinDist, CenterMustOverlap)
 %%
-ColocAuto.Source        = Dots.Name;
-ColocAuto.Fish1         = DotsEngulfed.Name;
+ColocAuto.Source = srcDots.Name;
+ColocAuto.Fish1  = dstDots.Name;
 
-AutoColocAnalyzingFlag                      = ones([1,numel(Dots.Vox)], 'uint8');
+AutoColocAnalyzingFlag                      = ones([1,numel(srcDots.Vox)], 'uint8');
 ColocAuto.ListDotIDsManuallyColocAnalyzed   = find(AutoColocAnalyzingFlag == 1);
 ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
 ColocAuto.ColocFlag                         = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
 
 % Trasverse each reference object and count how many objects are engulfed
-% *IMPORTANT*: ColocAuto here stores the absolute number DotsEngufled that 
-% each reference object in Dots is engulfing more than passed threshold
+% *IMPORTANT*: ColocAuto here stores the absolute number of dstDots that 
+% each srcDot is engulfing (after verifying overlap is more than threshold)
 
-for idx_src = 1:numel(Dots.Vox)
+xyum = srcDots.Settings.ImInfo.xyum;
+zum  = srcDots.Settings.ImInfo.zum;
+
+for idx_src = 1:numel(srcDots.Vox)
     ColocAuto.ColocFlag(idx_src) = 0; % Invalid dot (filter==0)
-    if ~Dots.Filter.passF(idx_src), continue; end
+    if ~srcDots.Filter.passF(idx_src), continue; end
    
-    for idx_dst = 1:numel(DotsEngulfed.Vox)
-        if ~DotsEngulfed.Filter.passF(idx_dst), continue; end
+    for idx_dst = 1:numel(dstDots.Vox)
+        if ~dstDots.Filter.passF(idx_dst), continue; end
         
-        VoxOverlap     = numel(intersect(Dots.Vox(idx_src).Ind, DotsEngulfed.Vox(idx_dst).Ind));
-        VoxOverlapPerc = 100 * VoxOverlap / DotsEngulfed.Vol(idx_dst); % Store voxel overlap as percent of engulfed object volume
-        PeakDistxy     = hypot( (Dots.Pos(idx_src,1)-DotsEngulfed.Pos(idx_dst,1))*xyum, (Dots.Pos(idx_src,2)-DotsEngulfed.Pos(idx_dst,2))*xyum);
-        PeakDistxyz    = hypot( PeakDistxy, (Dots.Pos(idx_src,3)-DotsEngulfed.Pos(idx_dst,3))*zum); % calculate separately along Z because this dimension has different pixel size
+        if CenterMustOverlap        
+            % Calculate brightness peak position because dstDots.Pos(i,:) might not
+            % be any of the actual pixels listed in dstDots.Vox(i).Pos
+            BrightPeakPos = dstDots.Vox(idx_dst).Ind(dstDots.Vox(idx_dst).RawBright == max(dstDots.Vox(idx_dst).RawBright));
+            if size(BrightPeakPos,1) > 1
+                BrightPeakPos = BrightPeakPos(1,:);
+            end
+        
+            % Check whether the center voxel of dstDot is among the voxels belonging to srcDot
+            if isempty(find(srcDots.Vox(idx_src).Ind == BrightPeakPos, 1))
+                continue
+            end
+        end               
+        
+        VoxOverlap     = numel(intersect(srcDots.Vox(idx_src).Ind, dstDots.Vox(idx_dst).Ind));
+        VoxOverlapPerc = 100 * VoxOverlap / dstDots.Vol(idx_dst); % Store voxel overlap as percent of engulfed object volume
+        PeakDistxy     = hypot( (srcDots.Pos(idx_src,1)-dstDots.Pos(idx_dst,1))*xyum, (srcDots.Pos(idx_src,2)-dstDots.Pos(idx_dst,2))*xyum);
+        PeakDistxyz    = hypot( PeakDistxy, (srcDots.Pos(idx_src,3)-dstDots.Pos(idx_dst,3))*zum); % calculate separately along Z because this dimension has different pixel size
         
         if (VoxOverlap >= NumVoxOverlap) && (VoxOverlapPerc >= NumPercOverlap) && (PeakDistxyz <= WithinDist)
             ColocAuto.ColocFlag(idx_src) = ColocAuto.ColocFlag(idx_src) + 1; % Add one more engulfed

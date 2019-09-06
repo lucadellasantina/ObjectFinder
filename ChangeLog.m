@@ -22,11 +22,9 @@
 %
 % *Change log*
 %
-% TODO: Add colocalization between objects and mask based on center distance
 % TODO: Bug in inspectObjects2D selecting dots position not accurate
 % TODO: make "skeletons' folder and allow user to choose which skeleton
-% TODO: measure distance from closest skeleton
-% TODO: measure colocalization as within certain distance from objects/skel
+% TODO: measure distance from closest skeleton and colocalize within it
 % TODO: understand why skeleton and dots locations don't match anymore
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
@@ -37,6 +35,7 @@
 %   + New Z position threshold available for validation 
 %   + Bugfixes in filterObjects
 %   + New colocalization with mask option checkbox: centroid must overlap
+%   + New colocalization between objects: centroid must overlap
 %
 %  _*Version 7.7*             created on 2019-08-21 by Luca Della Santina_
 %
