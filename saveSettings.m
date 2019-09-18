@@ -17,28 +17,24 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [SortedObjNames, SortedObjUIDs] = listObjects(folder)
-%% List available object names and UIDs
-switch nargin
-    case 0, folder = pwd;
-end
 
-ObjNames = {};
-ObjUIDs  = {};
-
-files = dir([folder filesep 'objects']);         % List the content of /Objects folder
-files = files(~[files.isdir]);  % Keep only files, discard subfolders
-for d = 1:numel(files)
-    load([folder filesep 'objects' filesep files(d).name],'Name', 'UID');
-    if isempty(ObjNames)
-        ObjNames = {Name};
-        ObjUIDs  = {UID};
-    else
-        ObjNames{end+1} = Name; %#ok
-        ObjUIDs{end+1}  = UID;  %#ok
+function saveSettings(Settings, FieldName)
+%% Save a variable into a .mat file
+    
+    if nargin == 1
+        % If no FieldName then save all field of Dots on file
+        FieldName = []; 
     end
-end
-
-[SortedObjNames, idx] = sort(ObjNames);
-SortedObjUIDs = ObjUIDs(idx);
+    
+    FileName = [pwd filesep 'Settings.mat'];
+    
+    lastwarn('') % Clear last warning message
+    
+    if isempty(FieldName)
+        % Save struct on file with fields split tino separate variables
+        save(FileName, '-struct', 'Settings');
+    else
+        % Save only a specific FieldName on disk
+        save(FileName, '-struct', 'Settings', FieldName,'-append');
+    end    
 end

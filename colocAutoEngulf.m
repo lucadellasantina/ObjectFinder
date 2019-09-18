@@ -44,11 +44,15 @@ xyum = srcDots.Settings.ImInfo.xyum;
 zum  = srcDots.Settings.ImInfo.zum;
 
 for idx_src = 1:numel(srcDots.Vox)
-    ColocAuto.ColocFlag(idx_src) = 0; % Invalid dot (filter==0)
-    if ~srcDots.Filter.passF(idx_src), continue; end
+    if ~srcDots.Filter.passF(idx_src)
+        ColocAuto.ColocFlag(idx_src) = -1; % Invalid dot
+        continue
+    end
    
     for idx_dst = 1:numel(dstDots.Vox)
-        if ~dstDots.Filter.passF(idx_dst), continue; end
+        if ~dstDots.Filter.passF(idx_dst)
+            continue
+        end
         
         if CenterMustOverlap        
             % Calculate brightness peak position because dstDots.Pos(i,:) might not
@@ -77,7 +81,7 @@ end
 
 ColocAuto.NumDotsColoc      = length(find(ColocAuto.ColocFlag > 0));
 ColocAuto.NumDotsNonColoc   = length(find(ColocAuto.ColocFlag == 0));
-ColocAuto.NumFalseDots      = 0;
+ColocAuto.NumFalseDots      = length(find(ColocAuto.ColocFlag < 0));
 ColocAuto.ColocRate         = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc);
 ColocAuto.FalseDotRate      = ColocAuto.NumFalseDots/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
 ColocAuto.ColocRateInclugingFalseDots = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);

@@ -17,28 +17,21 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [SortedObjNames, SortedObjUIDs] = listObjects(folder)
-%% List available object names and UIDs
-switch nargin
-    case 0, folder = pwd;
+function Settings = loadSettings(FieldNames)
+%% Load objects matching ObjName
+if nargin < 1
+    FieldNames = {};
 end
 
-ObjNames = {};
-ObjUIDs  = {};
-
-files = dir([folder filesep 'objects']);         % List the content of /Objects folder
-files = files(~[files.isdir]);  % Keep only files, discard subfolders
-for d = 1:numel(files)
-    load([folder filesep 'objects' filesep files(d).name],'Name', 'UID');
-    if isempty(ObjNames)
-        ObjNames = {Name};
-        ObjUIDs  = {UID};
-    else
-        ObjNames{end+1} = Name; %#ok
-        ObjUIDs{end+1}  = UID;  %#ok
-    end
+Settings = [];
+if ~exist([pwd filesep 'Settings.mat'],'file')
+    return
 end
 
-[SortedObjNames, idx] = sort(ObjNames);
-SortedObjUIDs = ObjUIDs(idx);
+if isempty(FieldNames)
+    Settings = load([pwd filesep 'Settings.mat']);
+else
+    Settings = load([pwd filesep 'Settings.mat'], FieldNames{:});
+end
+
 end

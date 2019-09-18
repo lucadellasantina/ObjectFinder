@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="42519204" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1183023371" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -10,11 +10,12 @@
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_24.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_16.png</file>
     </param.icons>
-    <param.summary>Find objects in volumetric image stacks.</param.summary>
+    <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.
+Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summary>
     <param.description>Copyright 2016-2019 Luca Della Santina. 
 Licensed under the terms of GNU General Public License v3</param.description>
-    <param.screenshot>${PROJECT_ROOT}/ObjectFinder_resources/app_icon_big.png</param.screenshot>
-    <param.version>7.8.13</param.version>
+    <param.screenshot>/tmp/tp6ae7c3a4_c598_40a3_926a_975c4ccd6ef2.png</param.screenshot>
+    <param.version>8.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Image Processing Toolbox</item>
@@ -28,15 +29,17 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <item>80</item>
     </param.products.id>
     <param.products.version>
-      <item>9.4</item>
+      <item>9.7</item>
       <item>10.2</item>
       <item>11.1</item>
-      <item>6.12</item>
+      <item>7.1</item>
     </param.products.version>
     <param.platforms />
-    <param.output>/home/luca/Dropbox/MATLAB scripts/ObjectFinder</param.output>
+    <param.output>${PROJECT_ROOT}</param.output>
     <param.guid>912cbc5e-7b98-4c7b-a172-fdd315f64c21</param.guid>
     <unset>
+      <param.authnamewatermark />
+      <param.email />
       <param.company />
       <param.platforms />
       <param.output />
@@ -45,6 +48,13 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
+      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-List-add.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-List-remove.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-Manual.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-save.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-settings.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-web-browser.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/bug.png</file>
       <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>
@@ -85,13 +95,17 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/loadImage.m</file>
       <file>${PROJECT_ROOT}/loadNetwork.m</file>
       <file>${PROJECT_ROOT}/loadObjects.m</file>
+      <file>${PROJECT_ROOT}/loadSettings.m</file>
       <file>${PROJECT_ROOT}/loadSimulation.m</file>
       <file>${PROJECT_ROOT}/saveNetwork.m</file>
       <file>${PROJECT_ROOT}/saveObjects.m</file>
+      <file>${PROJECT_ROOT}/saveSettings.m</file>
       <file>${PROJECT_ROOT}/saveSimulations.m</file>
       <file>${PROJECT_ROOT}/saveastiff.m</file>
       <file>${PROJECT_ROOT}/shollAnalysis.m</file>
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/ObjectFinder_TestStacks/PSD95-RGC v7.0/Settings.mat</file>
+      <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>
       <file>${PROJECT_ROOT}/ImarisXTensions</file>
@@ -103,14 +117,20 @@ Licensed under the terms of GNU General Public License v3</param.description>
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>/home/luca/MATLAB/R2018a</root>
+      <root>/home/luca/MATLAB/R2019b</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
+        <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
       </toolbox>
     </matlab>
     <platform>
@@ -122,7 +142,7 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>4.15.0-60-generic</osver>
+      <osver>4.15.0-62-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>

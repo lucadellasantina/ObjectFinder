@@ -24,6 +24,11 @@ tic;
 fprintf('Dividing image volume into blocks and estimating noise level... ');
 blockSize   = Settings.objfinder.blockSize;
 blockBuffer = Settings.objfinder.blockBuffer;
+if isfield(Settings.objfinder, 'connectedVoxN')
+    connectedVoxN = Settings.objfinder.connectedVoxN;
+else
+    connectedVoxN = 6; % Deault connectivity 6 directions
+end
 
 % Calculate the number of blocks to subsample the image volume
 if Settings.objfinder.blockSearch
@@ -122,7 +127,7 @@ parfor block = 1:(NumBx*NumBy*NumBz)
         
         % Label all areas in the block (Igl) that crosses the intensity "i" 
         % bwconncomp+labelmatrix is ~10% faster than using belabeln
-        CC                = bwconncomp(Blocks(block).Igm >= i,6);
+        CC                = bwconncomp(Blocks(block).Igm >= i,connectedVoxN);
         labels            = CC.NumObjects;
         Blocks(block).Igl = labelmatrix(CC);
         
@@ -181,11 +186,11 @@ parfor block = 1:(NumBx*NumBy*NumBz)
         wsTMapBinOpen   = imdilate(wsTMapBin, ones(3,3,3));         % Dilate map with a 3x3x3 kernel (dilated perimeter acts like ridges between background and ROIs)
         wsTMapComp      = imcomplement(Blocks(block).thresholdMap); % Complement (invert) image. Required because watershed() separate holes, not mountains. imcomplement creates complement using the entire range of the class, so for uint8, 0 becomes 255 and 255 becomes 0, but for double 0 becomes 1 and 255 becomes -254.
         wsTMMod         = wsTMapComp.*wsTMapBinOpen;                % Force background outside of dilated region to 0, and leaves walls of 255 between puncta and background.
-        wsTMLabels      = watershed(wsTMMod, 6);                    % 6 voxel connectivity watershed (faces), this will fill background with 1, ridges with 0 and puncta with 2,3,4,... in double format
+        wsTMLabels      = watershed(wsTMMod, connectedVoxN);        % Voxel connectivity watershed (faces), this will fill background with 1, ridges with 0 and puncta with 2,3,4,... in double format
         wsBkgLabel      = mode(double(wsTMLabels(:)));              % calculate background level
         wsTMLabels(wsTMLabels == wsBkgLabel) = 0;                   % seems that sometimes Background can get into puncta... so the next line was not good enough to remove all the background labels.
     else                          
-        wsTMLabels = bwlabeln(Blocks(block).thresholdMap, 6);   % 6 voxel connectivity without watershed on the original threshold map.
+        wsTMLabels = bwlabeln(Blocks(block).thresholdMap, connectedVoxN);   % Voxel connectivity without watershed on the original threshold map.
     end    
     
     wsLabelList                 = unique(wsTMLabels);

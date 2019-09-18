@@ -33,8 +33,8 @@ ColocAuto.Fish1         = NN.Name;
 
 AutoColocAnalyzingFlag                      = ones([1,numel(srcDots.Vox)], 'uint8');
 ColocAuto.ListDotIDsManuallyColocAnalyzed   = find(AutoColocAnalyzingFlag == 1);
-ColocAuto.TotalNumsrcDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
-ColocAuto.ColocFlag                         = zeros([1,ColocAuto.TotalNumsrcDotsManuallyColocAnalyzed], 'uint8');
+ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
+ColocAuto.ColocFlag                         = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
 
 % Trasverse each valid object and check if Nearest Neighbor is 
 % overlappedthe above the voxel and percent thresholds
@@ -68,12 +68,12 @@ for i = 1:numel(srcDots.Vox)
     end
 end
 
-ColocAuto.NumsrcDotsColoc      = length(find(ColocAuto.ColocFlag == 1));
-ColocAuto.NumsrcDotsNonColoc   = length(find(ColocAuto.ColocFlag == 2));
-ColocAuto.NumFalsesrcDots      = length(find(ColocAuto.ColocFlag == 3));
-ColocAuto.ColocRate         = ColocAuto.NumsrcDotsColoc/(ColocAuto.NumsrcDotsColoc+ColocAuto.NumsrcDotsNonColoc);
-ColocAuto.FalseDotRate      = ColocAuto.NumFalsesrcDots/(ColocAuto.NumsrcDotsColoc+ColocAuto.NumsrcDotsNonColoc+ColocAuto.NumFalsesrcDots);
-ColocAuto.ColocRateInclugingFalsesrcDots = ColocAuto.NumsrcDotsColoc/(ColocAuto.NumsrcDotsColoc+ColocAuto.NumsrcDotsNonColoc+ColocAuto.NumFalsesrcDots);
+ColocAuto.NumDotsColoc      = length(find(ColocAuto.ColocFlag == 1));
+ColocAuto.NumDotsNonColoc   = length(find(ColocAuto.ColocFlag == 2));
+ColocAuto.NumFalseDots      = length(find(ColocAuto.ColocFlag == 3));
+ColocAuto.ColocRate         = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc);
+ColocAuto.FalseDotRate      = ColocAuto.NumFalseDots/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
+ColocAuto.ColocRateInclugingFalseDots = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
 ColocAuto.Method            = 'AutoNN';
 ColocAuto.NumVoxOverlap     = NumVoxOverlap;
 ColocAuto.NumPercOverlap    = NumPercOverlap;
