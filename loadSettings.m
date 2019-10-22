@@ -30,6 +30,9 @@ end
 
 if isempty(FieldNames)
     Settings = load([pwd filesep 'Settings.mat']);
+    if isfield(Settings, 'Settings')
+        Settings = Settings.Settings;
+    end
 else
     Settings = load([pwd filesep 'Settings.mat'], FieldNames{:});
 end

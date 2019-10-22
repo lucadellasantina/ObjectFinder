@@ -18,9 +18,14 @@
 %
 
 function [Image, ImInfo, MIP] = loadImage(FileName)
+%%
     PathName = [pwd filesep 'I' filesep];
     if ~isempty(FileName)
         fileInfo = dir([PathName FileName]);
+        if isempty(fileInfo)
+            return
+        end
+        
         if fileInfo.bytes > 4e+9
             % Image file is bigger than 4Gb using custom imread function
             Image = uint8(imread_big([PathName FileName]));

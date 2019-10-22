@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1183023371" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3645811293" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -14,7 +14,7 @@
 Copyright 2016-2018 Luca Della Santina (luca.dellasantina@gmail.com)</param.summary>
     <param.description>Copyright 2016-2019 Luca Della Santina. 
 Licensed under the terms of GNU General Public License v3</param.description>
-    <param.screenshot>/tmp/tp6ae7c3a4_c598_40a3_926a_975c4ccd6ef2.png</param.screenshot>
+    <param.screenshot>/tmp/tpa286965a_2ae7_4bee_94cd_bf3686dcfb5d.png</param.screenshot>
     <param.version>8.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
@@ -30,7 +30,7 @@ Licensed under the terms of GNU General Public License v3</param.description>
     </param.products.id>
     <param.products.version>
       <item>9.7</item>
-      <item>10.2</item>
+      <item>11.0</item>
       <item>11.1</item>
       <item>7.1</item>
     </param.products.version>
@@ -48,13 +48,19 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
+      <file>/home/luca/Desktop/MaskEdgeError/Settings.mat</file>
       <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-List-add.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-List-remove.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-Manual.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-save.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-settings.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-web-browser.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/bug.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-Inspect.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-Masks.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-Training-set.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-monkey.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-new.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-save.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-settings.png</file>
       <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>
@@ -104,7 +110,6 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/saveastiff.m</file>
       <file>${PROJECT_ROOT}/shollAnalysis.m</file>
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/ObjectFinder_TestStacks/PSD95-RGC v7.0/Settings.mat</file>
       <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>
@@ -142,7 +147,7 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>4.15.0-62-generic</osver>
+      <osver>4.15.0-65-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>
