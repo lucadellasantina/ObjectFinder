@@ -17,8 +17,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-
-function saveObjects(Dots, FieldName)
+function saveSkel(Skel, FieldName)
 %% Save a variable into a .mat file efficiently depending on its size
     
     if nargin == 1
@@ -26,33 +25,24 @@ function saveObjects(Dots, FieldName)
         FieldName = []; 
     end
     
-    if ~isfield(Dots, 'UID')
-        Dots.UID = generateUID;
+    if ~isfield(Skel, 'UID')
+        Skel.UID = generateUID;
+    end
+    if ~isfield(Skel, 'Name')
+        Skel.Name = 'Skeleton';
     end
     
-    if ~exist([pwd filesep 'objects'], 'dir')
-        mkdir([pwd filesep 'objects']);
+    if ~exist([pwd filesep 'skeletons'], 'dir')
+        mkdir([pwd filesep 'skeletons']);
     end
     
-    FileName = [pwd filesep 'objects' filesep Dots.UID '.mat'];
-    
-    lastwarn('') % Clear last warning message
+    FileName = [pwd filesep 'skeletons' filesep Skel.UID '.mat'];
     
     if isempty(FieldName)
         % Save struct on file with fields split tino separate variables
-        save(FileName, '-struct', 'Dots', '-v7');
-        [warnMsg, ~] = lastwarn;
-        if ~isempty(warnMsg)
-            disp('Objects are bigger than 2Gb, will be saved using larger file format, be patient...')
-            save(FileName, '-struct', 'Dots', '-v7.3', '-nocompression');
-        end
+        save(FileName, '-struct', 'Skel');
     else
         % Save only a specific FieldName on disk
-        save(FileName, '-struct', 'Dots', FieldName,'-append');
-        [warnMsg, ~] = lastwarn;
-        if ~isempty(warnMsg)
-            disp('Objects are bigger than 2Gb, will be saved using larger file format, be patient...')
-            save(FileName, '-struct', 'Dots', FieldName, '-append');
-        end
+        save(FileName, '-struct', 'Skel', FieldName,'-append');
     end    
 end

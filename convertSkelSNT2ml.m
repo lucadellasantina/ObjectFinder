@@ -1,5 +1,5 @@
 %% simpleneuritetracer2ml - import ImageJ's simple neurite tracer skeletons
-%  Copyright (C) 2011-2018 Luca Della Santina
+%  Copyright (C) 2011-2020 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %

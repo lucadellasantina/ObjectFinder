@@ -17,28 +17,21 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [SortedObjNames, SortedObjUIDs] = listObjects(folder)
+function SortedImgNames = listImages(folder)
 %% List available object names and UIDs
 switch nargin
     case 0, folder = pwd;
 end
 
-ObjNames = {};
-ObjUIDs  = {};
-
-files = dir([folder filesep 'objects']);         % List the content of /Objects folder
-files = files(~[files.isdir]);  % Keep only files, discard subfolders
-for d = 1:numel(files)
-    load([folder filesep 'objects' filesep files(d).name],'Name', 'UID');
-    if isempty(ObjNames)
-        ObjNames = {Name};
-        ObjUIDs  = {UID};
-    else
-        ObjNames{end+1} = Name; %#ok
-        ObjUIDs{end+1}  = UID;  %#ok
-    end
+files = dir([folder filesep 'I' filesep '*.tif']); % List TIF images in ./I folder
+ImgNames = [];
+for f = numel(files):-1:1
+    ImgNames{f} = files(f).name;
 end
 
-[SortedObjNames, idx] = sort(ObjNames);
-SortedObjUIDs = ObjUIDs(idx);
+if isempty(ImgNames)
+    SortedImgNames = [];
+else
+    SortedImgNames = sort(ImgNames);
+end
 end

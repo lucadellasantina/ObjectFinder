@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2019 Luca Della Santina
+%  Copyright (C) 2016-2020 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -35,7 +35,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
     SelObjID= 0;                        % Initialize selected object ID#
 	
 	% Initialize GUI
-	fig_handle = figure('Name','Volume inspector (green: valid object, red: rejected object, blue: selected object)','NumberTitle','off','Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
+	fig_handle = figure('Name','Volume inspector (green: valid object, red: rejected object, yellow: selected object)','NumberTitle','off','Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
 		'WindowButtonDownFcn',@button_down, 'WindowButtonUpFcn',@button_up, 'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press,'windowscrollWheelFcn', @wheel_scroll);
 	
 	% Add custom scroll bar
@@ -798,7 +798,7 @@ ValObjColor     = uint8([0 1 0])'; % Green
 RejObjColor     = uint8([1 0 0])'; % Gray
 
 F               = squeeze(Post(:,:,frameNum,:));
-PostCut         = zeros(NaviRectSize(1), NaviRectSize(2), 3, 'uint8');
+PostCut         = ones(NaviRectSize(1), NaviRectSize(2), 3, 'uint8');
 PostCutResized  = zeros(size(Post,1), size(Post,2), 3, 'uint8');
 PostVoxMapCut   = PostCut;
 

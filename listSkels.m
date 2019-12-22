@@ -17,28 +17,28 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [SortedObjNames, SortedObjUIDs] = listObjects(folder)
-%% List available object names and UIDs
+function [SortedSkelNames, SortedSkelUIDs] = listSkels(folder)
+%% List available skeleton names and UIDs
 switch nargin
     case 0, folder = pwd;
 end
 
-ObjNames = {};
-ObjUIDs  = {};
+SkelNames = {};
+SkelUIDs  = {};
 
-files = dir([folder filesep 'objects']);         % List the content of /Objects folder
+files = dir([folder filesep 'skeletons']);         % List the content of /Objects folder
 files = files(~[files.isdir]);  % Keep only files, discard subfolders
-for d = 1:numel(files)
-    load([folder filesep 'objects' filesep files(d).name],'Name', 'UID');
-    if isempty(ObjNames)
-        ObjNames = {Name};
-        ObjUIDs  = {UID};
+for f = 1:numel(files)
+    load([folder filesep 'skeletons' filesep files(f).name],'Name', 'UID');
+    if isempty(SkelNames)
+        SkelNames = {Name};
+        SkelUIDs  = {UID};
     else
-        ObjNames{end+1} = Name; %#ok
-        ObjUIDs{end+1}  = UID;  %#ok
+        SkelNames{end+1} = Name; %#ok
+        SkelUIDs{end+1}  = UID;  %#ok
     end
 end
 
-[SortedObjNames, idx] = sort(ObjNames);
-SortedObjUIDs = ObjUIDs(idx);
+[SortedSkelNames, idx] = sort(SkelNames);
+SortedSkelUIDs = SkelUIDs(idx);
 end

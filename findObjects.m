@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2019 Luca Della Santina
+%  Copyright (C) 2016-2020 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -86,7 +86,7 @@ for block = 1:(NumBx*NumBy*NumBz)
         case 'min'
             % Estimates noise as the absolute minimum intensity in the data
             if Settings.objfinder.localNoise
-                Blocks(block).Gmode     = min(Blocks(block).Igm(Blocks(block).Igm(:)));
+                Blocks(block).Gmode     = min(Blocks(block).Igm(:));
             else
                 Blocks(block).Gmode     = min(Post(:));
             end         

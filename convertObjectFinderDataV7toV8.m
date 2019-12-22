@@ -17,28 +17,26 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [SortedObjNames, SortedObjUIDs] = listObjects(folder)
-%% List available object names and UIDs
-switch nargin
-    case 0, folder = pwd;
-end
+function convertObjectFinderDataV7toV8
+%% Convert objectfinder 7.x data format to 8.x data format
 
-ObjNames = {};
-ObjUIDs  = {};
-
-files = dir([folder filesep 'objects']);         % List the content of /Objects folder
-files = files(~[files.isdir]);  % Keep only files, discard subfolders
-for d = 1:numel(files)
-    load([folder filesep 'objects' filesep files(d).name],'Name', 'UID');
-    if isempty(ObjNames)
-        ObjNames = {Name};
-        ObjUIDs  = {UID};
-    else
-        ObjNames{end+1} = Name; %#ok
-        ObjUIDs{end+1}  = UID;  %#ok
+    % Create a skeleton folder and move in there any existing skeleton
+    if ~exist('skeletons','dir')
+        mkdir('objects'); 
     end
-end
-
-[SortedObjNames, idx] = sort(ObjNames);
-SortedObjUIDs = ObjUIDs(idx);
+    
+    if exist('Skel.mat', 'file')
+        Skel = load('Skel.mat', 'Skel');
+        saveSkel(Skel);
+        delete('Skel.mat'); % Skeleton is now stored inside ./skeletons/
+    end
+    
+    % Remove 'data' and 'images' folders as no more needed
+    if exist([pwd filesep 'data'],'dir')
+        rmdir([pwd filesep 'data'], 's'); 
+    end
+    if exist([pwd filesep 'images'],'dir')
+        rmdir([pwd filesep 'images'], 's'); 
+    end
+    
 end

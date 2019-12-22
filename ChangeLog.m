@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2019 Luca Della Santina
+%  Copyright (C) 2016-2020 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -28,6 +28,19 @@
 % TODO: understand why skeleton and dots locations don't match anymore
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
+% TODO: colocManual: allow user to invalidate an object
+% TODO: inspect2D: allow adding a new object and refining object voxels
+% TODO: heatmap plot move to VolumeCut and plot hearmap of intersection of 2 masks
+%
+%  _*Version 8.0*             created on 2019-12-24 by Luca Della Santina_
+%
+%   + Inspect2D pixels not beloning to any objects are now shown in grey
+%   + Batch nearest neighbor analysis, colocalization and report
+%   + Removed bottom bar with Log and Lamp
+%   + Multiple skeletons management
+%   + findObjects: Fixed noise=min bug preventing detection of binary masks
+%   + removed 'data' and 'images' subdfolders from each project
+%   + direct selection of images and masks without going through gallery
 %
 %  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
 %

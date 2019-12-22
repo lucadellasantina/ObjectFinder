@@ -17,28 +17,24 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [SortedObjNames, SortedObjUIDs] = listObjects(folder)
-%% List available object names and UIDs
-switch nargin
-    case 0, folder = pwd;
+function Skel = loadSkel(UID, FieldNames)
+%% Load objects matching ObjName
+if nargin <2
+    FieldNames = {};
 end
 
-ObjNames = {};
-ObjUIDs  = {};
-
-files = dir([folder filesep 'objects']);         % List the content of /Objects folder
+files = dir('skeletons');         % List the content of /Objects folder
 files = files(~[files.isdir]);  % Keep only files, discard subfolders
+    
 for d = 1:numel(files)
-    load([folder filesep 'objects' filesep files(d).name],'Name', 'UID');
-    if isempty(ObjNames)
-        ObjNames = {Name};
-        ObjUIDs  = {UID};
-    else
-        ObjNames{end+1} = Name; %#ok
-        ObjUIDs{end+1}  = UID;  %#ok
+    [~, fName, ~] = fileparts(files(d).name);
+    if strcmp(fName, UID)
+        if isempty(FieldNames)
+            Skel = load([pwd filesep 'skeletons' filesep files(d).name]);
+        else
+            Skel = load([pwd filesep 'skeletons' filesep files(d).name], FieldNames{:});
+        end
+        return;
     end
 end
-
-[SortedObjNames, idx] = sort(ObjNames);
-SortedObjUIDs = ObjUIDs(idx);
 end
