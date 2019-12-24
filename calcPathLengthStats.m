@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%  Copyright (C) 2016-2020 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -60,7 +60,7 @@ if showPlot
     axis([0 EdgePathLengthMax 0 250]);
     set(gca, 'XColor', [1 1 1]); set(gca, 'YColor', [1 1 1]);
     title('bin=10um');
-    xlabel('Path length from cell body (µm)');
+    xlabel('Path length from cell body (ï¿½m)');
     ylabel('Total number of dots in the bin');
     
     subplot(3,1,2, 'Color', [0 0 0]), hold on;
@@ -68,7 +68,7 @@ if showPlot
     axis([0 EdgePathLengthMax 0 400]);
     set(gca, 'XColor', [1 1 1]); set(gca, 'YColor', [1 1 1]);
     title('bin=10um');
-    xlabel('Path length from cell body (µm)');
+    xlabel('Path length from cell body (ï¿½m)');
     ylabel('Total lengths of dendrites in the bin');
     
     subplot(3,1,3, 'Color', [0 0 0]), hold on;
@@ -76,8 +76,8 @@ if showPlot
     axis([0 EdgePathLengthMax 0 max(1, max(PoverD))]);
     set(gca, 'XColor', [1 1 1]); set(gca, 'YColor', [1 1 1]);
     title('bin=10um');
-    xlabel('Path length from cell body (µm)');
-    ylabel('#puncta/µm dendrite');
+    xlabel('Path length from cell body (ï¿½m)');
+    ylabel('#puncta/ï¿½m dendrite');
     
     set(gcf,'inverthardcopy','off'); %this will prevent color change back to default upon saving or printing
     %saveas(gcf, [pwd filesep 'images' filesep 'DotDend_vs_PathLengthStats'], 'tif');

@@ -1,5 +1,5 @@
-%% simpleneuritetracer2ml - import ImageJ's simple neurite tracer skeletons
-%  Copyright (C) 2011-2020 Luca Della Santina
+%% ObjectFinder - Recognize 3D structures in image stacks
+%  Copyright (C) 2016-2020 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %

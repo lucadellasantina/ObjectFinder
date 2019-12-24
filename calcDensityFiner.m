@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016,2017,2018 Luca Della Santina
+%  Copyright (C) 2016-2020 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -133,7 +133,7 @@ if showPlot
     pause(2);    
     % Drap heatmap of linear density (P/D)
     image(DotDist./DendDist*256);
-    title('Puncta/Dendrite (linear density) (0-1 dots/µm)');
+    title('Puncta/Dendrite (linear density) (0-1 dots/ï¿½m)');
     colorbar('Ytick',[]); %Adam added color bar 3/11/2011
     axis image; % adding color bar changes image x y dimention, so resize the image.
     axis off    % remove the axis

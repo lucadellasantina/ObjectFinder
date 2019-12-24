@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2019 Luca Della Santina
+%  Copyright (C) 2016-2020 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %

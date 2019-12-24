@@ -29,6 +29,7 @@
 %
 %  _*Version 8.0*             created on 2019-12-24 by Luca Della Santina_
 %
+%   + Updated copyright notice to 2020
 %   + Inspect2D pixels not beloning to any objects are now shown in grey
 %   + Batch nearest neighbor analysis, colocalization and report
 %   + Removed bottom bar with Log and Lamp
@@ -38,6 +39,7 @@
 %   + direct selection of images and masks without going through gallery
 %   + New NeuralNet management system and improved usage
 %   + New Simulations management system, simular to objects
+%   + Rename and clone simulations
 %
 %  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
 %
