@@ -17,22 +17,26 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [SimNames, SimUIDs] = listSimulations
-%% List available object names and UIDs
-
+function [SortedSimNames, SortedSimUIDs] = listSimulations(folder)
+%% List available simulations
+switch nargin
+    case 0, folder = pwd;
+end
 SimNames = {};
 SimUIDs  = {};
 
-files = dir('simulations');         % List the content of /Objects folder
-    files = files(~[files.isdir]);  % Keep only files, discard subfolders
-    for d = 1:numel(files)
-        load([pwd filesep 'simulations' filesep files(d).name],'Name', 'UID');
-        if isempty(SimNames)
-            SimNames = {Name};
-            SimUIDs  = {UID};
-        else
-            SimNames{end+1} = Name;
-            SimUIDs{end+1} = UID;
-        end
+files = dir([folder filesep 'simulations' filesep '*.mat']);
+for f = 1:numel(files)
+    load([pwd filesep 'simulations' filesep files(f).name],'Name', 'UID');
+    if isempty(SimNames)
+        SimNames = {Name};
+        SimUIDs  = {UID};
+    else
+        SimNames{end+1} = Name; %#ok
+        SimUIDs{end+1}  = UID;  %#ok
     end
+end
+
+[SortedSimNames, idx] = sort(SkelNames);
+SortedSimUIDs = SimUIDs(idx);
 end

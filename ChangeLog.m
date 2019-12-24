@@ -16,14 +16,9 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-% *ObjectFinder allows to analyze an image volume containing objects
-% (i.e. labeling of synaptic structures) with the final goal of segmenting
-% each individual object and computing its indivudual properties.*
-%
 % *Change log*
 %
 % TODO: Bug in inspectObjects2D selecting dots position not accurate
-% TODO: make "skeletons' folder and allow user to choose which skeleton
 % TODO: measure distance from closest skeleton and colocalize within it
 % TODO: understand why skeleton and dots locations don't match anymore
 % TODO: Allow processing of 12/16-bit images
@@ -41,6 +36,8 @@
 %   + findObjects: Fixed noise=min bug preventing detection of binary masks
 %   + removed 'data' and 'images' subdfolders from each project
 %   + direct selection of images and masks without going through gallery
+%   + New NeuralNet management system and improved usage
+%   + New Simulations management system, simular to objects
 %
 %  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
 %

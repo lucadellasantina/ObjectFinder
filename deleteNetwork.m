@@ -1,6 +1,7 @@
 %% Follicle Finder - Recognize trachomatous follicles in eyelid photographs
 %  Copyright (C) 2019 Luca Della Santina
 %
+
 %  This file is part of Follicle Finder
 %
 %  Follicle Finder is free software: you can redistribute it and/or modify
@@ -17,26 +18,11 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function Net = loadNetwork(RequestedUID, FieldNames)
-%% Load objects matching ObjName
-NetFolder = [userpath filesep 'ObjectFinder' filesep 'NeuralNets']; 
+function deleteNetwork(UID)
+%% Remove saved training matching the passed unique identifier string UID
+NetFolder = [userpath filesep 'ObjectFinder' filesep 'NeuralNets'];
 
-if nargin <2
-    FieldNames = {};
+if exist([NetFolder filesep UID '.mat'],'file')
+    delete([NetFolder filesep UID '.mat']);
 end
-
-files = dir(NetFolder);         % List the content of /Objects folder
-    files = files(~[files.isdir]);  % Keep only files, discard subfolders
-    
-    for d = 1:numel(files)
-        [~, fName, ~] = fileparts(files(d).name);
-        if strcmp(fName, RequestedUID)
-            if isempty(FieldNames)
-                Net = load([NetFolder filesep files(d).name]);
-            else
-                Net = load([NetFolder filesep files(d).name], FieldNames{:});                
-            end
-            return;
-        end
-    end
 end

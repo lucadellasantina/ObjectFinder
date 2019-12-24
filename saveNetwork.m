@@ -34,23 +34,11 @@ function saveNetwork(Net, FieldName)
     end
     FileName = [NetFolder filesep Net.UID '.mat'];
     
-    lastwarn('') % Clear last warning message
-    
     if isempty(FieldName)
         % Save struct on file with fields split tino separate variables
-        save(FileName, '-struct', 'Net', '-v7');
-        [warnMsg, ~] = lastwarn;
-        if ~isempty(warnMsg)
-            disp('File bigger than 2Gb, will be saved using larger file format, be patient...')
-            save(FileName, '-struct', 'Net', '-v7.3', '-nocompression');
-        end
+        save(FileName, '-struct', 'Net', '-v7.3');
     else
         % Save only a specific FieldName on disk
         save(FileName, '-struct', 'Net', FieldName,'-append');
-        [warnMsg, ~] = lastwarn;
-        if ~isempty(warnMsg)
-            disp('File bigger than 2Gb, will be saved using larger file format, be patient...')
-            save(FileName, '-struct', 'Net', FieldName, '-append');
-        end
     end    
 end

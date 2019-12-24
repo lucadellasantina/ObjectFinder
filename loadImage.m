@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2019 Luca Della Santina
+%  Copyright (C) 2016-2020 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -17,7 +17,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function [Image, ImInfo, MIP] = loadImage(FileName)
+function [Image, ImInfo, MIP, ImRes] = loadImage(FileName)
 %%
     PathName = [pwd filesep 'I' filesep];
     if ~isempty(FileName)
@@ -28,6 +28,7 @@ function [Image, ImInfo, MIP] = loadImage(FileName)
         
         if fileInfo.bytes > 4e+9
             % Image file is bigger than 4Gb using custom imread function
+            ImInfo = imfinfo([PathName FileName]);
             Image = uint8(imread_big([PathName FileName]));
         else
             ImInfo = imfinfo([PathName FileName]);
@@ -38,6 +39,24 @@ function [Image, ImInfo, MIP] = loadImage(FileName)
             Image = uint8(Image);
         end
         
+        % Retrieve image calibration from TIF file descriptor
+        try
+            tmpXYres = num2str(1/ImInfo(1).XResolution);
+            if contains(ImInfo(1).ImageDescription, 'spacing=')
+                tmpPos = strfind(ImInfo(1).ImageDescription,'spacing=');
+                tmpZres = ImInfo(1).ImageDescription(tmpPos+8:end);
+                tmpZres = regexp(tmpZres,'\n','split');
+                tmpZres = tmpZres{1};
+            else
+                tmpZres = '1'; % for 2D images which have no spacing field default is 1 in ImageJ
+            end
+        catch
+            tmpXYres = '1'; % default values
+            tmpZres  = '1'; % default values
+        end        
+        ImRes = [str2double(tmpXYres), str2double(tmpXYres), str2double(tmpZres)];
+        
+        % Compute maximum intensity projection
         MIP = squeeze(max(Image,[],3)); % Create a MIP of each image to display
     end
 end

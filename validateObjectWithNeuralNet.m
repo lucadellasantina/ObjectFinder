@@ -19,7 +19,7 @@
 function Filter = validateObjectWithNeuralNet(Dots, NeuralNet)
 %% Classify objects using neural network (outcome == 'Object' or 'Noise')
 tic;
-sz = NeuralNet.netTransfer.Layers(1).InputSize;
+sz = NeuralNet.Layers.Layers(1).InputSize;     
 Filter = Dots.Filter;
 
 disp(['Validating objects using ' NeuralNet.Name]);
@@ -47,7 +47,7 @@ for i = 1:length(Dots.Vox)
     end
 
     % Classify using pretrained neural network
-    Filter.passF(i) = (classify(NeuralNet.netTransfer, I) == 'Object');
+    Filter.passF(i) = (classify(NeuralNet.Net, I) == 'Object');
 end
 disp(['Done in ' num2str(toc) ' seconds, valid objects: ' num2str(numel(find(Filter.passF))) ' / ' num2str(numel(Filter.passF))]);
 end

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="948009281" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3413923721" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -11,26 +11,25 @@
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_16.png</file>
     </param.icons>
     <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.</param.summary>
-    <param.description>Copyright 2016-2020 Luca Della Santina. 
-Licensed under the terms of GNU General Public License v3</param.description>
-    <param.screenshot>/tmp/tpc52a8cd0_8dff_4973_9c73_7391240df8b6.png</param.screenshot>
+    <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
+    <param.screenshot>/tmp/tpd519e753_0d2e_4d75_9a0e_2389de40cfff.png</param.screenshot>
     <param.version>8.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
+      <item>Deep Learning Toolbox</item>
       <item>Image Processing Toolbox</item>
-      <item>Neural Network Toolbox</item>
       <item>Parallel Computing Toolbox</item>
     </param.products.name>
     <param.products.id>
       <item>1</item>
-      <item>17</item>
       <item>12</item>
+      <item>17</item>
       <item>80</item>
     </param.products.id>
     <param.products.version>
       <item>9.7</item>
+      <item>13.0</item>
       <item>11.0</item>
-      <item>11.1</item>
       <item>7.1</item>
     </param.products.version>
     <param.platforms />
@@ -52,15 +51,21 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-Manual.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/48px-web-browser.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/Clarinet_resources/bug.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-Delete.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-Edit.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-Inspect.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-Masks.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-Training-set.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-copy.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-export.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-import.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-info.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-monkey.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-new.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-save.png</file>
       <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-settings.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/Follicle Finder_resources/48px-unblock-granted.png</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/editStruct.m</file>
       <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>
@@ -83,6 +88,7 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/convertObjectFinderDataV5toV7.m</file>
       <file>${PROJECT_ROOT}/convertObjectFinderDataV7toV8.m</file>
       <file>${PROJECT_ROOT}/convertSkelSNT2ml.m</file>
+      <file>${PROJECT_ROOT}/deleteNetwork.m</file>
       <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>
       <file>${PROJECT_ROOT}/distDotsToSkel.m</file>
       <file>${PROJECT_ROOT}/exportObjectsToImaris7.m</file>
@@ -110,12 +116,11 @@ Licensed under the terms of GNU General Public License v3</param.description>
       <file>${PROJECT_ROOT}/saveNetwork.m</file>
       <file>${PROJECT_ROOT}/saveObjects.m</file>
       <file>${PROJECT_ROOT}/saveSettings.m</file>
-      <file>${PROJECT_ROOT}/saveSimulations.m</file>
+      <file>${PROJECT_ROOT}/saveSimulation.m</file>
       <file>${PROJECT_ROOT}/saveSkel.m</file>
       <file>${PROJECT_ROOT}/saveastiff.m</file>
       <file>${PROJECT_ROOT}/shollAnalysis.m</file>
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/ObjectFinder_TestStacks/PSD95-RGC v7.0/Settings.mat</file>
       <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>

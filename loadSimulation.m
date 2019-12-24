@@ -17,24 +17,15 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function Dots = loadSimulation(SimName, FieldNames)
-%% Load simulation matching SimName
+function Sim = loadSimulation(UID, FieldNames)
+%% Load simulation matching UID
 if nargin <2
     FieldNames = {};
 end
 
-files = dir('simulations');         % List the content of /Objects folder
-    files = files(~[files.isdir]);  % Keep only files, discard subfolders
-    
-    for d = 1:numel(files)
-        load([pwd filesep 'simulations' filesep files(d).name],'Name');
-        if strcmp(Name, SimName)
-            if isempty(FieldNames)
-                Dots = load([pwd filesep 'simulations' filesep files(d).name]);
-            else
-                Dots = load([pwd filesep 'simulations' filesep files(d).name], FieldNames{:});                
-            end
-            return;
-        end
-    end
+if isempty(FieldNames)
+    Sim = load([pwd filesep 'simulations' filesep UID '.mat']);
+else
+    Sim = load([pwd filesep 'simulations' filesep UID '.mat'], FieldNames{:});
+end
 end

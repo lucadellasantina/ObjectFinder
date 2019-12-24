@@ -18,7 +18,7 @@
 %
 
 
-function saveSimulations(Sim, FieldName)
+function saveSimulation(Sim, FieldName)
 %% Save a variable into a .mat file efficiently depending on its size
     
     if nargin == 1
