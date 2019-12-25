@@ -71,7 +71,7 @@ else
     end    
 end
 
-Coloc = colocVideoFig(@(frm, ImStk) colocRedraw(frm, ImStk, 'gray(256)'), ColocManual, Dots, Post, Colo, Colo2, ColocManual2);
+Coloc = colocVideoFig(ColocManual, Dots, Post, Colo, Colo2, ColocManual2);
 end
 
 

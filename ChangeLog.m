@@ -23,13 +23,11 @@
 % TODO: understand why skeleton and dots locations don't match anymore
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
-% TODO: colocManual: allow user to invalidate an object
 % TODO: inspect2D: allow adding a new object and refining object voxels
-% TODO: heatmap plot move to VolumeCut and plot hearmap of intersection of 2 masks
 %
-%  _*Version 8.0*             created on 2019-12-24 by Luca Della Santina_
+%  _*Version 8.0*             created on 2019-12-25 by Luca Della Santina_
 %
-%   + Updated copyright notice to 2020
+%   + Updated copyright notices to 2020
 %   + Inspect2D pixels not beloning to any objects are now shown in grey
 %   + Batch nearest neighbor analysis, colocalization and report
 %   + Removed bottom bar with Log and Lamp
@@ -38,8 +36,12 @@
 %   + removed 'data' and 'images' subdfolders from each project
 %   + direct selection of images and masks without going through gallery
 %   + New NeuralNet management system and improved usage
-%   + New Simulations management system, simular to objects
-%   + Rename and clone simulations
+%   + Simulations: new management system
+%   + Simulations: rename and clone simulations
+%   + Removed colocRedraw.m, now embedded into colocVideoFig.m
+%   + Colocalize: new option to save not colocalized objects as a new set
+%   + colocManual: colocalization window automatically closes at the end
+%   + colocManual: user can mark objects as not valid
 %
 %  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
 %

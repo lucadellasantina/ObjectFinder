@@ -17,10 +17,9 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Colo2, ColocManual2)
+function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocManual2)
 
 	%check arguments
-	check_callback(redraw_func);
     Coloc = struct;
     
     size_video = [0 0.03 0.87 0.97]; % default video window size
@@ -79,11 +78,13 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
     if isempty(Colo2)
         btnColoc    = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.510,.110,.100], 'String','Colocalized','CallBack',@btnColocalized_clicked); %#ok, unused variable
         btnNotColoc = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String','<html><center>Not<br>Colocalized','CallBack',@btnNotColocalized_clicked); %#ok, unused variable
+        btnNotValid = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.300,.110,.050], 'String','<html><center>Invalid Object','CallBack',@btnNotValid_clicked); %#ok, unused variable
     else
         btnNotColoc12 = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.620,.110,.100], 'String','<html><center>Not<br>Colocalized','CallBack',@btnNotColoc12_clicked); %#ok, unused variable        
         btnColoc1     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.510,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual.Fish1],'CallBack',@btnColoc1_clicked); %#ok, unused variable
         btnColoc2     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual2.Fish1],'CallBack',@btnColoc2_clicked); %#ok, unused variable
         btnColoc12    = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.290,.110,.100], 'String','<html><center>Double<br>Colocalized','CallBack',@btnColoc12_clicked); %#ok, unused variable        
+        btnNotValid   = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.200,.110,.050], 'String','<html><center>Invalid Object','CallBack',@btnNotValid_clicked); %#ok, unused variable
     end    
     btnSave      = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.030,.110,.050], 'String','Save','Callback',@btnSave_clicked); %#ok, unused variable
     
@@ -91,9 +92,9 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
     if size_video(2) < 0.03; size_video(2) = 0.03; end % Bottom 0.03 must be used for scroll bar HO 2/17/2011
 	axes_handle = axes('Position',size_video); %[0 0.03 1 0.97] to size_video (6th input argument) to allow space for buttons and annotations 2/13/2011 HO
     
-	% Return handles and initial call to redraw_func
-	scroll_bar_handles = [scroll_axes_handle; scroll_handle];
-	scroll_func = @scroll;
+	% Return handles
+	scroll_bar_handles = [scroll_axes_handle; scroll_handle]; %#ok
+	scroll_func = @scroll; %#ok
     scroll(f);
     uiwait;
     
@@ -246,6 +247,7 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
 
             ImStk = [];
             DotNum = 0;
+            close(fig_handle);
             return;
         end
     end
@@ -253,6 +255,10 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
     function btnResetLast_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=0;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        if DotNum == 0
+            return % Manual colocalization is done, exit 
+        end
+        
         set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
         set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);
         num_frames = size(ImStk,3);
@@ -264,6 +270,10 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
     function btnColocalized_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        if DotNum == 0
+            return % Manual colocalization is done, exit 
+        end
+        
         set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
         set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
         num_frames = size(ImStk,3);
@@ -274,6 +284,24 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
     function btnNotColocalized_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        if DotNum == 0
+            return % Manual colocalization is done, exit 
+        end
+        
+        set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
+        set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
+        num_frames = size(ImStk,3);
+        f = ceil(num_frames/2); % Current frame
+        scroll(f);        
+    end
+
+    function btnNotValid_clicked(src, event) %#ok, unused arguments
+        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=3;
+        [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        if DotNum == 0
+            return % Manual colocalization is done, exit 
+        end
+        
         set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
         set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
         num_frames = size(ImStk,3);
@@ -285,6 +313,10 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
         ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        if DotNum == 0
+            return % Manual colocalization is done, exit 
+        end
+        
         set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
         set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
         num_frames = size(ImStk,3);
@@ -296,6 +328,10 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
         ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        if DotNum == 0
+            return % Manual colocalization is done, exit 
+        end
+        
         set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
         set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
         num_frames = size(ImStk,3);
@@ -307,6 +343,10 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
         ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        if DotNum == 0
+            return % Manual colocalization is done, exit 
+        end
+        
         set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
         set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
         num_frames = size(ImStk,3);
@@ -318,6 +358,10 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
         ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
+        if DotNum == 0
+            return % Manual colocalization is done, exit 
+        end
+        
         set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
         set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);        
         num_frames = size(ImStk,3);
@@ -407,17 +451,33 @@ function Coloc = colocVideoFig(redraw_func, ColocManual, Grouped, Post, Colo, Co
 		
 		%set to the right axes and call the custom redraw function
 		set(fig_handle, 'CurrentAxes', axes_handle);
-		redraw_func(f, ImStk);
+		colocRedraw(f, ImStk, 'gray(256)');
 		
 		%used to be "drawnow", but when called rapidly and the CPU is busy
 		%it didn't let Matlab process events properly (ie, close figure).
 		pause(0.001)
 	end
 	
-	function check_callback(a)
-		assert(isempty(a) || isa(a, 'function_handle'), ...
-			[upper(inputname(1)) ' must be a valid function handle.'])
-    end
-
 end
 
+function colocRedraw(frame, vidObj, colmap)
+%   REDRAW (FRAME, VIDOBJ)
+%       frame  - frame number to process
+%       vidObj - mmread object
+%       colmap - colormap of your image, not necessary for RGB image, and
+%                even if you specify any colormap for RGB, it will not do
+%                anything to your image.
+
+% Check if vidOjb is RGB or gray, and read frame
+if size(vidObj, 4) == 3 %RGB 3-D matrix (4th dimention is R, G, B)
+    f = squeeze(vidObj(:,:,frame,:));
+else
+    f = vidObj(:,:,frame);
+end
+
+% Display
+image(f); axis image off
+if exist('colmap', 'var')
+    colormap(colmap);
+end
+end

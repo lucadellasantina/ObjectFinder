@@ -39,7 +39,7 @@ if isempty(Colo2) % Single channel, check only colocalized objects
     
     % Re-annalyze only double colocalized objects
     Grouped = getFilteredObjects(Dots, Filter);
-    Coloc = colocVideoFig(@(frm, ImStk) colocRedraw(frm, ImStk, 'gray(256)'), ColocManual, Grouped, Post, Colo, Colo2, ColocManual2);
+    Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocManual2);
 else % 2 Colocalizing channels, check only double-colocalized objects
     % Find objects that are colocalized with both channels
     Coloc1 = find(ColocManual.ColocFlag==1); % Numbers of colocalized dots analyzed
@@ -55,6 +55,6 @@ else % 2 Colocalizing channels, check only double-colocalized objects
     
     % Re-annalyze only double colocalized objects
     Grouped = getFilteredObjects(Dots, Filter);
-    Coloc = colocVideoFig(@(frm, ImStk) colocRedraw(frm, ImStk, 'gray(256)'), ColocManual, Grouped, Post, Colo, Colo2, ColocManual2);
+    Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocManual2);
 end
 end
