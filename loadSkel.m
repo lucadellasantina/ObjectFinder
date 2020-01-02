@@ -39,15 +39,15 @@ for d = 1:numel(files)
     end
 end
 
-if ~isempty(Skel) && ~isfield(Skel.Skel, 'branches')
-    Skel.Skel.XYZ = Skel.Skel.FilStats.aXYZ;
-    Skel.Skel.SomaPtID = Skel.Skel.FilStats.SomaPtID+1;
-    Skel.Skel.FilStats.aEdges = Skel.Skel.FilStats.aEdges - Skel.Skel.FilStats.aEdges(1,1) + 1; % shift index edges so that first element starts with 1
+if ~isempty(Skel) && ~isfield(Skel, 'branches')
+    Skel.XYZ = Skel.FilStats.aXYZ;
+    Skel.SomaPtID = Skel.FilStats.SomaPtID+1;
+    Skel.FilStats.aEdges = Skel.FilStats.aEdges - Skel.FilStats.aEdges(1,1) + 1; % shift index edges so that first element starts with 1
     
     % March edges to find matching pairs and recreate the branching pattern
     % For each branch first the march from cell body is computer, then all points in common with previously calculated branches are removed
     % this leaves 1 segment per branch without any diplicate
-    vNumberOfSpots = length(Skel.Skel.FilStats.aRad); % Store total number of points we need to iterate
+    vNumberOfSpots = length(Skel.FilStats.aRad); % Store total number of points we need to iterate
     % Find position of terminal and biforcation points in the filament connectivity (aEdges)
     vNumberOfTerminals = 0;
     vTerminals = [];
@@ -55,7 +55,7 @@ if ~isempty(Skel) && ~isfield(Skel.Skel, 'branches')
     vForks = [];
     % Start investigating all spots except root (start from position #2 to exclude root)
     for vSpots = 2 : vNumberOfSpots
-        vEdge = find(Skel.Skel.FilStats.aEdges == vSpots);
+        vEdge = find(Skel.FilStats.aEdges == vSpots);
         % if current edge is a terminal point of the skeleton, it should be listed once
         if length(vEdge) == 1
             % disp('found a terminal point');
@@ -80,12 +80,12 @@ if ~isempty(Skel) && ~isfield(Skel.Skel, 'branches')
             % find among edges which one is connect to current terminal
             % vEdge contains the number to wich vTerminal is connected
             % vSide contains which side of the edge is vTerminal in this connection
-            [vEdge, vSide] = find(Skel.Skel.FilStats.aEdges == vTerminal);
+            [vEdge, vSide] = find(Skel.FilStats.aEdges == vTerminal);
             
             vFound = false;
             for vNeighborIndex = 1:length(vEdge)
                 % looks like is marching both directions here
-                vNeighbor = Skel.Skel.FilStats.aEdges(vEdge(vNeighborIndex), 3-vSide(vNeighborIndex));
+                vNeighbor = Skel.FilStats.aEdges(vEdge(vNeighborIndex), 3-vSide(vNeighborIndex));
                 if vNeighbor < vTerminal
                     vNewTerminal = vNeighbor;
                     vFound = true;
@@ -102,10 +102,10 @@ if ~isempty(Skel) && ~isfield(Skel.Skel, 'branches')
         vPath = setdiff(vPath, vPaths); % Remove common part with the paths previously calculated
         vPaths = cat(2,vPaths, vPath); % Add current path to paths
         
-        Skel.Skel.branches(vTerminalIndex).XYZ = Skel.Skel.FilStats.aXYZ(vPath,:);
-        Skel.Skel.branches(vTerminalIndex).Rad = Skel.Skel.FilStats.aRad(vPath);
-        %Skel.Skel.branches(vTerminalIndex).Edges = [1:vLength-1;2:vLength]';
-        Skel.Skel.TotalBranches = numel(Skel.Skel.branches);
+        Skel.branches(vTerminalIndex).XYZ = Skel.FilStats.aXYZ(vPath,:);
+        Skel.branches(vTerminalIndex).Rad = Skel.FilStats.aRad(vPath);
+        %Skel.branches(vTerminalIndex).Edges = [1:vLength-1;2:vLength]';
+        Skel.TotalBranches = numel(Skel.branches);
     end
 end
 end

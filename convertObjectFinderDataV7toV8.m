@@ -27,7 +27,7 @@ function convertObjectFinderDataV7toV8
     
     if exist('Skel.mat', 'file')
         Skel = load('Skel.mat', 'Skel');
-        saveSkel(Skel);
+        saveSkel(Skel.Skel);
         delete('Skel.mat'); % Skeleton is now stored inside ./skeletons/
     end
     

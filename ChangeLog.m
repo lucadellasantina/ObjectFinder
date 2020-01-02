@@ -45,6 +45,8 @@
 %   + Resolved all code warnings in AppDesigner
 %   + Plot Skeleton and Locations have en-face and side-view panels
 %   + UI cleanup
+%   + Included all icons into app packaging
+%   + Removed calcDensityFiner.m
 %
 %  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
 %

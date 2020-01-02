@@ -17,7 +17,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function Dots = loadObjects(UID, FieldNames)
+function Objs = loadObjects(UID, FieldNames)
 %% Load objects matching ObjName
 if nargin <2
     FieldNames = {};
@@ -30,9 +30,9 @@ for d = 1:numel(files)
     [~, fName, ~] = fileparts(files(d).name);
     if strcmp(fName, UID)
         if isempty(FieldNames)
-            Dots = load([pwd filesep 'objects' filesep files(d).name]);
+            Objs = load([pwd filesep 'objects' filesep files(d).name]);
         else
-            Dots = load([pwd filesep 'objects' filesep files(d).name], FieldNames{:});
+            Objs = load([pwd filesep 'objects' filesep files(d).name], FieldNames{:});
         end
         return;
     end
