@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3413923721" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="499842289" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -12,7 +12,7 @@
     </param.icons>
     <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tpd519e753_0d2e_4d75_9a0e_2389de40cfff.png</param.screenshot>
+    <param.screenshot>/tmp/tp899b9f3c_306e_40d9_84a5_08af2641da61.png</param.screenshot>
     <param.version>8.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
@@ -81,7 +81,6 @@
       <file>${PROJECT_ROOT}/colocManual.m</file>
       <file>${PROJECT_ROOT}/colocManualCheckDouble.m</file>
       <file>${PROJECT_ROOT}/colocManualCheckNotColoc.m</file>
-      <file>${PROJECT_ROOT}/colocRedraw.m</file>
       <file>${PROJECT_ROOT}/colocVideoFig.m</file>
       <file>${PROJECT_ROOT}/convertObjectFinderDataV3toV4.m</file>
       <file>${PROJECT_ROOT}/convertObjectFinderDataV4toV5.m</file>

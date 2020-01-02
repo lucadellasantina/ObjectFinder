@@ -20,7 +20,6 @@
 %
 % TODO: Bug in inspectObjects2D selecting dots position not accurate
 % TODO: measure distance from closest skeleton and colocalize within it
-% TODO: understand why skeleton and dots locations don't match anymore
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: inspect2D: allow adding a new object and refining object voxels
@@ -42,6 +41,10 @@
 %   + Colocalize: new option to save not colocalized objects as a new set
 %   + colocManual: colocalization window automatically closes at the end
 %   + colocManual: user can mark objects as not valid
+%   + colocManual: fixed reset last object button, was resetting current
+%   + Resolved all code warnings in AppDesigner
+%   + Plot Skeleton and Locations have en-face and side-view panels
+%   + UI cleanup
 %
 %  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
 %

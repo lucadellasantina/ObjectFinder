@@ -37,6 +37,6 @@ for f = 1:numel(files)
     end
 end
 
-[SortedSimNames, idx] = sort(SkelNames);
+[SortedSimNames, idx] = sort(SimNames);
 SortedSimUIDs = SimUIDs(idx);
 end

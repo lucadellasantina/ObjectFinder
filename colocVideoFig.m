@@ -24,6 +24,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     
     size_video = [0 0.03 0.87 0.97]; % default video window size
     click = 0;
+    LastDotNum = 0;
     [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
     num_frames = size(ImStk,3);
 	f = ceil(num_frames/2); % Current frame
@@ -253,22 +254,17 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     end
     
     function btnResetLast_clicked(src, event) %#ok, unused arguments
-        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=0;
-        [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
-        if DotNum == 0
-            return % Manual colocalization is done, exit 
+        if LastDotNum > 0
+            %disp(['resetting dot #: ' num2str(LastDotNum)]); 
+            ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==LastDotNum)=0;
+            LastDotNum = 0;
+            msgbox('Last object will be examined again in random order');
         end
-        
-        set(txtCurrent,'string',['Current: ' num2str(DotNum)]);
-        set(txtRemaining,'string',['Left: ' num2str(NumRemainingDots)]);
-        num_frames = size(ImStk,3);
-        f = ceil(num_frames/2); % Current frame
-        scroll(f);
-        msgbox('Last object will be examined again in random order.');
     end
 
     function btnColocalized_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
             return % Manual colocalization is done, exit 
@@ -283,6 +279,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
 
     function btnNotColocalized_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
             return % Manual colocalization is done, exit 
@@ -297,6 +294,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
 
     function btnNotValid_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=3;
+        LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
             return % Manual colocalization is done, exit 
@@ -312,6 +310,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     function btnNotColoc12_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
         ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
             return % Manual colocalization is done, exit 
@@ -327,6 +326,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     function btnColoc1_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
         ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
             return % Manual colocalization is done, exit 
@@ -342,6 +342,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     function btnColoc2_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
         ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
             return % Manual colocalization is done, exit 
@@ -357,6 +358,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     function btnColoc12_clicked(src, event) %#ok, unused arguments
         ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
         ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
             return % Manual colocalization is done, exit 
