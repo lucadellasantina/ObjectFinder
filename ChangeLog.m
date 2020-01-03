@@ -23,6 +23,7 @@
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: inspect2D: allow adding a new object and refining object voxels
+% TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
 %  _*Version 8.0*             created on 2019-12-25 by Luca Della Santina_
 %
