@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="9930199" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2440301930" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -12,7 +12,7 @@
     </param.icons>
     <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tp2a0aba12_6dec_4074_b904_6d88c70414cb.png</param.screenshot>
+    <param.screenshot>/tmp/tp5f376b4b_2d1f_4570_98a7_6f97ec12369b.png</param.screenshot>
     <param.version>8.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
