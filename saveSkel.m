@@ -25,18 +25,12 @@ function saveSkel(Skel, FieldName)
         FieldName = []; 
     end
     
-    if ~isfield(Skel, 'UID')
-        Skel.UID = generateUID;
-    end
-    if ~isfield(Skel, 'Name')
-        Skel.Name = 'Skeleton';
-    end
+    if ~isfield(Skel, 'UID'),  Skel.UID = generateUID; end
+    if ~isfield(Skel, 'Name'), Skel.Name = 'Skeleton'; end
     
-    if ~exist([pwd filesep 'skeletons'], 'dir')
-        mkdir([pwd filesep 'skeletons']);
-    end
-    
-    FileName = [pwd filesep 'skeletons' filesep Skel.UID '.mat'];
+    folder = [pwd filesep 'skeletons'];    
+    FileName = [folder filesep Skel.UID '.mat'];
+    if ~isfolder(folder), mkdir(folder); end
     
     if isempty(FieldName)
         % Save struct on file with fields split tino separate variables

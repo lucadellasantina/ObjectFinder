@@ -16,8 +16,8 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function Skel = calcSkelPathLength(Skel, debug)
-%This program was modified from HOSkelFinerGenerator.mat.
+function Skel = calcSkelPathLength(Skel, ReportStats)
+%% This program was modified from HOSkelFinerGenerator.mat.
 %This program takes in Skel, march from soma to connected skels while
 %registering the path length from soma for each skel point. Then put the
 %calculated path length from soma under Skel.FilStats and return.
@@ -35,10 +35,10 @@ SkelPathLength2Soma = zeros(1,size(Skel.FilStats.aXYZ,1));
 % March from the soma
 fprintf('Marching through current skeleton to calculate lengths ... ');
 while ~isempty(SkelIDsPool)
-    %length(SkelIDsPool) %how many more skel to deplete?
+    %length(SkelIDsPool) %how many more skel to process
     if isempty(SourceSkelIDs) %if the previous skel was the dead end, resume from the first entry within the remaining pool.
         SourceSkelIDs = SkelIDsPool(1); 
-        SkelIDsPool(1) = []; %deplete the newly grabbed skel.
+        SkelIDsPool(1) = []; % deplete the newly grabbed skel.
     end
 
     NextSkelIDs = [];
@@ -72,16 +72,16 @@ while ~isempty(SkelIDsPool)
 end
 fprintf('DONE \n');
 
-if debug
+if ReportStats
     disp(['Farthest skel path distance is: ' max(SkelPathLength2Soma)]);
     disp(['Soma point ID is (Imaris soma pt ID + 1): ' num2str(SomaPtID)]);
     disp(['Skel IDs of zero path distance are (only soma point should have zero path distance): ' num2str(find(SkelPathLength2Soma==0))]);
-end;
+end
 
 % Calculated path length of edges by taking the mean of skels
 EdgePathLength2Soma = zeros(1,size(Skel.FilStats.aEdges,1));
-for i=1:length(EdgePathLength2Soma)
-    EdgePathLength2Soma(i) = mean([SkelPathLength2Soma(Skel.FilStats.aEdges(i,1)+1), SkelPathLength2Soma(Skel.FilStats.aEdges(i,2)+1)]);
+for i = 1:length(EdgePathLength2Soma)
+    EdgePathLength2Soma(i) = mean([SkelPathLength2Soma(Skel.FilStats.aEdges(i,1)), SkelPathLength2Soma(Skel.FilStats.aEdges(i,2))]);
 end
 
 % Store the results under Skel.FilStats

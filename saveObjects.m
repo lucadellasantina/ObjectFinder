@@ -19,40 +19,35 @@
 
 
 function saveObjects(Dots, FieldName)
-%% Save a variable into a .mat file efficiently depending on its size
-    
-    if nargin == 1
-        % If no FieldName then save all field of Dots on file
-        FieldName = []; 
+%% Save a variable into a .mat file efficiently depending on its size    
+if nargin == 1
+    % If no FieldName then save all field of Dots on file
+    FieldName = [];
+end
+
+if ~isfield(Dots, 'UID'), Dots.UID = generateUID; end
+
+folder   = [pwd filesep 'objects'];
+FileName = [folder filesep Dots.UID '.mat'];
+if ~isfolder(folder), mkdir(folder); end
+
+lastwarn('') % Clear last warning message
+
+if isempty(FieldName)
+    % Save struct on file with fields split tino separate variables
+    save(FileName, '-struct', 'Dots', '-v7');
+    [warnMsg, ~] = lastwarn;
+    if ~isempty(warnMsg)
+        disp('Objects are bigger than 2Gb, will be saved using larger file format, be patient...')
+        save(FileName, '-struct', 'Dots', '-v7.3', '-nocompression');
     end
-    
-    if ~isfield(Dots, 'UID')
-        Dots.UID = generateUID;
+else
+    % Save only a specific FieldName on disk
+    save(FileName, '-struct', 'Dots', FieldName,'-append');
+    [warnMsg, ~] = lastwarn;
+    if ~isempty(warnMsg)
+        disp('Objects are bigger than 2Gb, will be saved using larger file format, be patient...')
+        save(FileName, '-struct', 'Dots', FieldName, '-append');
     end
-    
-    if ~exist([pwd filesep 'objects'], 'dir')
-        mkdir([pwd filesep 'objects']);
-    end
-    
-    FileName = [pwd filesep 'objects' filesep Dots.UID '.mat'];
-    
-    lastwarn('') % Clear last warning message
-    
-    if isempty(FieldName)
-        % Save struct on file with fields split tino separate variables
-        save(FileName, '-struct', 'Dots', '-v7');
-        [warnMsg, ~] = lastwarn;
-        if ~isempty(warnMsg)
-            disp('Objects are bigger than 2Gb, will be saved using larger file format, be patient...')
-            save(FileName, '-struct', 'Dots', '-v7.3', '-nocompression');
-        end
-    else
-        % Save only a specific FieldName on disk
-        save(FileName, '-struct', 'Dots', FieldName,'-append');
-        [warnMsg, ~] = lastwarn;
-        if ~isempty(warnMsg)
-            disp('Objects are bigger than 2Gb, will be saved using larger file format, be patient...')
-            save(FileName, '-struct', 'Dots', FieldName, '-append');
-        end
-    end    
+end
 end

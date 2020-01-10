@@ -17,23 +17,26 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function Objs = loadObjects(UID, FieldNames)
-%% Load objects matching ObjName
-if nargin <2
-    FieldNames = {};
+function savePreset(Preset, FieldName)
+%% Save a variable into a .mat file efficiently depending on its size
+
+if nargin == 1
+    % If no FieldName then save all field of Dots on file
+    FieldName = [];
 end
 
-folder = [pwd filesep 'objects'];
-files  = dir([folder filesep '*.mat']);
-for d = 1:numel(files)
-    [~, fName, ~] = fileparts(files(d).name);
-    if strcmp(fName, UID)
-        if isempty(FieldNames)
-            Objs = load([folder filesep files(d).name]);
-        else
-            Objs = load([folder filesep files(d).name], FieldNames{:});
-        end
-        return;
-    end
+if ~isfield(Preset, 'UID'),  Preset.UID = generateUID; end
+if ~isfield(Preset, 'Name'), Preset.Name = 'MySettings'; end
+
+folder   = [userpath filesep 'ObjectFinder' filesep 'Presets'];
+FileName = [folder filesep Preset.UID '.mat'];
+if ~isfolder(folder),  mkdir(folder); end
+
+if isempty(FieldName)
+    % Save struct on file with fields split tino separate variables
+    save(FileName, '-struct', 'Preset');
+else
+    % Save only a specific FieldName on disk
+    save(FileName, '-struct', 'Preset', FieldName,'-append');
 end
 end

@@ -26,8 +26,7 @@ end
 SkelNames = {};
 SkelUIDs  = {};
 
-files = dir([folder filesep 'skeletons']);         % List the content of /Objects folder
-files = files(~[files.isdir]);  % Keep only files, discard subfolders
+files = dir([folder filesep 'skeletons' filesep '*.mat']);
 for f = 1:numel(files)
     load([folder filesep 'skeletons' filesep files(f).name],'Name', 'UID');
     if isempty(SkelNames)

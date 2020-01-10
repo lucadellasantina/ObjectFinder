@@ -17,23 +17,24 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function Objs = loadObjects(UID, FieldNames)
+function Preset = loadPreset(UID, FieldNames)
 %% Load objects matching ObjName
 if nargin <2
     FieldNames = {};
 end
 
-folder = [pwd filesep 'objects'];
-files  = dir([folder filesep '*.mat']);
+Preset = [];
+folder = [userpath filesep 'ObjectFinder' filesep 'Presets'];
+files  = dir([folder filesep '*.mat']);         % List the content of /Objects folder
 for d = 1:numel(files)
     [~, fName, ~] = fileparts(files(d).name);
     if strcmp(fName, UID)
         if isempty(FieldNames)
-            Objs = load([folder filesep files(d).name]);
+            Preset = load([folder filesep files(d).name]);
         else
-            Objs = load([folder filesep files(d).name], FieldNames{:});
+            Preset = load([folder filesep files(d).name], FieldNames{:});
         end
-        return;
+        break;
     end
 end
 end

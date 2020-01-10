@@ -17,23 +17,28 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 
-function Objs = loadObjects(UID, FieldNames)
-%% Load objects matching ObjName
-if nargin <2
-    FieldNames = {};
+function [SortedNames, SortedUIDs] = listPresets(folder)
+%% List available skeleton names and UIDs
+switch nargin
+    case 0, folder = [userpath filesep 'ObjectFinder' filesep 'Presets'];
 end
 
-folder = [pwd filesep 'objects'];
-files  = dir([folder filesep '*.mat']);
-for d = 1:numel(files)
-    [~, fName, ~] = fileparts(files(d).name);
-    if strcmp(fName, UID)
-        if isempty(FieldNames)
-            Objs = load([folder filesep files(d).name]);
-        else
-            Objs = load([folder filesep files(d).name], FieldNames{:});
-        end
-        return;
+Names = {};
+UIDs  = {};
+
+files = dir(folder);            % List the content of /Objects folder
+files = files(~[files.isdir]);  % Keep only files, discard subfolders
+for f = 1:numel(files)
+    load([folder filesep files(f).name], 'Name', 'UID');
+    if isempty(Names)
+        Names = {Name};
+        UIDs  = {UID};
+    else
+        Names{end+1} = Name; %#ok
+        UIDs{end+1}  = UID;  %#ok
     end
 end
+
+[SortedNames, idx] = sort(Names);
+SortedUIDs = UIDs(idx);
 end

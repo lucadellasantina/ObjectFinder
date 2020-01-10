@@ -49,6 +49,9 @@
 %   + Removed calcDensityFiner.m
 %   + Updated all imarisXT plugins for the new format
 %   + inspect2D allows adding a new object and refining object voxels
+%   + Simplified Detect tab UI
+%   + Support for storing/retrieving Presets of detection parameters
+%   + Simulate colocalization rate at different thresholds
 %
 %  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
 %

@@ -61,14 +61,14 @@ end
 cnt = 0;
 for vChildIndex = 1:vSurpassScene.GetNumberOfChildren
     if vImarisApplication.mFactory.IsSpots(vSurpassScene.GetChild(vChildIndex - 1))
-        cnt = cnt+1;
-        vSpots{cnt} = vSurpassScene.GetChild(vChildIndex - 1);
+        cnt = cnt + 1;
+        vSpots{cnt} = vSurpassScene.GetChild(vChildIndex - 1); %#ok
     end
 end
 
 %% choose passing spots
 vSpotsCnt = length(vSpots);
-for n= 1:vSpotsCnt
+for n= vSpotsCnt:-1:1
     vSpotsName{n} = vSpots{n}.mName;
 end
 cellstr = cell2struct(vSpotsName,{'names'},vSpotsCnt+2);

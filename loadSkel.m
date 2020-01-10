@@ -24,9 +24,7 @@ if nargin <2
 end
 
 Skel = [];
-files = dir('skeletons');         % List the content of /Objects folder
-files = files(~[files.isdir]);  % Keep only files, discard subfolders
-
+files = dir([pwd filesep 'skeletons' filesep '*.mat']); % List the content of /Objects folder
 for d = 1:numel(files)
     [~, fName, ~] = fileparts(files(d).name);
     if strcmp(fName, UID)

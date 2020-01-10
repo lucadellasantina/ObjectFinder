@@ -26,8 +26,7 @@ end
 ObjNames = {};
 ObjUIDs  = {};
 
-files = dir([folder filesep 'objects']);         % List the content of /Objects folder
-files = files(~[files.isdir]);  % Keep only files, discard subfolders
+files = dir([folder filesep 'objects' filesep '*.mat']);
 for d = 1:numel(files)
     load([folder filesep 'objects' filesep files(d).name],'Name', 'UID');
     if isempty(ObjNames)

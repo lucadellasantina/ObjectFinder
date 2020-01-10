@@ -62,14 +62,14 @@ end
 cnt = 0;
 for vChildIndex = 1:vSurpassScene.GetNumberOfChildren
     if vImarisApplication.mFactory.IsFilament(vSurpassScene.GetChild(vChildIndex - 1))
-        cnt = cnt+1;
-        vFilaments{cnt} = vSurpassScene.GetChild(vChildIndex - 1);
+        cnt = cnt + 1;
+        vFilaments{cnt} = vSurpassScene.GetChild(vChildIndex - 1); %#ok
     end
 end
 
 %% choose the correct Filament
 vFilamentsCnt = length(vFilaments);
-for n= 1:vFilamentsCnt
+for n= vFilamentsCnt:-1:1
     vFilamentsName{n} = vFilaments{n}.mName;
 end
 cellstr = cell2struct(vFilamentsName,{'names'},vFilamentsCnt+2);
@@ -86,8 +86,6 @@ end
 vSizeX=vImarisApplication.mDataSet.mSizeX;
 vSizeY=vImarisApplication.mDataSet.mSizeY;
 vSizeZ=vImarisApplication.mDataSet.mSizeZ;
-vSizeC=vImarisApplication.mDataSet.mSizeC; % 20101106 AB added getting channel info
-vSizeT = vImarisApplication.mDataSet.mSizeT;% 20101106 AB added getting time info
 
 xyum = (vImarisApplication.mDataSet.mExtendMaxX-vImarisApplication.mDataSet.mExtendMinX)/vSizeX;
 zum = (vImarisApplication.mDataSet.mExtendMaxZ-vImarisApplication.mDataSet.mExtendMinZ)/vSizeZ;
@@ -115,7 +113,7 @@ vVoxSizeZ           = str2double(vAnswer(5));
 
 vFilamentAPosXYZ    = vFilament.GetPositionsXYZ;
 vFilamentARadius    = vFilament.GetRadii';
-vFilamentAEdges     = vFilament.GetEdges;
+%vFilamentAEdges     = vFilament.GetEdges;
 
 %% create elipsoidal mask around filament
 
@@ -192,7 +190,15 @@ end
 
 TPN = uigetdir;
 TPN = [TPN filesep];
-saveastiff(Mask, [TPN vFilament.mName '_Mask_XY-' num2str(XYExtraRad) '_Z-' num2str(ZExtraRad) '.tif']);
+
+for i=1:size(Mask,3)
+    if i==1
+        imwrite(Mask(:,:,i),[TPN vFilament.mName '_Mask_XY-' num2str(XYExtraRad) '_Z-' num2str(ZExtraRad) '.tif'])
+    else
+        imwrite(Mask(:,:,i),[TPN vFilament.mName '_Mask_XY-' num2str(XYExtraRad) '_Z-' num2str(ZExtraRad) '.tif'],'WriteMode','append')
+    end
+end
+%saveastiff(Mask, [TPN vFilament.mName '_Mask_XY-' num2str(XYExtraRad) '_Z-' num2str(ZExtraRad) '.tif']);
 
 disp(['Mask saved successfully as ' TPN vFilament.mName '_Mask_XY-' num2str(XYExtraRad) '_Z-' num2str(ZExtraRad) '.tif']);
 end

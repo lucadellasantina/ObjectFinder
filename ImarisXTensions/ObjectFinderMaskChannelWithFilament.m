@@ -62,14 +62,14 @@ end
 cnt = 0;
 for vChildIndex = 1:vSurpassScene.GetNumberOfChildren
     if vImarisApplication.mFactory.IsFilament(vSurpassScene.GetChild(vChildIndex - 1))
-        cnt = cnt+1;
-        vFilaments{cnt} = vSurpassScene.GetChild(vChildIndex - 1);
+        cnt = cnt + 1;
+        vFilaments{cnt} = vSurpassScene.GetChild(vChildIndex - 1); %#ok
     end
 end
 
 %% choose the correct Filament
 vFilamentsCnt = length(vFilaments);
-for n= 1:vFilamentsCnt
+for n = vFilamentsCnt:-1:1
     vFilamentsName{n} = vFilaments{n}.mName;
 end
 cellstr = cell2struct(vFilamentsName,{'names'},vFilamentsCnt+2);
@@ -87,7 +87,6 @@ vSizeX=vImarisApplication.mDataSet.mSizeX;
 vSizeY=vImarisApplication.mDataSet.mSizeY;
 vSizeZ=vImarisApplication.mDataSet.mSizeZ;
 vSizeC=vImarisApplication.mDataSet.mSizeC; % 20101106 AB added getting channel info
-vSizeT = vImarisApplication.mDataSet.mSizeT;% 20101106 AB added getting time info
 
 xyum = (vImarisApplication.mDataSet.mExtendMaxX-vImarisApplication.mDataSet.mExtendMinX)/vSizeX;
 zum = (vImarisApplication.mDataSet.mExtendMaxZ-vImarisApplication.mDataSet.mExtendMinZ)/vSizeZ;
@@ -97,12 +96,15 @@ vDataSet = vImarisApplication.mDataSet;% 20101106 AB dont use clone it eats memo
 
 vAnswer = inputdlg({sprintf(['Choose channel and filter for mask:\n', ...
     'Channel names: 1, 2, ...\n']), ...
-    sprintf(['Type extra radius in xy direction added to dendrite radius for masking in um:\n']), ...
-    sprintf(['Type extra radius in z direction added to dendrite radius AND xy extra radius for masking in um:\n']), ...
-    sprintf(['Type radius of cell soma that you want to exclude from mask in um (0 for no exclusion):\n']), ...
-    sprintf(['xy voxel size in um:\n']), sprintf(['z voxel size in um:\n']), sprintf(['Show the mask in Imaris? (1 for Yes, 0 for No):\n']), ...
-    sprintf(['Save the mask in Matlab? (1 for Yes, 0 for No):\n'])}, 'Choose Channel', 1, {'2','1','0.5','10',num2str(xyum),num2str(zum),'1','1'});
-if isempty(vAnswer), return, end
+    sprintf('Type extra radius in xy direction added to dendrite radius for masking in um:\n'), ...
+    sprintf('Type extra radius in z direction added to dendrite radius AND xy extra radius for masking in um:\n'), ...
+    sprintf('Type radius of cell soma that you want to exclude from mask in um (0 for no exclusion):\n'), ...
+    sprintf('xy voxel size in um:\n'), sprintf('z voxel size in um:\n'), sprintf('Show the mask in Imaris? (1 for Yes, 0 for No):\n'), ...
+    sprintf('Save the mask in Matlab? (1 for Yes, 0 for No):\n')}, 'Choose Channel', 1, {'2','1','0.5','10',num2str(xyum),num2str(zum),'1','1'});
+if isempty(vAnswer)
+    return
+end
+
 vChannel = str2double(vAnswer(1))-1; % channels in Imaris are 0,1,2,3,etc..
 XYExtraRad = str2double(vAnswer(2));
 ZExtraRad = str2double(vAnswer(3));
@@ -120,7 +122,7 @@ SaveFlag = str2double(vAnswer(8));
 
 vFilamentAPosXYZ = vFilament.GetPositionsXYZ;
 vFilamentARadius = vFilament.GetRadii';
-vFilamentAEdges  = vFilament.GetEdges;
+%vFilamentAEdges  = vFilament.GetEdges;
 
 %% create elipsoidal mask around filament
 
