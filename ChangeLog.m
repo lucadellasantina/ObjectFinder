@@ -24,7 +24,12 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
-%  _*Version 8.0*             created on 2019-12-25 by Luca Della Santina_
+%  _*Version 8.1*             created on 2020-01-12 by Luca Della Santina_
+%
+%   + 3D Volume Inspector tool: renders volume and objects
+%   + New button to create a mask where objects are randomly colored
+%
+%  _*Version 8.0*             created on 2020-01-10 by Luca Della Santina_
 %
 %   + Updated copyright notices to 2020
 %   + Inspect2D pixels not beloning to any objects are now shown in grey
@@ -52,6 +57,7 @@
 %   + Simplified Detect tab UI
 %   + Support for storing/retrieving Presets of detection parameters
 %   + Simulate colocalization rate at different thresholds
+%   + Native builds for Windows, macOS, Linux
 %
 %  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
 %

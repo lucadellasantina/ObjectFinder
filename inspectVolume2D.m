@@ -35,7 +35,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
     SelObjID   = 0;               % Initialize selected object ID#
 	
 	% Initialize GUI
-	fig_handle = figure('Name','Volume inspector (green: valid object, red: rejected object, yellow: selected object)','NumberTitle','off','Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
+	fig_handle = figure('Name','Sliced Volume inspector (green: valid object, red: rejected object, yellow: selected object)','NumberTitle','off','Color',[.3 .3 .3], 'MenuBar','none', 'Units','norm', ...
 		'WindowButtonDownFcn',@button_down, 'WindowButtonUpFcn',@button_up, 'WindowButtonMotionFcn', @on_click, 'KeyPressFcn', @key_press,'windowscrollWheelFcn', @wheel_scroll);
 	
 	% Add custom scroll bar

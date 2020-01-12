@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3924039080" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2740810774" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -12,8 +12,8 @@
     </param.icons>
     <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tp91c7612a_a569_42ed_9bf1_c8bd83697d3d.png</param.screenshot>
-    <param.version>8.0</param.version>
+    <param.screenshot>/tmp/tpc13282e3_7ed4_4ba7_9cfa_642479ee8a83.png</param.screenshot>
+    <param.version>8.1</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Deep Learning Toolbox</item>
@@ -46,7 +46,7 @@
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/editStruct.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/editStruct.m</file>
       <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>
@@ -82,6 +82,7 @@
       <file>${PROJECT_ROOT}/inpoly2.m</file>
       <file>${PROJECT_ROOT}/inpolygon_fast.m</file>
       <file>${PROJECT_ROOT}/inspectVolume2D.m</file>
+      <file>${PROJECT_ROOT}/inspectVolume3D.m</file>
       <file>${PROJECT_ROOT}/listImages.m</file>
       <file>${PROJECT_ROOT}/listNetwork.m</file>
       <file>${PROJECT_ROOT}/listObjects.m</file>
