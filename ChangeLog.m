@@ -24,6 +24,11 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
+%  _*Version 8.2*             created on 2020-03-17 by Luca Della Santina_
+%
+%   + App version automatically displayed in title
+%   + Simulate colocalization rate at different overlap with binary mask 
+%
 %  _*Version 8.1*             created on 2020-01-12 by Luca Della Santina_
 %
 %   + 3D Volume Inspector tool: renders volume and objects

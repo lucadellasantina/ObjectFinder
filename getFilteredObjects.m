@@ -23,7 +23,9 @@ Filter.passF = logical(Filter.passF);
 
 Passing.UID         = Objects.UID;
 Passing.Name        = Objects.Name;
-Passing.ImSize      = Objects.ImSize;
+if isfield(Objects, 'ImSize')
+    Passing.ImSize      = Objects.ImSize;
+end
 Passing.Settings    = Objects.Settings;
 Passing.Pos         = Objects.Pos(Filter.passF, :);
 Passing.Vox         = Objects.Vox(Filter.passF);

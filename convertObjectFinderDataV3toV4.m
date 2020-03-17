@@ -29,7 +29,7 @@ if exist('D.mat','file')
 end
 
 % Create Filter properties from SG.mat
-if exist('find', 'dir')  
+if exist('find', 'dir')
     load([pwd filesep 'find' filesep 'SG.mat'])
     Filter.passF = SG.passI;
     Filter.FilterOpts.EdgeDotCut = SG.SGOptions.EdgeDotCut;
@@ -48,14 +48,22 @@ end
 
 % Convert Dots.mat
 load('Dots.mat');
-Dots = rmfield(Dots,'TotalNumOverlapDots');
-Dots = rmfield(Dots,'TotalNumOverlapVoxs');
-Dots = rmfield(Dots,'Ratio');
-Dots = rmfield(Dots,'DF');
-Dots = rmfield(Dots,'DFOf');
-Dots = rmfield(Dots,'DFOfTopHalf');
-Dots.ImInfo.CBpos = Dots.Im.CBpos;
-Dots = rmfield(Dots,'Im');
+if isfield(Dots, 'TotalNumOverlapDots')
+    Dots = rmfield(Dots,'TotalNumOverlapDots');
+    Dots = rmfield(Dots,'TotalNumOverlapVoxs');
+end
+if isfield(Dots, 'Ratio')
+    Dots = rmfield(Dots,'Ratio');
+end
+if isfield(Dots, 'DF')
+    Dots = rmfield(Dots,'DF');
+    Dots = rmfield(Dots,'DFOf');
+    Dots = rmfield(Dots,'DFOfTopHalf');
+end
+if isfield(Dots, 'Im')
+    Dots.ImInfo.CBpos = Dots.Im.CBpos;
+    Dots = rmfield(Dots,'Im');
+end
 save('Dots.mat', 'Dots');
 clear Dots
 
@@ -82,5 +90,7 @@ delete('GradI.mat');
 delete('Grouped.mat');
 delete('TPN.mat');
 delete('Use.mat');
-rmdir('temp', 's');
+if isfolder('temp')
+    rmdir('temp', 's');
+end
 end

@@ -62,14 +62,17 @@ end
 Dots.Skel = struct;
 if isfield(Dots, 'Dist2CB')
     Dots.Skel.Dist2CB           = Dots.Dist2CB;
-    Dots.Skel.ClosestSkelIDs    = Dots.ClosestSkelIDs;
-    Dots.Skel.ClosestSkelDist   = Dots.ClosestSkelDist;
-    Dots.Settings.ImInfo.CBpos  = Dots.ImInfo.CBpos;
-    
     Dots = rmfield(Dots,'Dist2CB');
-    Dots = rmfield(Dots,'ClosestSkelIDs');
-    Dots = rmfield(Dots,'ClosestSkelDist');
+
+    Dots.Settings.ImInfo.CBpos  = Dots.ImInfo.CBpos;
     Dots = rmfield(Dots,'ImInfo');
+end
+
+if isfield(Dots, 'ClosestSkelIDs')    
+    Dots.Skel.ClosestSkelIDs    = Dots.ClosestSkelIDs;
+    Dots.Skel.ClosestSkelDist   = Dots.ClosestSkelDist;    
+    Dots = rmfield(Dots,'ClosestSkelIDs');
+    Dots = rmfield(Dots,'ClosestSkelDist');Dist2CB
 end
 
 Dots.Coloc = struct;

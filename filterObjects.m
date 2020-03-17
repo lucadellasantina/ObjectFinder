@@ -24,10 +24,8 @@ Filter.FilterOpts = FilterOpts;
 pass = ones(1,Dots.Num); % Initialize vector of passing objects
 
 % Remove dots facing outside the mask or image
-if FilterOpts.EdgeDotCut
-    if isfield(Dots.Settings.ImInfo, 'MaskChName') && ~isempty(Dots.Settings.ImInfo.MaskChName)
-        Mask = loadImage(Dots.Settings.ImInfo.MaskChName);
-    end
+if FilterOpts.EdgeDotCut && isfield(Dots.Settings.ImInfo, 'MaskChName') && ~isempty(Dots.Settings.ImInfo.MaskChName)
+    Mask = loadImage(Dots.Settings.ImInfo.MaskChName);
     
     Mask = bwperim(uint8(Mask), 6); % this operation will leave mask voxels facing 0 or outside the image as 1, and change the other mask voxels to 0.
     VoxIDMap = zeros(Dots.ImSize);
@@ -116,7 +114,7 @@ if isfield(FilterOpts, 'Thresholds')
     end
     
     if isfield(FilterOpts.Thresholds, 'PrincipalAxisLen') && isfield(Dots.Shape, 'PrincipalAxisLen')
-        if FilterOpts.Thresholds.PrincipalAxisLenhDir == 1
+        if FilterOpts.Thresholds.PrincipalAxisLenDir == 1
             threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' >= FilterOpts.Thresholds.PrincipalAxisLen);
         else
             threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' <= FilterOpts.Thresholds.PrincipalAxisLen);

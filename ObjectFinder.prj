@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2740810774" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1011557686" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -10,10 +10,10 @@
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_24.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_resources/icon_16.png</file>
     </param.icons>
-    <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.</param.summary>
+    <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tpc13282e3_7ed4_4ba7_9cfa_642479ee8a83.png</param.screenshot>
-    <param.version>8.1</param.version>
+    <param.screenshot>/tmp/tp7ddf5297_1874_4276_a07d_0add4ff481ea.png</param.screenshot>
+    <param.version>8.2</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Deep Learning Toolbox</item>
@@ -46,7 +46,7 @@
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>/home/luca/Dropbox/MATLAB scripts/Clarinet/editStruct.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/editStruct.m</file>
       <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>
@@ -142,7 +142,7 @@
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>5.3.0-26-generic</osver>
+      <osver>5.3.0-40-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>

@@ -29,7 +29,9 @@ function convertObjectFinderDataV7toV8
         Skel = load('Skel.mat', 'Skel');
         saveSkel(Skel.Skel);
         delete('Skel.mat'); % Skeleton is now stored inside ./skeletons/
+        delete('SkelFiner.mat'); % Skeleton is now stored inside ./skeletons/
     end
+    
     
     % Remove 'data' and 'images' folders as no more needed
     if exist([pwd filesep 'data'],'dir')

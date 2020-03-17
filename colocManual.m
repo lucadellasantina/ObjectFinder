@@ -56,7 +56,7 @@ else
         [~, fName2, ~] = fileparts(FileName2);
 
         ColocManual.Source  = Dots.Name;
-        ColocManual.Fish1   = fName;       
+        ColocManual.Fish1   = fName;
 
         ColocManual.ListDotIDsManuallyColocAnalyzed = 1:numel(Dots.Filter.passF);
         ColocManual.TotalNumDotsManuallyColocAnalyzed = numel(Dots.Filter.passF);
