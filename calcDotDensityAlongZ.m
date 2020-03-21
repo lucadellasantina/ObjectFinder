@@ -16,7 +16,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function [dotDensity] = calcDotDensityAlongZ(Settings, Grouped, showPlot)
+function [dotDensity] = calcDotDensityAlongZ(Settings, Objs, showPlot)
 %% Accumulate passing dots coordinates (xyz) into dPosPassF
 dotDensity.zStart = 1;                    % Analyze the entire volume
 dotDensity.zEnd = Settings.ImInfo.zNumVox; % Analyze the entire volume
@@ -24,23 +24,23 @@ dotDensity.binSize = (dotDensity.zEnd - dotDensity.zStart)/100; % binning densit
 
 if dotDensity.zEnd == dotDensity.zStart
     % 2D image (single Z plane)
-    tmpDensity = size(Grouped.Pos, 1);
+    Density = size(Objs.Pos, 1);
     for i=100:-1:1
-        tmpDensityPerc(i) = tmpDensity;
+        tmpDensityPerc(i) = Density;
     end
 else
     % 3D image (multiple Z planes) 
-    tmpDensity=zeros(1, (dotDensity.zEnd - dotDensity.zStart +1));
+    Density=zeros(1, (dotDensity.zEnd - dotDensity.zStart +1));
     tmpDensityPerc=zeros(1, 100);
     for i = dotDensity.zStart: dotDensity.zEnd -1
-        tmpDensity(i) = numel(find(Grouped.Pos(:,3) == i));
+        Density(i) = numel(find(Objs.Pos(:,3) == i));
     end
     for i=1:100
-        tmpDensityPerc(i) = tmpDensity(ceil(i*dotDensity.binSize));
+        tmpDensityPerc(i) = Density(ceil(i*dotDensity.binSize));
     end
 end
 
-dotDensity.density = tmpDensity;
+dotDensity.density = Density;
 dotDensity.densityPerc = tmpDensityPerc;
 clear tmp* i passingIDs PassDotIDs ans Dots SG;
 

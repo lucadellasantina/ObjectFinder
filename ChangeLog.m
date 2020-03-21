@@ -24,10 +24,18 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
+%  _*Version 8.2*             created on 2020-03-20 by Luca Della Santina_
+%
+%   + fixed Major bug in NN distance calculation, invalid objects were also
+%     considered in the pool of potential neighbors for the calculation
+%   + New option in batch colocalizaion to force NN distance recalculation
+%   + New dialog in auto colocalization to force NN distance recalculation
+%
 %  _*Version 8.2*             created on 2020-03-17 by Luca Della Santina_
 %
 %   + App version automatically displayed in title
-%   + Simulate colocalization rate at different overlap with binary mask 
+%   + Simulate colocalization rate at different overlap with binary mask
+%   + LateX interpreter disabled when plotting simulation results
 %
 %  _*Version 8.1*             created on 2020-01-12 by Luca Della Santina_
 %
