@@ -66,12 +66,8 @@ end
 cellstr = cell2struct(vFilamentsName,{'names'},vFilamentsCnt+2);
 str = {cellstr.names};
 
-if vFilamentsCnt == 1
-    aFilament = vFilaments{1};
-else
-    [vAnswer_yes,~] = listdlg('ListSize',[200 160], 'PromptString','Choose Filament:', 'SelectionMode','single','ListString',str);
-    aFilament = vFilaments{vAnswer_yes};
-end
+[vAnswer_yes,~] = listdlg('ListSize',[200 160], 'PromptString','Choose Filament:', 'SelectionMode','single','ListString',str);
+aFilament = vFilaments{vAnswer_yes};
 
 aXYZ    = aFilament.GetPositionsXYZ;
 aRad    = aFilament.GetRadii;
@@ -113,7 +109,7 @@ Skel.UID = tmpStr.toCharArray';
 % Save skeleton into the skeletons folder of the project
 TPN = uigetdir;
 if ~exist([TPN filesep 'skeletons'], 'dir')
-    mkdir([pwd filesep 'skeletons']);
+    mkdir([TPN filesep 'skeletons']);
 end
 
 FileName = [TPN filesep 'skeletons' filesep Skel.UID '.mat']; 

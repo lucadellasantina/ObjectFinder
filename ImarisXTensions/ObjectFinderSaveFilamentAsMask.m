@@ -189,8 +189,11 @@ for i=1:size(Filterchannel,3)
 end
 
 TPN = uigetdir;
-TPN = [TPN filesep];
-
+if ~isfolder([TPN filesep 'I'])
+    mkdir([TPN filesep 'I']);
+end
+TPN = [TPN filesep 'I' filesep];
+    
 for i=1:size(Mask,3)
     if i==1
         imwrite(Mask(:,:,i),[TPN vFilament.mName '_Mask_XY-' num2str(XYExtraRad) '_Z-' num2str(ZExtraRad) '.tif'])
