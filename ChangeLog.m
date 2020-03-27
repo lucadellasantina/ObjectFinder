@@ -24,12 +24,17 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
-%  _*Version 8.2*             created on 2020-03-20 by Luca Della Santina_
+%  _*Version 8.4*             created on 2020-03-27 by Luca Della Santina_
+%
+%   + Density by depth calculates also within mask boundaries
+%
+%  _*Version 8.3*             created on 2020-03-20 by Luca Della Santina_
 %
 %   + fixed Major bug in NN distance calculation, invalid objects were also
 %     considered in the pool of potential neighbors for the calculation
 %   + New option in batch colocalizaion to force NN distance recalculation
 %   + New dialog in auto colocalization to force NN distance recalculation
+%   + Improved speed of NN distance calculation
 %
 %  _*Version 8.2*             created on 2020-03-17 by Luca Della Santina_
 %

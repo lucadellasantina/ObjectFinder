@@ -34,7 +34,7 @@ function convertObjectFinderDataV5toV7
     
     % Ensure Colocalization has fields for Method, NumVoxOverlap, NumPercOverlap
     for idx_dot = 1:numel(Dots)
-        if ~isempty(fieldnames(Dots(idx_dot).Coloc))
+        if isfield(Dots(idx_dot), 'Coloc') && ~isempty(fieldnames(Dots(idx_dot).Coloc))
             for idx_coloc = 1:numel(Dots(idx_dot).Coloc)
                 if ~isfield(Dots(idx_dot).Coloc(idx_coloc), 'Method') || isempty(Dots(idx_dot).Coloc(idx_coloc).Method)
                     Dots(idx_dot).Coloc(idx_coloc).Method = 'Unknown';

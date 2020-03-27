@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1817955749" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3048729690" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder" target="target.mlapps" target-name="Package App">
     <param.appname>ObjectFinder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -12,8 +12,8 @@
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tpaf9d4b7a_6962_457f_b244_f805a246d667.png</param.screenshot>
-    <param.version>8.3</param.version>
+    <param.screenshot>/tmp/tp51bdad77_c9cb_4d49_848d_3142f287f981.png</param.screenshot>
+    <param.version>8.4</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Deep Learning Toolbox</item>
@@ -46,7 +46,7 @@
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/editStruct.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/FollicleFinder/editStruct.m</file>
       <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>

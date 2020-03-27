@@ -31,7 +31,11 @@ end
 % Create Filter properties from SG.mat
 if exist('find', 'dir')
     load([pwd filesep 'find' filesep 'SG.mat'])
-    Filter.passF = SG.passI;
+    if isfield(SG, 'passI')
+        Filter.passF = SG.passI;
+    elseif isfield(SG, 'passF')
+        Filter.passF = SG.passF;
+    end
     Filter.FilterOpts.EdgeDotCut = SG.SGOptions.EdgeDotCut;
     Filter.FilterOpts.SingleZDotCut = SG.SGOptions.SingleZDotCut;
     Filter.FilterOpts.xyStableDots = SG.SGOptions.xyStableDots;
@@ -60,7 +64,7 @@ if isfield(Dots, 'DF')
     Dots = rmfield(Dots,'DFOf');
     Dots = rmfield(Dots,'DFOfTopHalf');
 end
-if isfield(Dots, 'Im')
+if isfield(Dots, 'Im') && isfield(Dots.Im, 'CBpos')
     Dots.ImInfo.CBpos = Dots.Im.CBpos;
     Dots = rmfield(Dots,'Im');
 end
