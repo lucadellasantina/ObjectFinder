@@ -29,6 +29,9 @@ SkelUIDs  = {};
 files = dir([folder filesep 'skeletons' filesep '*.mat']);
 for f = 1:numel(files)
     load([folder filesep 'skeletons' filesep files(f).name],'Name', 'UID');
+    if isnumeric(Name)
+        Name = ['Filament ' num2str(Name)];       
+    end
     if isempty(SkelNames)
         SkelNames = {Name};
         SkelUIDs  = {UID};

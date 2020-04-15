@@ -1,0 +1,151 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="940171414" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+    <param.appname>Object Finder</param.appname>
+    <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
+    <param.email>luca.dellasantina@gmail.com</param.email>
+    <param.company />
+    <param.icon>${PROJECT_ROOT}/Object Finder_resources/icon_24.png</param.icon>
+    <param.icons>
+      <file>${PROJECT_ROOT}/Object Finder_resources/icon_48.png</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources/icon_24.png</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources/icon_16.png</file>
+    </param.icons>
+    <param.summary>Find objects in three-dimentional image stacks.</param.summary>
+    <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
+    <param.screenshot>/tmp/tp20dc4745_9351_482a_9b9d_6dd1821c7d22.png</param.screenshot>
+    <param.version>8.5</param.version>
+    <param.products.name>
+      <item>MATLAB</item>
+      <item>Deep Learning Toolbox</item>
+      <item>Image Processing Toolbox</item>
+      <item>Parallel Computing Toolbox</item>
+    </param.products.name>
+    <param.products.id>
+      <item>1</item>
+      <item>12</item>
+      <item>17</item>
+      <item>80</item>
+    </param.products.id>
+    <param.products.version>
+      <item>9.8</item>
+      <item>14.0</item>
+      <item>11.1</item>
+      <item>7.2</item>
+    </param.products.version>
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>912cbc5e-7b98-4c7b-a172-fdd315f64c21</param.guid>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
+      <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
+      <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>
+      <file>${PROJECT_ROOT}/calcDensity.m</file>
+      <file>${PROJECT_ROOT}/calcDotDensityAlongZ.m</file>
+      <file>${PROJECT_ROOT}/calcPathLengthStats.m</file>
+      <file>${PROJECT_ROOT}/calcSkelPathLength.m</file>
+      <file>${PROJECT_ROOT}/colocAutoEngulf.m</file>
+      <file>${PROJECT_ROOT}/colocAutoMask.m</file>
+      <file>${PROJECT_ROOT}/colocAutoNN.m</file>
+      <file>${PROJECT_ROOT}/colocDotStackCutter.m</file>
+      <file>${PROJECT_ROOT}/colocManual.m</file>
+      <file>${PROJECT_ROOT}/colocManualCheckDouble.m</file>
+      <file>${PROJECT_ROOT}/colocManualCheckNotColoc.m</file>
+      <file>${PROJECT_ROOT}/colocVideoFig.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV3toV4.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV4toV5.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV5toV7.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV7toV8.m</file>
+      <file>${PROJECT_ROOT}/convertSkelSNT2ml.m</file>
+      <file>${PROJECT_ROOT}/deleteNetwork.m</file>
+      <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>
+      <file>${PROJECT_ROOT}/distDotsToSkel.m</file>
+      <file>${PROJECT_ROOT}/exportObjectsToImaris7.m</file>
+      <file>${PROJECT_ROOT}/exportObjectsToImaris8.m</file>
+      <file>${PROJECT_ROOT}/filterObjects.m</file>
+      <file>${PROJECT_ROOT}/findObjects.m</file>
+      <file>${PROJECT_ROOT}/findObjectsSimple.m</file>
+      <file>${PROJECT_ROOT}/fitSphere.m</file>
+      <file>${PROJECT_ROOT}/generateUID.m</file>
+      <file>${PROJECT_ROOT}/getFilteredObjects.m</file>
+      <file>${PROJECT_ROOT}/inpoly2.m</file>
+      <file>${PROJECT_ROOT}/inpolygon_fast.m</file>
+      <file>${PROJECT_ROOT}/inspectVolume2D.m</file>
+      <file>${PROJECT_ROOT}/inspectVolume3D.m</file>
+      <file>${PROJECT_ROOT}/listImages.m</file>
+      <file>${PROJECT_ROOT}/listNetwork.m</file>
+      <file>${PROJECT_ROOT}/listObjects.m</file>
+      <file>${PROJECT_ROOT}/listPresets.m</file>
+      <file>${PROJECT_ROOT}/listSimulations.m</file>
+      <file>${PROJECT_ROOT}/listSkels.m</file>
+      <file>${PROJECT_ROOT}/loadImage.m</file>
+      <file>${PROJECT_ROOT}/loadNetwork.m</file>
+      <file>${PROJECT_ROOT}/loadObjects.m</file>
+      <file>${PROJECT_ROOT}/loadPreset.m</file>
+      <file>${PROJECT_ROOT}/loadSimulation.m</file>
+      <file>${PROJECT_ROOT}/loadSkel.m</file>
+      <file>${PROJECT_ROOT}/saveNetwork.m</file>
+      <file>${PROJECT_ROOT}/saveObjects.m</file>
+      <file>${PROJECT_ROOT}/savePreset.m</file>
+      <file>${PROJECT_ROOT}/saveSettings.m</file>
+      <file>${PROJECT_ROOT}/saveSimulation.m</file>
+      <file>${PROJECT_ROOT}/saveSkel.m</file>
+      <file>${PROJECT_ROOT}/saveastiff.m</file>
+      <file>${PROJECT_ROOT}/shollAnalysis.m</file>
+      <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/editStruct.m</file>
+      <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
+      <file>/media/luca/DATA/OF testBatch/PSD95-RGC alpha/Settings.mat</file>
+    </fileset.depfun>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}/ImarisXTensions</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources</file>
+    </fileset.resources>
+    <fileset.package />
+    <build-deliverables>
+      <file location="/home/luca/Dropbox/MATLAB scripts" name="ObjectFinder" optional="false">/home/luca/Dropbox/MATLAB scripts/ObjectFinder</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>/home/luca/MATLAB/R2020a</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>true</unix>
+      <mac>false</mac>
+      <windows>false</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>true</linux>
+      <solaris>false</solaris>
+      <osver>5.3.0-46-generic</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>glnxa64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

@@ -24,9 +24,19 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
+%  _*Version 8.5*             created on 2020-04-14 by Luca Della Santina_
+%
+%   + Automate tab: adding folders does not load all images into gallery
+%   + Automate tab: choose image stack&mask from combo boxes in search
+%   + App renamed to "Object Finder" for better display in matlab app tab
+%   + Faster boot and load experiment by loading Images only when needed
+%   + Faster window centering at boot time
+%   + Report objects statistics text alligned consistently in table 
+%
 %  _*Version 8.4*             created on 2020-03-27 by Luca Della Santina_
 %
 %   + Density by depth calculates also within mask boundaries
+%   + Bugfixes in batch report object density by depth
 %
 %  _*Version 8.3*             created on 2020-03-20 by Luca Della Santina_
 %
