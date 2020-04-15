@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="940171414" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="253715100" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
     <param.appname>Object Finder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -12,7 +12,7 @@
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tp20dc4745_9351_482a_9b9d_6dd1821c7d22.png</param.screenshot>
+    <param.screenshot>/tmp/tp4da98330_741b_4cc8_89fd_68c0290731f2.png</param.screenshot>
     <param.version>8.5</param.version>
     <param.products.name>
       <item>MATLAB</item>
@@ -104,7 +104,6 @@
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
       <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/editStruct.m</file>
       <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
-      <file>/media/luca/DATA/OF testBatch/PSD95-RGC alpha/Settings.mat</file>
     </fileset.depfun>
     <fileset.resources>
       <file>${PROJECT_ROOT}/ImarisXTensions</file>
