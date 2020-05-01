@@ -1,8 +1,8 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3104388047" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="134838676" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
     <param.appname>Object Finder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
-    <param.email>luca.dellasantina@gmail.com</param.email>
+    <param.email />
     <param.company />
     <param.icon>${PROJECT_ROOT}/Object Finder_resources/icon_24.png</param.icon>
     <param.icons>
@@ -12,8 +12,8 @@
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tp5d782f60_c6b2_4d16_87ab_1b4adcc31d8d.png</param.screenshot>
-    <param.version>8.5</param.version>
+    <param.screenshot>/tmp/tpe56c9e06_bde5_4c1e_983f_26dc09330c19.png</param.screenshot>
+    <param.version>8.6</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Deep Learning Toolbox</item>
@@ -36,7 +36,6 @@
     <param.output>${PROJECT_ROOT}</param.output>
     <param.guid>912cbc5e-7b98-4c7b-a172-fdd315f64c21</param.guid>
     <unset>
-      <param.authnamewatermark />
       <param.email />
       <param.company />
       <param.platforms />
@@ -140,7 +139,7 @@
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>5.3.0-46-generic</osver>
+      <osver>5.4.0-28-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>

@@ -44,16 +44,24 @@ else
         D.densityPerc(i) = D.density(ceil(i*D.binSize));
     end
     
-    % Calculate Z position as % within the masked volume
-    if ~isempty(Mask) && ~isempty(find(Mask.I(:), 1))
+    if ~isempty(Mask) && ~isempty(find(Mask.I(:), 1))        
         PosPerc = Objs.Pos;
-        for i = size(PosPerc,1)
+        for i = 1:size(PosPerc,1)
+            % Skip if current object is outside of the mask
+            if Mask.I(sub2ind(size(Mask.I), PosPerc(i,1), PosPerc(i,2), PosPerc(i,3))) == 0
+                PosPerc(i,3) = -1;
+                continue
+            end
+            
+            % Calculate Z position of each object as % within the masked volume        
             zMask   = squeeze(Mask.I(PosPerc(i,1), PosPerc(i,2),:));
-            zStart  = find(zMask, 1 );
-            zEnd    = find(zMask, 1, 'last' );
-            PosPerc(i,3) = ceil(100*(PosPerc(i,3)-zStart) / (zEnd-zStart));
+            zStart  = find(zMask, 1);
+            zEnd    = find(zMask, 1, 'last');
+            PosPerc(i,3) = (PosPerc(i,3)-zStart) / (zEnd-zStart);
+            PosPerc(i,3) = round(PosPerc(i,3)*100);
         end
         
+        % Cound how many dots in each % bin
         for i = 1:100
             D.densityPercMask(i) = numel(find(PosPerc(:,3) == i));
         end            
@@ -67,13 +75,13 @@ if showPlot
     set(gcf, 'DefaultAxesFontName', 'Arial', 'DefaultAxesFontSize', 12);
     set(gcf, 'DefaultTextFontName', 'Arial', 'DefaultTextFontSize', 12);
     
-    tiledlayout(1,3);
+    tiledlayout(1,2);
     nexttile;
     hold on;
     tmpY = D.densityPerc;
     tmpX = 1:100;
     plot(tmpX, tmpY, 'k', 'MarkerSize', 8);
-    
+    plot(1:100, D.densityPercMask, 'r', 'MarkerSize', 8);    
     box off;
     set(gca, 'color', 'none',  'TickDir','out');
     ylabel('Number of objects');
@@ -87,19 +95,17 @@ if showPlot
     tmpY = D.densityPerc / sizeBin;
     tmpX = 1:100;
     plot(tmpX, tmpY, 'k', 'MarkerSize', 8);
+
+    MaskedVoxN = numel(find(Mask.I));
+    MaskBinVolume = Settings.ImInfo.xyum *Settings.ImInfo.xyum *Settings.ImInfo.zum * MaskedVoxN / 100;    
+    plot(1:100, D.densityPercMask / MaskBinVolume, 'r', 'MarkerSize', 8);    
     
     box off;
     set(gca, 'color', 'none',  'TickDir','out');
     ylabel('Density (objects / um^3)');
+    legend({'Full volume', 'Masked volume'});
     xlabel(['Volume depth % (bin: ' num2str(Settings.ImInfo.zum * D.binSize, 2) 'um)']);
     
-    nexttile;
-    plot(1:100, D.densityPercMask, 'k', 'MarkerSize', 8);    
-    box off;
-    set(gca, 'color', 'none',  'TickDir','out');
-    ylabel('Density (objects / um^3)');
-    xlabel('Mask depth % (bin: 1%)');
-
     clear tmp* plot_variance sizeBin;
 end
 end

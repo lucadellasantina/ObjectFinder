@@ -24,6 +24,11 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
+%  _*Version 8.6*             created on 2020-05-01 by Luca Della Santina_
+%
+%   + Fixed major bug preventing calculation of density within mask
+%   + Density of objects within mask only uses objects within mask
+%
 %  _*Version 8.5*             created on 2020-04-14 by Luca Della Santina_
 %
 %   + Automate tab: adding folders does not load all images into gallery
