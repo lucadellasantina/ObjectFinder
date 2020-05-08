@@ -123,9 +123,9 @@ if isfield(FilterOpts, 'Thresholds')
     
     if isfield(FilterOpts.Thresholds, 'Zposition')
         if FilterOpts.Thresholds.ZpositionDir == 1
-            threshpass = threshpass & (Dots.Pos(:,3) >= FilterOpts.Thresholds.Zposition);
+            threshpass = threshpass & (Dots.Pos(:,3) >= FilterOpts.Thresholds.ZpositionDir)';
         else
-            threshpass = threshpass & (Dots.Pos(:,3) <= FilterOpts.Thresholds.Zposition);
+            threshpass = threshpass & (Dots.Pos(:,3) <= FilterOpts.Thresholds.Zposition)';
         end
     end
     
@@ -169,9 +169,9 @@ if isfield(FilterOpts, 'Thresholds2')
     
     if isfield(FilterOpts.Thresholds2, 'Zposition')
         if FilterOpts.Thresholds2.ZpositionDir == 1
-            threshpass = threshpass & (Dots.Pos(:,3) >= FilterOpts.Thresholds2.Zposition);
+            threshpass = threshpass & (Dots.Pos(:,3) >= FilterOpts.Thresholds2.ZpositionDir)';
         else
-            threshpass = threshpass & (Dots.Pos(:,3) <= FilterOpts.Thresholds2.Zposition);
+            threshpass = threshpass & (Dots.Pos(:,3) <= FilterOpts.Thresholds2.Zposition)';
         end
     end
  

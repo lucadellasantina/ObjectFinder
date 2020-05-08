@@ -29,7 +29,6 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
     PosZoom    = [-1, -1, -1];    % Initial position in zoomed area
     click      = 0;               % Initialize click status
     frame      = ceil(nFrames/2); % Current frame
-    passI      = Filter.passF;    % Initialize temporary filter
     thresh     = 0;               % Initialize thresholds
     thresh2    = 0;               % Initialize thresholds
     SelObjID   = 0;               % Initialize selected object ID#
@@ -47,8 +46,8 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
     % Add GUI conmponents
     set(gcf,'units', 'normalized', 'position', [0.05 0.1 0.90 0.76]);
     pnlSettings     = uipanel(  'Title','Objects'   ,'Units','normalized','Position',[.903,.005,.095,.99]); %#ok, unused variable
-    txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.940,.085,.02],'String',['Valid: ' num2str(numel(find(passI)))]);
-    txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.910,.085,.02],'String',['Total: ' num2str(numel(passI))]); %#ok, unused variable
+    txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.940,.085,.02],'String',['Valid: ' num2str(numel(find(Filter.passF)))]);
+    txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.910,.085,.02],'String',['Total: ' num2str(numel(Filter.passF))]);
     txtAction       = uicontrol('Style','text'      ,'Units','normalized','position',[.912,.845,.020,.02],'String','Tool:'); %#ok, unused handle
     cmbAction       = uicontrol('Style','popup'     ,'Units','normalized','Position',[.935,.830,.055,.04],'String', {'Select (s)', 'Refine (r)'},'Callback', @cmbAction_changed);
     chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.912,.880,.085,.02],'String','Colors (spacebar)', 'Value',1,'Callback',@chkShowObjects_changed);
@@ -101,7 +100,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
             % Multiple objects selected
             
             for i = 1: numel(SelObjID)
-                passI(SelObjID(i)) = ~passI(SelObjID(i));
+                Filter.passF(SelObjID(i)) = ~Filter.passF(SelObjID(i));
             end            
             SelObjID = 0;            % Clear selection
             PosZoom  = [-1, -1, -1]; % Clear selection
@@ -110,8 +109,8 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
         elseif SelObjID > 0
             % Only one object selected
             
-            passI(SelObjID) = ~passI(SelObjID);
-            set(txtValidObjs,'string',['Valid: ' num2str(numel(find(passI)))]);
+            Filter.passF(SelObjID) = ~Filter.passF(SelObjID);
+            set(txtValidObjs,'string',['Valid: ' num2str(numel(find(Filter.passF)))]);
             SelObjID = 0;            % Clear selection
             PosZoom  = [-1, -1, -1]; % Clear selection
             scroll(frame, 'right');
@@ -157,7 +156,6 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
     end
 
     function btnSave_clicked(src, event) %#ok, unused arguments
-        Filter.passF    = passI;
         save([pwd filesep 'Filter.mat'], 'Filter');
         msgbox('Validated objects saved.', 'Saved', 'help');
     end
@@ -293,8 +291,8 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                 set(btnMinus2,'Visible','off');
             case 2 % ITMax
                 try
-                    new_thresh2 = Filter.FilterOpts.Thresholds.ITMax;
-                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.ITMaxDir);
+                    new_thresh2 = Filter.FilterOpts.Thresholds2.ITMax;
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds2.ITMaxDir);
                 catch
                     disp('Threshold value or direction not specified on file, using default average value');
                     new_thresh2 = ceil(mean(Dots.ITMax)); % mean value;
@@ -305,8 +303,8 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                 set(btnMinus2,'Visible','on');                
             case 3 % Volume
                 try
-                    new_thresh2 = Filter.FilterOpts.Thresholds.Vol;
-                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.VolDir);
+                    new_thresh2 = Filter.FilterOpts.Thresholds2.Vol;
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds2.VolDir);
                 catch
                     disp('Threshold value or direction not specified on file, using default average value');
                     new_thresh2 = ceil(mean(Dots.Vol)); % mean value;
@@ -317,8 +315,8 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                 set(btnMinus2,'Visible','on');                
             case 4 % Brightness
                 try
-                    new_thresh2 = Filter.FilterOpts.Thresholds.MeanBright;
-                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.MeanBrightDir);
+                    new_thresh2 = Filter.FilterOpts.Thresholds2.MeanBright;
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds2.MeanBrightDir);
                 catch
                     disp('Threshold value or direction not specified on file, using default average value');
                     new_thresh2 = ceil(mean(Dots.MeanBright)); % mean value;
@@ -329,8 +327,8 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                 set(btnMinus2,'Visible','on');                
             case 5 % Oblongness
                 try
-                    new_thresh2 = Filter.FilterOpts.Thresholds.Oblong;
-                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.OblongDir);
+                    new_thresh2 = Filter.FilterOpts.Thresholds2.Oblong;
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds2.OblongDir);
                 catch
                     disp('Threshold value or direction not specified on file, using default average value');
                     new_thresh2 = ceil(mean(Dots.Shape.Oblong)); % mean value;
@@ -341,8 +339,8 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                 set(btnMinus2,'Visible','on');                
             case 6 % PrincipalAxisLen
                 try
-                    new_thresh2 = Filter.FilterOpts.Thresholds.PrincipalAxisLen;
-                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.PrincipalAxisLenDir);
+                    new_thresh2 = Filter.FilterOpts.Thresholds2.PrincipalAxisLen;
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds2.PrincipalAxisLenDir);
                 catch
                     disp('Threshold value or direction not specified on file, using default average value');
                     new_thresh2 = ceil(mean(Dots.Shape.PrincipalAxisLen)); % mean value;
@@ -353,8 +351,8 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                 set(btnMinus2,'Visible','on');                
             case 7 % Z Position
                 try
-                    new_thresh2 = Filter.FilterOpts.Thresholds.Zposition;
-                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds.ZpositionDir);
+                    new_thresh2 = Filter.FilterOpts.Thresholds2.Zposition;
+                    set(cmbFilter2Dir,'Value',Filter.FilterOpts.Thresholds2.ZpositionDir);
                 catch
                     disp('Threshold value or direction not specified on file, using default average value');
                     new_thresh2 = frame; % Deafult value is current Z position
@@ -371,116 +369,81 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
     function applyFilter(new_thresh, new_thresh2)
         thresh = new_thresh;
         thresh2 = new_thresh2;
-        
+
+        % Reset thresholds to default
+        Filter.FilterOpts.Thresholds.ITMaxDir = 1;
+        Filter.FilterOpts.Thresholds.ITMax = 0;
+        Filter.FilterOpts.Thresholds.VolDir = 1;
+        Filter.FilterOpts.Thresholds.Vol = 0;
+        Filter.FilterOpts.Thresholds.MeanBrightDir = 1;
+        Filter.FilterOpts.Thresholds.MeanBright = 0;
+        Filter.FilterOpts.Thresholds.OblongDir = 1;
+        Filter.FilterOpts.Thresholds.Oblong = 0;
+        Filter.FilterOpts.Thresholds.PrincipalAxisLenDir = 1;
+        Filter.FilterOpts.Thresholds.PrincipalAxisLen = 0;
+        Filter.FilterOpts.Thresholds.ZpositionDir = 1;
+        Filter.FilterOpts.Thresholds.Zposition = 0;
+        Filter.FilterOpts.Thresholds2.ITMaxDir = 1;
+        Filter.FilterOpts.Thresholds2.ITMax = 0;
+        Filter.FilterOpts.Thresholds2.VolDir = 1;
+        Filter.FilterOpts.Thresholds2.Vol = 0;
+        Filter.FilterOpts.Thresholds2.MeanBrightDir = 1;
+        Filter.FilterOpts.Thresholds2.MeanBright = 0;
+        Filter.FilterOpts.Thresholds2.OblongDir = 1;
+        Filter.FilterOpts.Thresholds2.Oblong = 0;
+        Filter.FilterOpts.Thresholds2.PrincipalAxisLenDir = 1;
+        Filter.FilterOpts.Thresholds2.PrincipalAxisLen = 0;
+        Filter.FilterOpts.Thresholds2.ZpositionDir = 1;
+        Filter.FilterOpts.Thresholds2.Zposition = 0;
+
         % Apply primary filter criteria if selected        
         switch get(cmbFilterType,'Value')
-            case 1 % None
-                passI = Filter.passF;
+            case 1 % None, reset all thresholds
             case 2 % ITMax
-                if cmbFilterDir.Value == 1
-                    %passI = Filter.passF & (Dots.ITMax >= new_thresh)'; %Filter only previously filtered objects 
-                    passI = (Dots.ITMax >= new_thresh)'; % Filter all objects
-                else
-                    %passI = Filter.passF & (Dots.ITMax <= new_thresh)';
-                    passI = (Dots.ITMax <= new_thresh)';
-                end
-                Filter.FilterOpts.Thresholds.ITMaxDir   = cmbFilterDir.Value;
-                Filter.FilterOpts.Thresholds.ITMax      = new_thresh;
+                Filter.FilterOpts.Thresholds.ITMaxDir = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.ITMax = new_thresh;
             case 3 % Volume
-                if cmbFilterDir.Value == 1
-                    passI = (Dots.Vol >= new_thresh)';
-                else
-                    passI = (Dots.Vol <= new_thresh)';
-                end
-                Filter.FilterOpts.Thresholds.VolDir     = cmbFilterDir.Value;
-                Filter.FilterOpts.Thresholds.Vol        = new_thresh;
+                Filter.FilterOpts.Thresholds.VolDir = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.Vol = new_thresh;
             case 4 % Brightness
-                if cmbFilterDir.Value == 1
-                    passI = (Dots.MeanBright >= new_thresh)';
-                else    
-                    passI = (Dots.MeanBright <= new_thresh)';
-                end
-                Filter.FilterOpts.Thresholds.MeanBrightDir  = cmbFilterDir.Value;
-                Filter.FilterOpts.Thresholds.MeanBright     = new_thresh;
+                Filter.FilterOpts.Thresholds.MeanBrightDir = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.MeanBright = new_thresh;
             case 5 % Oblongness
-                if cmbFilterDir.Value == 1
-                    passI = (Dots.Shape.Oblong >= new_thresh)';
-                else    
-                    passI = (Dots.Shape.Oblong <= new_thresh)';
-                end
-                Filter.FilterOpts.Thresholds.OblongDir  = cmbFilterDir.Value;
-                Filter.FilterOpts.Thresholds.Oblong     = new_thresh;
+                Filter.FilterOpts.Thresholds.OblongDir = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.Oblong = new_thresh;
             case 6 % Oblongness
-                if cmbFilterDir.Value == 1
-                    passI = (Dots.Shape.PrincipalAxisLen(:,1)' >= new_thresh)';
-                else    
-                    passI = (Dots.Shape.PrincipalAxisLen(:,1)' <= new_thresh)';
-                end
-                Filter.FilterOpts.Thresholds.PrincipalAxisLenDir  = cmbFilterDir.Value;
-                Filter.FilterOpts.Thresholds.PrincipalAxisLen     = new_thresh;
+                Filter.FilterOpts.Thresholds.PrincipalAxisLenDir = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.PrincipalAxisLen = new_thresh;
             case 7 % Z position
-                if cmbFilterDir.Value == 1
-                    passI = Dots.Pos(:,3) >= new_thresh;
-                else    
-                    passI = Dots.Pos(:,3) <= new_thresh;
-                end
-                Filter.FilterOpts.Thresholds.Zposition  = cmbFilterDir.Value;
-                Filter.FilterOpts.Thresholds.Zposition  = new_thresh;
+                Filter.FilterOpts.Thresholds.ZpositionDir = cmbFilterDir.Value;
+                Filter.FilterOpts.Thresholds.Zposition = new_thresh;
         end
         
         % Apply secondary filter criteria if selected
         switch get(cmbFilterType2,'Value')
+            case 1 % None, reset all thresholds
             case 2 % ITMax
-                if cmbFilter2Dir.Value == 1
-                    passI = passI & (Dots.ITMax >= new_thresh2)';
-                else
-                    passI = passI & (Dots.ITMax <= new_thresh2)';
-                end
                 Filter.FilterOpts.Thresholds2.ITMaxDir = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds2.ITMax    = new_thresh2;
+                Filter.FilterOpts.Thresholds2.ITMax = new_thresh2;
             case 3 % Volume
-                if cmbFilter2Dir.Value == 1
-                    passI = passI & (Dots.Vol >= new_thresh2)';
-                else
-                    passI = passI & (Dots.Vol <= new_thresh2)';
-                end
                 Filter.FilterOpts.Thresholds2.VolDir = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds2.Vol    = new_thresh2;
+                Filter.FilterOpts.Thresholds2.Vol = new_thresh2;
             case 4 % Brighness
-                if cmbFilter2Dir.Value == 1
-                    passI = passI & (Dots.MeanBright >= new_thresh2)';
-                else    
-                    passI = passI & (Dots.MeanBright <= new_thresh2)';
-                end
-                Filter.FilterOpts.Thresholds2.MeanBrightDir  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds2.MeanBright     = new_thresh2;
+                Filter.FilterOpts.Thresholds2.MeanBrightDir = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.MeanBright = new_thresh2;
             case 5 % Oblongness
-                if cmbFilter2Dir.Value == 1
-                    passI = passI & (Dots.Shape.Oblong >= new_thresh2)';
-                else    
-                    passI = passI & (Dots.Shape.Oblong <= new_thresh2)';
-                end
-                Filter.FilterOpts.Thresholds2.OblongDir  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds2.Oblong     = new_thresh2;
+                Filter.FilterOpts.Thresholds2.OblongDir = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.Oblong = new_thresh2;
             case 6 % Principal axis length
-                if cmbFilter2Dir.Value == 1
-                    passI = passI & (Dots.Shape.PrincipalAxisLen(:,1)' >= new_thresh2)';
-                else    
-                    passI = passI & (Dots.Shape.PrincipalAxisLen(:,1)' <= new_thresh2)';
-                end
-                Filter.FilterOpts.Thresholds2.PrincipalAxisLenDir  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds2.PrincipalAxisLen     = new_thresh2;
+                Filter.FilterOpts.Thresholds2.PrincipalAxisLenDir = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.PrincipalAxisLen = new_thresh2;
             case 7 % Z position
-                if cmbFilter2Dir.Value == 1
-                    passI = passI & (Dots.Pos(:,3) >= new_thresh2);
-                else    
-                    passI = passI & (Dots.Pos(:,3) <= new_thresh2);
-                end
-                Filter.FilterOpts.Thresholds2.Zposition  = cmbFilter2Dir.Value;
-                Filter.FilterOpts.Thresholds2.Zposition  = new_thresh2;                
+                Filter.FilterOpts.Thresholds2.ZpositionDir = cmbFilter2Dir.Value;
+                Filter.FilterOpts.Thresholds2.Zposition = new_thresh2;                
         end      
-        
-        set(txtValidObjs,'string',['Valid Objects: ' num2str(numel(find(passI)))]);
+
+        Filter = filterObjects(Dots, Filter.FilterOpts);
+        set(txtValidObjs,'string',['Valid Objects: ' num2str(numel(find(Filter.passF)))]);
         scroll(frame, 'right');
     end
 
@@ -586,11 +549,11 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                 Dots.ITMax(SelObjID) = 255;
                 Dots.ITSim(SelObjID) = 255;
                 
-                % Update total amount of available objects and filter passI
+                % Update total amount of available objects
                 Dots.Num = Dots.Num +1;
-                passI(SelObjID) = true;
-                set(txtValidObjs, 'String',['Valid: ' num2str(numel(find(passI)))]);
-                set(txtTotalObjs, 'String',['Total: ' num2str(numel(passI))]);
+                Filter.passF(SelObjID) = true;
+                set(txtValidObjs, 'String',['Valid: ' num2str(numel(find(Filter.passF)))]);
+                set(txtTotalObjs, 'String',['Total: ' num2str(numel(Filter.passF))]);
                 
             elseif strcmp(clickType,'normal') 
                 % User left-clicked Add pixels to current object (SelObjID)
@@ -681,7 +644,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
         MousePosX   = ceil(click_point(1,1));
         switch actionType
             case {'Select'}
-                if MousePosX > size(ImStk,2)
+                if MousePosX > size(ImStk,2) && isvalid(animatedLine)
                     [x,y] = getpoints(animatedLine);
 
                     % Locate position of points in respect to zoom area
@@ -699,7 +662,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                     delete(animatedLine);
                 end
             case {'Refine'}
-                if MousePosX > size(ImStk,2)
+                if MousePosX > size(ImStk,2) && isvalid(animatedLine)
                     [x,y] = getpoints(animatedLine);
 
                     % Locate position of points in respect to zoom area
@@ -900,9 +863,9 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
         set(fig_handle, 'CurrentAxes', axes_handle);
         set(fig_handle,'DoubleBuffer','off');
         switch WhichPanel
-            case 'both',  [SelObjID, frame_handle, rect_handle] = redraw(frame_handle, rect_handle, frame, chkShowObjects.Value, Pos, PosZoom, ImStk, CutNumVox, Dots, passI, SelObjID, 'both');
-            case 'left',  [SelObjID, frame_handle, rect_handle] = redraw(frame_handle, rect_handle, frame, chkShowObjects.Value, Pos, PosZoom, ImStk, CutNumVox, Dots, passI, SelObjID, 'left');                
-            case 'right', [SelObjID, frame_handle, rect_handle] = redraw(frame_handle, rect_handle, frame, chkShowObjects.Value, Pos, PosZoom, ImStk, CutNumVox, Dots, passI, SelObjID, 'right');                
+            case 'both',  [SelObjID, frame_handle, rect_handle] = redraw(frame_handle, rect_handle, frame, chkShowObjects.Value, Pos, PosZoom, ImStk, CutNumVox, Dots, Filter.passF, SelObjID, 'both');
+            case 'left',  [SelObjID, frame_handle, rect_handle] = redraw(frame_handle, rect_handle, frame, chkShowObjects.Value, Pos, PosZoom, ImStk, CutNumVox, Dots, Filter.passF, SelObjID, 'left');                
+            case 'right', [SelObjID, frame_handle, rect_handle] = redraw(frame_handle, rect_handle, frame, chkShowObjects.Value, Pos, PosZoom, ImStk, CutNumVox, Dots, Filter.passF, SelObjID, 'right');                
         end        
         
         if numel(SelObjID) == 1 && SelObjID > 0
@@ -917,7 +880,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                 set(txtSelObjRound  ,'string','Roundness : ');
                 set(txtSelObjLength ,'string','Length : '   );
             end    
-            set(txtSelObjValid  ,'string',['Validated : '   num2str(ceil(passI(SelObjID)))]);
+            set(txtSelObjValid  ,'string',['Validated : '   num2str(ceil(Filter.passF(SelObjID)))]);
             
         else
             set(txtSelObjID     ,'string','ID#: '       );
@@ -931,7 +894,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
     end
 end
 
-function [SelObjID, image_handle, navi_handle] = redraw(image_handle, navi_handle, frameNum, ShowObjects, Pos, PosZoom, Post, NaviRectSize, Dots, Filter, SelectedObjIDs, WhichPanel)
+function [SelObjID, image_handle, navi_handle] = redraw(image_handle, navi_handle, frameNum, ShowObjects, Pos, PosZoom, Post, NaviRectSize, Dots, passF, SelectedObjIDs, WhichPanel)
 %% Redraw function, full image on left panel, zoomed area on right panel
 % Note: Pos(1), PosZoom(1), Post(1), PostCut(1), NaviRectSize(1) = Y
 % Note: Dots.Pos(:,1) = X
@@ -958,8 +921,8 @@ if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,2)) && (Pos(2) < size(Pos
     fypad = NaviRectSize(1) - (fymax - fymin); % padding if out of image
     
     % Find indeces of valid and rejected objects within the zoomed area
-    valIcut = Filter;
-    rejIcut = ~Filter;
+    valIcut = passF;
+    rejIcut = ~passF;
     for i = 1:numel(valIcut)
         valIcut(i) = valIcut(i) && Dots.Pos(i,1)>fxmin && Dots.Pos(i,1)<fxmax && Dots.Pos(i,2)>fymin && Dots.Pos(i,2)<fymax;
         rejIcut(i) = rejIcut(i) && Dots.Pos(i,1)>fxmin && Dots.Pos(i,1)<fxmax && Dots.Pos(i,2)>fymin && Dots.Pos(i,2)<fymax;

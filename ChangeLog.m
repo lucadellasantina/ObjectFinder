@@ -28,6 +28,11 @@
 %
 %   + Fixed major bug preventing calculation of density within mask
 %   + Density of objects within mask only uses objects within mask
+%   + Automatic skeletonization of binary masks
+%   + inspect2D: Fixed error when clicking on scrollbar during button_up 
+%   + load mask calibration from mask image file
+%   + density-by-depth saves density in excel table intead of objects#
+%   + Fixes mismatch in validating objects with automate vs detect tabs
 %
 %  _*Version 8.5*             created on 2020-04-14 by Luca Della Santina_
 %

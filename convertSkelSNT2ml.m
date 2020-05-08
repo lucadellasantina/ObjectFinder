@@ -33,7 +33,7 @@
 %     |- idPrimary = id of the primary branch connected to this
 %     |- order = branching order (1 = primary branch = originating at soma)
 %     |- length = length of the current segment
-%     |- Points = coordinates of each node (rows)[x um,y um ,z um,x um,y um ,z um,radius]
+%     |- Points = coordinates of each node (rows)[x px,y px ,z px,x um,y um ,z um,radius]
 %
 % SkelOld
 % |
@@ -238,6 +238,7 @@ SkelOld.FilStats.aRad      = single(aRad');
 SkelOld.FilStats.aEdges    = uint32(aEdges);
 SkelOld.FilStats.SomaPtID  = 0;
 SkelOld.FilStats.SomaPtXYZ = SkelOld.FilStats.aXYZ(1,:);
+SkelOld.branches = skel.branches;
 fprintf('DONE\n');
 
 %clear tmp* i j;
