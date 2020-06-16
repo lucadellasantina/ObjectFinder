@@ -120,7 +120,7 @@ while ~isempty(tmpNode)
                 i = i+1;
                 % x and y positions are inverted in the .trces file as
                 % compare to original image stacks, inverting back here
-                tmpBranch.points(i, :)= [tmpPos.y, tmpPos.x, tmpPos.z, tmpPos.yd, tmpPos.xd, tmpPos.zd, tmpPos.r];
+                tmpBranch.points(i, :)= [tmpPos.x, tmpPos.y, tmpPos.z, tmpPos.xd, tmpPos.yd, tmpPos.zd, tmpPos.r];
             end
             tmpPoint = tmpPoint.getNextSibling;
         end
@@ -227,9 +227,9 @@ for branch = 1:numel(skel.branches)
         aRad(nPoint, :) = skel.branches(branch).points(point, 7);
         if point >=2
             nSeg = nSeg + 1;
-            % Edges indexes start with zero because of Imaris C/C++
-            aEdges(nSeg, 1) = nPoint -2;
-            aEdges(nSeg, 2) = nPoint -1;
+            % Edges indexes start with one when imported from SNT
+            aEdges(nSeg, 1) = nPoint -1;
+            aEdges(nSeg, 2) = nPoint;
         end
     end
 end

@@ -321,9 +321,9 @@ for i = 1:numel(tmpDots)
         idx = find(ismember(ContendedVoxIDs, tmpDots(Loser).Vox.Ind));
         tmpDots(Loser).Vox.Pos(idx,:)     = [];
         tmpDots(Loser).Vox.Ind(idx)       = [];
-        tmpDots(Loser).Vox.RawBright(idx) = [];
-        tmpDots(Loser).Vox.IT(idx)        = [];
-        tmpDots(Loser).Vol                = tmpDots(Loser).Vol - numel(idx);
+        tmpDots(Loser).Vox.RawBright(idx) = 0;
+        tmpDots(Loser).Vox.IT             = 0;
+        tmpDots(Loser).Vol                = 0;
     end
 end
 

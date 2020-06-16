@@ -23,20 +23,20 @@ function Skel = calcSkelPathLength(Skel, ReportStats)
 %calculated path length from soma under Skel.FilStats and return.
 
 SkelIDsPool = 1:1:size(Skel.FilStats.aXYZ,1);
-SkelIDsConnectivityPool = Skel.FilStats.aEdges+1; %+1 because Imaris ID starts from zero.
+SkelIDsConnectivityPool = Skel.FilStats.aEdges;
 SkelSegLengthsPool = Skel.SegStats.Lengths;
 
-SomaPtID = Skel.FilStats.SomaPtID+1; %+1 because Imaris ID starts from zero.
-SourceSkelIDs = SomaPtID; %start from soma.
-SkelIDsPool(SomaPtID) = []; %deplete the soma point.
+SomaPtID = Skel.FilStats.SomaPtID;
+SourceSkelIDs = SomaPtID+1; % start from soma.
+SkelIDsPool(SomaPtID) = []; % deplete the soma point.
 
 SkelPathLength2Soma = zeros(1,size(Skel.FilStats.aXYZ,1));
 
 % March from the soma
 fprintf('Marching through current skeleton to calculate lengths ... ');
 while ~isempty(SkelIDsPool)
-    %length(SkelIDsPool) %how many more skel to process
-    if isempty(SourceSkelIDs) %if the previous skel was the dead end, resume from the first entry within the remaining pool.
+    % length(SkelIDsPool) % how many more skel to process
+    if isempty(SourceSkelIDs) % if the previous skel was the dead end, resume from the first entry within the remaining pool.
         SourceSkelIDs = SkelIDsPool(1); 
         SkelIDsPool(1) = []; % deplete the newly grabbed skel.
     end
@@ -58,8 +58,8 @@ while ~isempty(SkelIDsPool)
                 
                 NextSkelIDs = [NextSkelIDs, NextSkelID];
             end
-            SkelIDsConnectivityPool(SourceSkelRows,:) = []; %deplete the found connectivity from the pool.
-            SkelSegLengthsPool(SourceSkelRows) = []; %also deplete seg lengths
+            SkelIDsConnectivityPool(SourceSkelRows,:) = []; % deplete the found connectivity from the pool.
+            SkelSegLengthsPool(SourceSkelRows) = []; % also deplete seg lengths
         end
     end
 

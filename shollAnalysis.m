@@ -20,29 +20,48 @@ function sholl = shollAnalysis(skel, step, debug)
 %% Calculate sholl analysis using a given stepping size (same units as skel.XYZ)
 sholl = struct;
 sholl.stepSize = step;
-stepPx = step;
-% stepPx = round(step / skel.ResXYZ(1));
+SomaPtID = skel.FilStats.SomaPtID +1; % Required because somas stored from C/C++ programs
+% step = round(step / skel.ResXYZ(1));
 % Calculate the longest distance from cell body and stop a step size after that.
-stopRadiusPx = ceil(max(dist(skel.XYZ(:, 1:2),skel.XYZ(skel.SomaPtID,1:2)))) + stepPx;
+stopRadius = ceil(max(pdist2(skel.FilStats.aXYZ(:, 1:2),skel.FilStats.aXYZ(SomaPtID,1:2)))) + step;
 
 if debug
     figure('Name', 'Skeleton 2D projection. Color code = originating primary branch');
     hold on;
     for i=1:numel(skel.branches)
-        plot(skel.branches(i).XYZ(:,1), skel.branches(i).XYZ(:,2));
-        %pause(2);
+        if isfield(skel.branches, 'points')        
+            plot(skel.branches(i).points(:,4), skel.branches(i).points(:,5));
+        else
+            plot(skel.branches(i).XYZ(:,1), skel.branches(i).XYZ(:,2));
+        end
+        %pause(1);
     end
-    scatter(skel.XYZ(skel.SomaPtID,1), skel.XYZ(skel.SomaPtID,2), 'ok');
+    scatter(skel.FilStats.aXYZ(SomaPtID,1), skel.FilStats.aXYZ(SomaPtID,2), 'ok');
 end
 
-tmpShollRadius = zeros(numel(stepPx:stepPx:stopRadiusPx), 2);
-tmpShollRadius(:,1) = stepPx:stepPx:stopRadiusPx;
+tmpShollRadius = zeros(numel(step:step:stopRadius), 2);
+tmpShollRadius(:,1) = step:step:stopRadius;
 
 for i = 1: numel(tmpShollRadius(:,1))
-    [tmpXc, tmpYc] = circle(skel.XYZ(skel.SomaPtID,1), skel.XYZ(skel.SomaPtID,2), tmpShollRadius(i,1)); % Create circle
-    if debug, plot(tmpXc, tmpYc, 'Color',[0.8,0.8,0.8]); end
-    for j=1:numel(skel.branches)
-        [tmpXi, ~] = intersections(skel.branches(j).XYZ(:,1), skel.branches(j).XYZ(:,2),tmpXc, tmpYc);
+    [tmpXc, tmpYc] = circle(skel.FilStats.aXYZ(SomaPtID,1), skel.FilStats.aXYZ(SomaPtID,2), tmpShollRadius(i,1)); % Create circle
+
+    if debug
+        plot(tmpXc, tmpYc, 'Color',[0.8,0.8,0.8]); 
+    end
+    
+    for j=1:numel(skel.branches)        
+        % Ensure current segment has at least 2 points to calculate intersections
+        if isfield(skel.branches, 'points') && size(skel.branches(j).points, 1) < 2
+            continue 
+        elseif isfield(skel.branches, 'XYZ') && size(skel.branches(j).XYZ, 1) < 2
+            continue % need at least 2 points to calculate intersections
+        end
+          
+        if isfield(skel.branches, 'points')        
+            [tmpXi, ~] = intersections(skel.branches(j).points(:,4), skel.branches(j).points(:,5),tmpXc, tmpYc);
+        else
+            [tmpXi, ~] = intersections(skel.branches(j).XYZ(:,1), skel.branches(j).XYZ(:,2),tmpXc, tmpYc);
+        end
         tmpShollRadius(i, 2) = tmpShollRadius(i, 2) + numel(tmpXi);
     end
 end

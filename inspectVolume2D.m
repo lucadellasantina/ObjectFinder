@@ -51,9 +51,9 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
     txtAction       = uicontrol('Style','text'      ,'Units','normalized','position',[.912,.845,.020,.02],'String','Tool:'); %#ok, unused handle
     cmbAction       = uicontrol('Style','popup'     ,'Units','normalized','Position',[.935,.830,.055,.04],'String', {'Select (s)', 'Refine (r)'},'Callback', @cmbAction_changed);
     chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.912,.880,.085,.02],'String','Colors (spacebar)', 'Value',1,'Callback',@chkShowObjects_changed);
-    txtZoom         = uicontrol('Style','text'      ,'Units','normalized','position',[.925,.230,.050,.02],'String','Zoom level:'); %#ok, unused variable
-    btnZoomOut      = uicontrol('Style','Pushbutton','Units','normalized','position',[.920,.170,.030,.05],'String','-'                              ,'Callback',@btnZoomOut_clicked); %#ok, unused variable
-    btnZoomIn       = uicontrol('Style','Pushbutton','Units','normalized','position',[.950,.170,.030,.05],'String','+'                              ,'Callback',@btnZoomIn_clicked); %#ok, unused variable
+    txtZoom         = uicontrol('Style','text'      ,'Units','normalized','position',[.925,.160,.050,.02],'String','Zoom level:'); %#ok, unused variable
+    btnZoomOut      = uicontrol('Style','Pushbutton','Units','normalized','position',[.920,.100,.030,.05],'String','-'                              ,'Callback',@btnZoomOut_clicked); %#ok, unused variable
+    btnZoomIn       = uicontrol('Style','Pushbutton','Units','normalized','position',[.950,.100,.030,.05],'String','+'                              ,'Callback',@btnZoomIn_clicked); %#ok, unused variable
     btnSave         = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.010,.088,.05],'String','Save current objects'           ,'Callback',@btnSave_clicked); %#ok, unused variable    
     
     % Primary filter parameter controls
@@ -81,7 +81,9 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
     txtSelObjRound  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.410,.085,.02],'String','Roundness : ');
     txtSelObjLength = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.380,.085,.02],'String','Length : ');
     txtSelObjValid  = uicontrol('Style','text'      ,'Units','normalized','position',[.907,.350,.085,.02],'String','Validated : ');    
-    btnToggleValid  = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.300,.088,.04],'String','Change Validation (v)'          ,'Callback',@btnToggleValid_clicked); %#ok, unused variable
+    btnToggleValid  = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.300,.088,.04],'String','Change Validation (v)','Callback',@btnToggleValid_clicked); %#ok, unused variable
+    btnValidate     = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.240,.088,.04],'String','Validate selected'    ,'Callback',@btnValidate_clicked); %#ok, unused variable
+    btnReject       = uicontrol('Style','Pushbutton','Units','normalized','position',[.907,.200,.088,.04],'String','Reject selected'      ,'Callback',@btnReject_clicked); %#ok, unused variable
     
 	% Main drawing and related handles
 	axes_handle     = axes('Position',[0 0.03 0.90 1]);
@@ -110,6 +112,52 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
             % Only one object selected
             
             Filter.passF(SelObjID) = ~Filter.passF(SelObjID);
+            set(txtValidObjs,'string',['Valid: ' num2str(numel(find(Filter.passF)))]);
+            SelObjID = 0;            % Clear selection
+            PosZoom  = [-1, -1, -1]; % Clear selection
+            scroll(frame, 'right');
+        end
+    end
+
+    function btnValidate_clicked(src,event) %#ok, unused arguments 
+        if numel(SelObjID) > 1
+            disp('multple objects selected');
+            % Multiple objects selected
+            
+            for i = 1: numel(SelObjID)
+                Filter.passF(SelObjID(i)) = true;
+            end            
+            SelObjID = 0;            % Clear selection
+            PosZoom  = [-1, -1, -1]; % Clear selection
+            scroll(frame, 'right');
+            
+        elseif SelObjID > 0
+            % Only one object selected
+            
+            Filter.passF(SelObjID) = true;
+            set(txtValidObjs,'string',['Valid: ' num2str(numel(find(Filter.passF)))]);
+            SelObjID = 0;            % Clear selection
+            PosZoom  = [-1, -1, -1]; % Clear selection
+            scroll(frame, 'right');
+        end
+    end
+
+    function btnReject_clicked(src,event) %#ok, unused arguments 
+        if numel(SelObjID) > 1
+            disp('multple objects selected');
+            % Multiple objects selected
+            
+            for i = 1: numel(SelObjID)
+                Filter.passF(SelObjID(i)) = false;
+            end            
+            SelObjID = 0;            % Clear selection
+            PosZoom  = [-1, -1, -1]; % Clear selection
+            scroll(frame, 'right');
+            
+        elseif SelObjID > 0
+            % Only one object selected
+            
+            Filter.passF(SelObjID) = false;
             set(txtValidObjs,'string',['Valid: ' num2str(numel(find(Filter.passF)))]);
             SelObjID = 0;            % Clear selection
             PosZoom  = [-1, -1, -1]; % Clear selection
@@ -461,12 +509,12 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
             click_point = get(gca, 'CurrentPoint');
             
             PosX     = ceil(click_point(1,1));
-            PosZoomX = PosX - size(ImStk,2)+1;
-            PosZoomX = ceil(PosZoomX * CutNumVox(2)/size(ImStk,2));
+            PosZoomX = PosX - size(ImStk,2) -1;
+            PosZoomX = ceil(PosZoomX * CutNumVox(2)/(size(ImStk,2)-1));
 
             PosY     = ceil(click_point(1,2));                        
             PosZoomY = size(ImStk,1) - PosY;
-            PosZoomY = ceil(CutNumVox(1)-PosZoomY*CutNumVox(1)/size(ImStk,1));
+            PosZoomY = CutNumVox(1)-ceil(PosZoomY*CutNumVox(1)/(size(ImStk,1)-1));
 
             PosZoom  = [PosZoomX, PosZoomY frame];
             Pos      = [Pos(1), Pos(2) frame];
@@ -477,21 +525,40 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
             mask   = inpolygon_fast(x,y,xv,yv); % ~75x faster than inpolygon
             
             % Select Dot IDs id their voxels fall within the polygon arel
+            %tic;
             SelObjID = [];
-            for i = 1:numel(Dots.Vox)
-                for j = 1:size(Dots.Vox(i).Pos,1)
-                    if Dots.Vox(i).Pos(j, 3) == frame
-                        ind = sub2ind(size(mask), Dots.Vox(i).Pos(j,1), Dots.Vox(i).Pos(j,2));
+            
+            % Restrict search only to objects within the zoomed area
+            fxmin = max(ceil(Pos(1) - CutNumVox(2)/2)+1, 1);
+            fxmax = min(ceil(Pos(1) + CutNumVox(2)/2), size(Post,2));
+            fymin = max(ceil(Pos(2) - CutNumVox(1)/2)+1, 1);
+            fymax = min(ceil(Pos(2) + CutNumVox(1)/2), size(Post,1));            
+            valIcut = Filter.passF;
+            rejIcut = ~Filter.passF;
+            for i = 1:numel(valIcut)
+                valIcut(i) = valIcut(i) && Dots.Pos(i,2)>=fxmin && Dots.Pos(i,2)<=fxmax && Dots.Pos(i,1)>=fymin && Dots.Pos(i,1)<=fymax;
+                rejIcut(i) = rejIcut(i) && Dots.Pos(i,2)>=fxmin && Dots.Pos(i,2)<=fxmax && Dots.Pos(i,1)>=fymin && Dots.Pos(i,1)<=fymax;
+            end
+            ValObjIDs = find(valIcut); % IDs of valid objects within field of view  
+            RejObjIDs = find(rejIcut); % IDs of rejected objects within field of view 
+            VisObjIDs = [ValObjIDs; RejObjIDs]; % IDs of objects within field of view 
+
+            for i=1:numel(VisObjIDs)
+                VoxPos = Dots.Vox(VisObjIDs(i)).Pos;
+                for j = 1:size(VoxPos,1)
+                    if VoxPos(j,3) == frame && VoxPos(j,2)>=fxmin && VoxPos(j,2)<=fxmax && VoxPos(j,1)>=fymin && VoxPos(j,1)<=fymax
+                        ind = sub2ind(size(mask), VoxPos(j,1), VoxPos(j,2));
                         if mask(ind) && isempty(SelObjID)
-                            SelObjID = i;
+                            SelObjID = VisObjIDs(i);
                             break
                         elseif mask(ind) && ~isempty(SelObjID)
-                            SelObjID(end+1) = i; %#ok
+                            SelObjID(end+1) = VisObjIDs(i); %#ok
                             break
                         end
                     end
                 end
             end
+            %disp(['Time elapsed: ' num2str(toc)]);
         end
         
         % Switch back mouse pointer to the original shape
@@ -517,7 +584,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
 
             PosY     = ceil(click_point(1,2));                        
             PosZoomY = size(ImStk,1) - PosY;
-            PosZoomY = ceil(CutNumVox(1)-PosZoomY*CutNumVox(1)/size(ImStk,1));
+            PosZoomY = CutNumVox(1)-ceil(PosZoomY*CutNumVox(1)/size(ImStk,1));
 
             PosZoom  = [PosZoomX, PosZoomY frame];
             Pos      = [Pos(1), Pos(2) frame];
@@ -639,19 +706,19 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
 	end
 
 	function button_up(src, event)  %#ok, unused arguments
-		click = 0;
+        click = 0;
         click_point = get(gca, 'CurrentPoint');
         MousePosX   = ceil(click_point(1,1));
         switch actionType
-            case {'Select'}
+            case {'Select'}                
                 if MousePosX > size(ImStk,2) && isvalid(animatedLine)
                     [x,y] = getpoints(animatedLine);
 
                     % Locate position of points in respect to zoom area
                     PosZoomX = x - size(ImStk,2)-1;
-                    PosZoomX = round(PosZoomX * CutNumVox(2)/(size(ImStk,2)-1));                
+                    PosZoomX = ceil(PosZoomX * CutNumVox(2)/(size(ImStk,2)-1));                
                     PosZoomY = size(ImStk,1) - y;
-                    PosZoomY = CutNumVox(1)-round(PosZoomY*CutNumVox(1)/(size(ImStk,1)-1));
+                    PosZoomY = CutNumVox(1)-ceil(PosZoomY*CutNumVox(1)/(size(ImStk,1)-1));
 
                     % Locate position of points in respect to original img
                     absX = PosZoomX + PosRect(1);
@@ -667,9 +734,9 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
 
                     % Locate position of points in respect to zoom area
                     PosZoomX = x - size(ImStk,2)-1;
-                    PosZoomX = round(PosZoomX * CutNumVox(2)/(size(ImStk,2)-1));                
+                    PosZoomX = ceil(PosZoomX * CutNumVox(2)/(size(ImStk,2)-1));                
                     PosZoomY = size(ImStk,1) - y;
-                    PosZoomY = CutNumVox(1)-round(PosZoomY*CutNumVox(1)/(size(ImStk,1)-1));
+                    PosZoomY = CutNumVox(1)-ceil(PosZoomY*CutNumVox(1)/(size(ImStk,1)-1));
 
                     % Locate position of points in respect to original img
                     absX = PosZoomX + PosRect(1);
@@ -680,6 +747,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                     delete(animatedLine);
                 end
         end
+
         scroll(frame, 'right');
 	end
 
@@ -749,12 +817,11 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                     % Detect coordinates of the point clicked in PosZoom
                     % Note: x,y coordinates are inverted in ImStk
                     % Note: x,y coordinates are inverted in CutNumVox
-
                     PosZoomX = PosX - size(ImStk,2)-1;
-                    PosZoomX = round(PosZoomX * CutNumVox(2)/(size(ImStk,2)-1));
+                    PosZoomX = ceil(PosZoomX * CutNumVox(2)/(size(ImStk,2)-1));
                     
                     PosZoomY = size(ImStk,1) - PosY;
-                    PosZoomY = CutNumVox(1)-round(PosZoomY*CutNumVox(1)/(size(ImStk,1)-1));
+                    PosZoomY = CutNumVox(1)-ceil(PosZoomY*CutNumVox(1)/(size(ImStk,1)-1));
 
                     % Do different things depending whether left/right-clicked
                     clickType = get(fig_handle, 'SelectionType');
@@ -764,7 +831,6 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
                         switch actionType
                             case 'Select'
                                 % Move the view to that position
-
                                 PosZoom = [-1, -1, -1];
                                 Pos     = [Pos(1)+PosZoomX-CutNumVox(2)/2,...
                                            Pos(2)+PosZoomY-CutNumVox(1)/2, frame];
@@ -862,6 +928,7 @@ function Dots = inspectVolume2D(Post, Dots, Filter)
         %set to the right axes and call the custom redraw function
         set(fig_handle, 'CurrentAxes', axes_handle);
         set(fig_handle,'DoubleBuffer','off');
+
         switch WhichPanel
             case 'both',  [SelObjID, frame_handle, rect_handle] = redraw(frame_handle, rect_handle, frame, chkShowObjects.Value, Pos, PosZoom, ImStk, CutNumVox, Dots, Filter.passF, SelObjID, 'both');
             case 'left',  [SelObjID, frame_handle, rect_handle] = redraw(frame_handle, rect_handle, frame, chkShowObjects.Value, Pos, PosZoom, ImStk, CutNumVox, Dots, Filter.passF, SelObjID, 'left');                
@@ -896,54 +963,52 @@ end
 
 function [SelObjID, image_handle, navi_handle] = redraw(image_handle, navi_handle, frameNum, ShowObjects, Pos, PosZoom, Post, NaviRectSize, Dots, passF, SelectedObjIDs, WhichPanel)
 %% Redraw function, full image on left panel, zoomed area on right panel
-% Note: Pos(1), PosZoom(1), Post(1), PostCut(1), NaviRectSize(1) = Y
-% Note: Dots.Pos(:,1) = X
+% Note: Pos(1), PosZoom(1) is X
+% Dots.Pos(:,1), Post(1), PostCut(1), NaviRectSize(1) = Y
 
 SelObjID        = 0;
 SelObjColor     = uint8([1 1 0])'; % Yellow
 ValObjColor     = uint8([0 1 0])'; % Green
 RejObjColor     = uint8([1 0 0])'; % Gray
-
-F               = squeeze(Post(:,:,frameNum,:));
 PostCut         = ones(NaviRectSize(1), NaviRectSize(2), 3, 'uint8');
 PostCutResized  = zeros(size(Post,1), size(Post,2), 3, 'uint8');
 PostVoxMapCut   = PostCut;
+F = squeeze(Post(:,:,frameNum,:)); % Image of current frame
 
 if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,2)) && (Pos(2) < size(Post,1))
     % Find borders of the area to zoom according to passed mouse position
-    % Pos(2), NaviRectSize(2) is X      
-    fxmin = max(ceil(Pos(2) - NaviRectSize(2)/2)+1, 1);
-    fxmax = min(ceil(Pos(2) + NaviRectSize(2)/2), size(Post,2));
+    fxmin = max(ceil(Pos(1) - NaviRectSize(2)/2)+1, 1);
+    fxmax = min(ceil(Pos(1) + NaviRectSize(2)/2), size(Post,2));
+    fymin = max(ceil(Pos(2) - NaviRectSize(1)/2)+1, 1);
+    fymax = min(ceil(Pos(2) + NaviRectSize(1)/2), size(Post,1));
     fxpad = NaviRectSize(2) - (fxmax - fxmin); % padding if out of image
-
-    fymin = max(ceil(Pos(1) - NaviRectSize(1)/2)+1, 1);
-    fymax = min(ceil(Pos(1) + NaviRectSize(1)/2), size(Post,1));
     fypad = NaviRectSize(1) - (fymax - fymin); % padding if out of image
     
-    % Find indeces of valid and rejected objects within the zoomed area
+    % Find indeces of objects visible within the zoomed area
     valIcut = passF;
     rejIcut = ~passF;
     for i = 1:numel(valIcut)
-        valIcut(i) = valIcut(i) && Dots.Pos(i,1)>fxmin && Dots.Pos(i,1)<fxmax && Dots.Pos(i,2)>fymin && Dots.Pos(i,2)<fymax;
-        rejIcut(i) = rejIcut(i) && Dots.Pos(i,1)>fxmin && Dots.Pos(i,1)<fxmax && Dots.Pos(i,2)>fymin && Dots.Pos(i,2)<fymax;
+        valIcut(i) = valIcut(i) && Dots.Pos(i,2)>=fxmin && Dots.Pos(i,2)<=fxmax && Dots.Pos(i,1)>=fymin && Dots.Pos(i,1)<=fymax;
+        rejIcut(i) = rejIcut(i) && Dots.Pos(i,2)>=fxmin && Dots.Pos(i,2)<=fxmax && Dots.Pos(i,1)>=fymin && Dots.Pos(i,1)<=fymax;
     end
-    VisObjIDs = find(valIcut);  
-    RejObjIDs = find(rejIcut);
-
+    ValObjIDs = find(valIcut); % IDs of valid objects within field of view  
+    RejObjIDs = find(rejIcut); % IDs of rejected objects within field of view 
+    VisObjIDs = [ValObjIDs; RejObjIDs]; % IDs of objects within field of view 
+    
     % Flag valid and rejected object IDs within zoomed area    
-    for i=1:numel(VisObjIDs)
-        VoxPos = Dots.Vox(VisObjIDs(i)).Pos;
+    for i=1:numel(ValObjIDs)
+        VoxPos = Dots.Vox(ValObjIDs(i)).Pos;
         for j = 1:size(VoxPos,1)
-            if VoxPos(j,3) == frameNum && VoxPos(j,1)>fxmin && VoxPos(j,1)<fxmax && VoxPos(j,2)>fymin && VoxPos(j,2)<fymax
-                PostVoxMapCut(VoxPos(j,1)+fxpad-fxmin+1,VoxPos(j,2)+fypad-fymin+1, :) = ValObjColor;
+            if VoxPos(j,3) == frameNum && VoxPos(j,2)>=fxmin && VoxPos(j,2)<=fxmax && VoxPos(j,1)>=fymin && VoxPos(j,1)<=fymax
+                PostVoxMapCut(VoxPos(j,1)+fypad-fymin,VoxPos(j,2)+fxpad-fxmin, :) = ValObjColor;
             end
         end
     end
     for i=1:numel(RejObjIDs)
         VoxPos = Dots.Vox(RejObjIDs(i)).Pos;
         for j = 1:size(VoxPos,1)
-            if VoxPos(j,3) == frameNum && VoxPos(j,1)>fxmin && VoxPos(j,1)<fxmax && VoxPos(j,2)>fymin && VoxPos(j,2)<fymax
-                PostVoxMapCut(VoxPos(j,1)+fxpad-fxmin+1,VoxPos(j,2)+fypad-fymin+1,:) = RejObjColor;
+            if VoxPos(j,3) == frameNum && VoxPos(j,2)>=fxmin && VoxPos(j,2)<=fxmax && VoxPos(j,1)>=fymin && VoxPos(j,1)<=fymax
+                PostVoxMapCut(VoxPos(j,1)+fypad-fymin,VoxPos(j,2)+fxpad-fxmin,:) = RejObjColor;
             end
         end
     end
@@ -956,24 +1021,24 @@ if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,2)) && (Pos(2) < size(Pos
             VoxPos = Dots.Vox(SelectedObjIDs(i)).Pos;
             %disp(['SelectedObjID: ' num2str(SelectedObjIDs(i))]);
             for j = 1:size(VoxPos,1)
-                if VoxPos(j,1)>fxmin && VoxPos(j,1)<fxmax && VoxPos(j,2)>fymin && VoxPos(j,2)<fymax            
-                    PostVoxMapCut(VoxPos(j,1)+fxpad-fxmin+1,VoxPos(j,2)+fypad-fymin+1, :) = SelObjColor;
+                if VoxPos(j,3) == frameNum && VoxPos(j,2)>=fxmin && VoxPos(j,2)<=fxmax && VoxPos(j,1)>=fymin && VoxPos(j,1)<=fymax            
+                    PostVoxMapCut(VoxPos(j,1)+fypad-fymin,VoxPos(j,2)+fxpad-fxmin, :) = SelObjColor;
                 end
             end
         end
     elseif PosZoom(1) > 0 && PosZoom(2) > 0
         % If user queried for objects at a specific location coordinates
         %disp(['X:' num2str(PosZoom(1)) ' Y:' num2str(PosZoom(2)) ' xmin:' num2str(fxmin) ' ymin:' num2str(fymin)]);
-        absX = fxpad+fxmin+PosZoom(2)-1;            
-        absY = fypad+fymin+PosZoom(1)-2;
+        absX = fxpad+fxmin+PosZoom(1)-2;            
+        absY = fypad+fymin+PosZoom(2)-2;
         for i=1:numel(VisObjIDs)
             VoxPos  = Dots.Vox(VisObjIDs(i)).Pos;
             for j = 1:size(VoxPos,1)                
-                if VoxPos(j,3)==frameNum && VoxPos(j,1)==absX && VoxPos(j,2)==absY
+                if VoxPos(j,3)==frameNum && VoxPos(j,1)==absY && VoxPos(j,2)==absX
                     SelObjID = VisObjIDs(i); % Return ID of selected object
                     for k = 1:size(VoxPos,1)
-                        if VoxPos(k,3) == frameNum
-                            PostVoxMapCut(VoxPos(k,1)+fxpad-fxmin+1, VoxPos(k,2)+fypad-fymin+1, :) = SelObjColor;
+                        if VoxPos(k,3) == frameNum && VoxPos(k,2)>=fxmin && VoxPos(k,2)<=fxmax && VoxPos(k,1)>=fymin && VoxPos(k,1)<=fymax
+                            PostVoxMapCut(VoxPos(k,1)+fypad-fymin, VoxPos(k,2)+fxpad-fxmin, :) = SelObjColor;
                         end
                     end
                     break
@@ -981,30 +1046,10 @@ if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,2)) && (Pos(2) < size(Pos
             end
         end
         
-        if SelObjID == 0
-            % Clicked positon does not belong to any validated object,
-            % check if belong to any of the rejected objects intead
-            
-            for i=1:numel(RejObjIDs)
-                VoxPos = Dots.Vox(RejObjIDs(i)).Pos;
-                for j = 1:size(VoxPos,1)
-                    if VoxPos(j,3) == frameNum  && VoxPos(j,1)==absX && VoxPos(j,2)==absY
-                        SelObjID = RejObjIDs(i);
-                        for k = 1:size(VoxPos,1)
-                            if VoxPos(k,3) == frameNum
-                                PostVoxMapCut(VoxPos(k,1)+fxpad-fxmin+1,VoxPos(k,2)+fypad-fymin+1, :) = SelObjColor;
-                            end
-                        end
-                        break
-                    end
-                end
-            end
-        end
-        
     end
     
     % Draw the right panel containing a zoomed version of selected area
-    PostCut(fxpad+1 : fxpad+fxmax-fxmin, fypad+1 : fypad+fymax-fymin,:) = F(fxmin:fxmax-1, fymin:fymax-1, :);
+    PostCut(fypad : fypad+fymax-fymin, fxpad : fxpad+fxmax-fxmin,:) = F(fymin:fymax, fxmin:fxmax, :);
     if ShowObjects
         PostCutResized = imresize(PostCut.*PostVoxMapCut,[size(Post,1), size(Post,2)], 'nearest');
     else
@@ -1020,7 +1065,7 @@ if image_handle == 0
     image_handle = image(cat(2, F, PostCutResized));
     axis image off
     % Draw a rectangle border over the selected area (left panel)
-    navi_handle = rectangle(gca, 'Position',[fymin,fxmin,NaviRectSize(2),NaviRectSize(1)],'EdgeColor', [1 1 0],'LineWidth',2,'LineStyle','-');
+    navi_handle = rectangle(gca, 'Position',[fxmin,fymin,NaviRectSize(2),NaviRectSize(1)],'EdgeColor', [1 1 0],'LineWidth',2,'LineStyle','-');
 else
     % If we already drawn the image once, just update WhichPanel is needed
     switch  WhichPanel       
@@ -1029,9 +1074,9 @@ else
             CData(:, 1:size(CData,2)/2,:) = F; % redraw left panel
             CData(:, size(CData,2)/2+1:size(CData,2),:) = PostCutResized; % redraw right panel
             set(image_handle, 'CData', CData);   
-            set(navi_handle, 'Position',[fymin,fxmin,NaviRectSize(2),NaviRectSize(1)]);
+            set(navi_handle, 'Position',[fxmin,fymin,NaviRectSize(2),NaviRectSize(1)]);
         case 'left'            
-            set(navi_handle, 'Position',[fymin,fxmin,NaviRectSize(2),NaviRectSize(1)]);
+            set(navi_handle, 'Position',[fxmin,fymin,NaviRectSize(2),NaviRectSize(1)]);
         case 'right'
             CData = get(image_handle, 'CData');
             CData(:, size(CData,2)/2+1:size(CData,2),:) = PostCutResized;

@@ -102,9 +102,12 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     function [ImStk, DotNum, NumRemainingDots] = getNewImageStack()
         RemainingDotIDs = ColocManual.ListDotIDsManuallyColocAnalyzed(ColocManual.ColocFlag == 0);
         NumRemainingDots = length(RemainingDotIDs);
-        if NumRemainingDots > 0 
+        if NumRemainingDots > 0
             dot = ceil(rand*NumRemainingDots); % randomize the order of analyzing dots
             DotNum = RemainingDotIDs(dot);
+            if DotNum > numel(Grouped.Vox)
+                disp('Requested dot num does not exist');                
+            end
             PostVoxMap = zeros(size(Post), 'uint8');
             PostVoxMap(Grouped.Vox(DotNum).Ind) = 1;
             CutNumVox = [60, 60, 20];

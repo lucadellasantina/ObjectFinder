@@ -18,7 +18,6 @@
 %
 % *Change log*
 %
-% TODO: Bug in inspectObjects2D selecting dots position not accurate
 % TODO: measure distance from closest skeleton and colocalize within it
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
@@ -33,6 +32,13 @@
 %   + load mask calibration from mask image file
 %   + density-by-depth saves density in excel table intead of objects#
 %   + Fixes mismatch in validating objects with automate vs detect tabs
+%   + inspect2D: fixed misaligned drawing of zoomed panel
+%   + inspect2D: fixed inaccurate dot selection on clicking
+%   + inspect2D: selecting multiple objects is significant sped-up
+%   + findObjectsSimple: fixed error in overlap regions resolution
+%   + inspect2D: Added buttons to validate/reject all selected objects
+%   + Enforced reading image resolution from current app.Post image
+%   + Ensured current image is loaded before starting manual colocalization
 %
 %  _*Version 8.5*             created on 2020-04-14 by Luca Della Santina_
 %

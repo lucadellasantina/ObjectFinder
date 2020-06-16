@@ -38,13 +38,16 @@ for d = 1:numel(files)
 end
 
 if ~isempty(Skel) && ~isfield(Skel, 'branches')
+
     Skel.XYZ = Skel.FilStats.aXYZ;
     Skel.SomaPtID = Skel.FilStats.SomaPtID+1;
     Skel.FilStats.aEdges = Skel.FilStats.aEdges - Skel.FilStats.aEdges(1,1) + 1; % shift index edges so that first element starts with 1
     
     % March edges to find matching pairs and recreate the branching pattern
-    % For each branch first the march from cell body is computer, then all points in common with previously calculated branches are removed
-    % this leaves 1 segment per branch without any diplicate
+    % For each branch first the march from cell body is computed, 
+    % then all points in common with previously calculated branches are removed
+    % this leaves 1 segment per branch without any duplicates
+    
     vNumberOfSpots = length(Skel.FilStats.aRad); % Store total number of points we need to iterate
     % Find position of terminal and biforcation points in the filament connectivity (aEdges)
     vNumberOfTerminals = 0;
@@ -59,8 +62,8 @@ if ~isempty(Skel) && ~isfield(Skel, 'branches')
             % disp('found a terminal point');
             vNumberOfTerminals = vNumberOfTerminals + 1;
             vTerminals(vNumberOfTerminals) = vSpots; %#ok
-        elseif length(vEdge)>2
-            % disp('found fork point');
+        elseif length(vEdge) > 2
+            % disp('found a fork point');
             vNumberOfForks = vNumberOfForks + 1;
             vForks(vNumberOfForks) = vSpots; %#ok
         end
@@ -100,7 +103,7 @@ if ~isempty(Skel) && ~isfield(Skel, 'branches')
         vPath = setdiff(vPath, vPaths); % Remove common part with the paths previously calculated
         vPaths = cat(2,vPaths, vPath); % Add current path to paths
         
-        Skel.branches(vTerminalIndex).XYZ = Skel.FilStats.aXYZ(vPath,:);
+        Skel.branches(vTerminalIndex).points = Skel.FilStats.aXYZ(vPath,:);
         Skel.branches(vTerminalIndex).Rad = Skel.FilStats.aRad(vPath);
         %Skel.branches(vTerminalIndex).Edges = [1:vLength-1;2:vLength]';
         Skel.TotalBranches = numel(Skel.branches);
