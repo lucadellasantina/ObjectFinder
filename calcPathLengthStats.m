@@ -17,7 +17,7 @@
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
 function PathLengthStats = calcPathLengthStats(Dots, Skel, showPlot)
-
+%%
 Dots = getFilteredObjects(Dots, Dots.Filter); % work only on validated objects
 
 DotPathLengthList   = Skel.FilStats.SkelPathLength2Soma(Dots.Skel.ClosestSkelIDs);

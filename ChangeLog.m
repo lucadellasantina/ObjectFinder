@@ -23,6 +23,11 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
+%  _*Version 8.8*             created on 2020-07-24 by Luca Della Santina_
+%
+%   + Custom binning for density by depth and volume by depth plots
+%   + Bugfixes
+%
 %  _*Version 8.6*             created on 2020-05-01 by Luca Della Santina_
 %
 %   + Fixed major bug preventing calculation of density within mask

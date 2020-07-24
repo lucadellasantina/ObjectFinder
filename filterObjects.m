@@ -160,7 +160,7 @@ if isfield(FilterOpts, 'Thresholds2')
     end
     
     if isfield(FilterOpts.Thresholds2, 'PrincipalAxisLen') && isfield(Dots.Shape, 'PrincipalAxisLen')
-        if FilterOpts.Thresholds2.PrincipalAxisLenhDir == 1
+        if FilterOpts.Thresholds2.PrincipalAxisLenDir == 1
             threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' >= FilterOpts.Thresholds2.PrincipalAxisLen);
         else
             threshpass = threshpass & (Dots.Shape.PrincipalAxisLen(:,1)' <= FilterOpts.Thresholds2.PrincipalAxisLen);

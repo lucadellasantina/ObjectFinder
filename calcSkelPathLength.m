@@ -26,8 +26,8 @@ SkelIDsPool = 1:1:size(Skel.FilStats.aXYZ,1);
 SkelIDsConnectivityPool = Skel.FilStats.aEdges;
 SkelSegLengthsPool = Skel.SegStats.Lengths;
 
-SomaPtID = Skel.FilStats.SomaPtID;
-SourceSkelIDs = SomaPtID+1; % start from soma.
+SomaPtID = Skel.FilStats.SomaPtID+1;
+SourceSkelIDs = SomaPtID; % start from soma.
 SkelIDsPool(SomaPtID) = []; % deplete the soma point.
 
 SkelPathLength2Soma = zeros(1,size(Skel.FilStats.aXYZ,1));

@@ -16,42 +16,39 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function Density = calcDensity(Settings, Dots, Skel, showPlot)
-%%
-% Work only on validated objects
-Dots = getFilteredObjects(Dots, Dots.Filter);
+function Density = calcDensityFiner(Settings, Dots, Skel, Radius, ShowPlot)
+%% Work in pixels to have the max resolution
+
+Dots = getFilteredObjects(Dots, Dots.Filter); % Work only on validated objects
 
 % Mids are the middle point of each skeleton's segment
-AllSegCut = cat(2, Skel.SegStats.Seg(:,2,:), Skel.SegStats.Seg(:,1,:), Skel.SegStats.Seg(:,3,:));
+AllSegCut = cat(2, Skel.SegStats.Seg(:,2,:)./Settings.ImInfo.xyum, Skel.SegStats.Seg(:,1,:)./Settings.ImInfo.xyum, Skel.SegStats.Seg(:,3,:)./Settings.ImInfo.zum);
 
-DPos = round(Dots.Pos);
-DPos(:,1:2) = DPos(:,1:2)*Settings.ImInfo.xyum; 
-DPos(:,3) = DPos(:,3)*Settings.ImInfo.zum;
+%DPos = round(Dots.Pos);
+%DPos(:,1:2) = DPos(:,1:2)*Settings.ImInfo.xyum; 
+%DPos(:,3) = DPos(:,3)*Settings.ImInfo.zum;
 
-%Extract Dend positions
+% Extract Dend positions
+% Mids = middle position of each dendritic segment
+% Length = length of each dendritic segement
 Mids = mean(AllSegCut,3); % segment xyz position calculated as mean of two node positions
 Length = sqrt((AllSegCut(:,1,1)-AllSegCut(:,1,2)).^2 + (AllSegCut(:,2,1)-AllSegCut(:,2,2)).^2 + (AllSegCut(:,3,1)-AllSegCut(:,3,2)).^2);
 
-Nearest = zeros(size(DPos, 1),1);
-for i = 1:size(DPos,1)
-    Ndist       = dist2(Mids,DPos(i,:)); %find dist from dot to all nodes
-    Near        = min(Ndist); %find shortest distance
-    Nearest(i)  = find(Ndist==Near,1); %get node at that distance
+Nearest = zeros(size(Dots.Pos, 1),1);
+for i = 1:size(Dots.Pos,1)
+    Ndist       = dist2(Mids, Dots.Pos(i,:));   % find dist from dot to all nodes
+    Near        = min(Ndist);                   % find shortest distance
+    Nearest(i)  = find(Ndist==Near,1);          % get node at that distance
 end
-NN = Mids(Nearest,:); %assign that node to NearestNode list for dots
-
-% Image is shrunck so that number of 
-yNumVox = fix(Settings.ImInfo.yNumVox * Settings.ImInfo.xyum)+1; % yNumVox is the rounded um of the image in y direction.
-xNumVox = fix(Settings.ImInfo.xNumVox * Settings.ImInfo.xyum)+1; % xNumVox is the rounded um of the image in y direction.
-Msize = [yNumVox xNumVox];     % 2048*2048 with 0.103um xy pixel size becomes Settings.ImInfo.yNumVox=Settings.ImInfo.xNumVox=211.
+NN = Mids(Nearest,:); % assign that node to NearestNode list for dots
 
 % create Nearest Node list (nearest node for each dot and distance)
-Mids(Mids<1) = 1;
-NN(NN<1) = 1;
-Mids(Mids(:,1)>yNumVox,1) = yNumVox;
-NN(NN(:,1)>yNumVox,1) = yNumVox;
-Mids(Mids(:,2)>xNumVox,2) = xNumVox;
-NN(NN(:,2)>xNumVox,2) = xNumVox;
+% Mids(Mids<1) = 1;
+% NN(NN<1) = 1;
+% Mids(Mids(:,1)>yNumVox,1) = yNumVox;
+% NN(NN(:,1)>yNumVox,1) = yNumVox;
+% Mids(Mids(:,2)>xNumVox,2) = xNumVox;
+% NN(NN(:,2)>xNumVox,2) = xNumVox;
 
 clear sMids sNN
 sMids = Mids;
@@ -66,12 +63,12 @@ sNN = round(sNN); %%This rounds up all the sNN to 1um step.
 % this part is calculating the density of dots (#/um2) or the density of
 % arbors (um/um2) in each 1um pixel area.
 
-DotMap = zeros(Msize(1),Msize(2)); %DotMap will be 211*211 if the image is 2048*2048 with 0.103um xy pixel size.
+DotMap = zeros(Settings.ImInfo.yNumVox,Settings.ImInfo.xNumVox); %DotMap will be 211*211 if the image is 2048*2048 with 0.103um xy pixel size.
 for i = 1:size(sNN,1)
     DotMap(sNN(i,1),sNN(i,2)) = DotMap(sNN(i,1),sNN(i,2))+1; %if you have >1 dot within the 1um pixel field, you gain more value.
 end
 
-DendMap = zeros(Msize(1),Msize(2)); %DotMap will be 211*211 if the image is 2048*2048 with 0.103um xy pixel size.
+DendMap = zeros(Settings.ImInfo.yNumVox,Settings.ImInfo.xNumVox); %DotMap will be 211*211 if the image is 2048*2048 with 0.103um xy pixel size.
 for i = 1:size(sMids,1)
     DendMap(sMids(i,1),sMids(i,2)) = DendMap(sMids(i,1),sMids(i,2))+Length(i); %if you have >1 arbor within the 1um pixel field, you gain more value. Also, if the arbor is long, you gain more value.
 end
@@ -81,8 +78,8 @@ end
 % So, instead of each 1um pixel representing the density of that particular
 % pixel, it represents the average density of dots within the 10um area
 
-AreaS    = 10; %filter is 10um RADIUS disk (because one pixel is 1um*1um).
-Disk     = fspecial('disk',AreaS); %fspecial geneartes averaging filter. It averages the pixel values in the 21*21 circular area.
+RadiusPx = Radius / Settings.ImInfo.xyum;
+Disk     = fspecial('disk',RadiusPx); %fspecial geneartes averaging filter. It averages the pixel values in the 21*21 circular area.
 DotFilt  = imfilter(DotMap,Disk,'same');
 DendFilt = imfilter(DendMap,Disk,'same');
 
@@ -98,7 +95,7 @@ DendFilt = imfilter(DendMap,Disk,'same');
 % P/A, mean D/A and mean P/D were calculated by averaging all the pixels
 % WITHIN THE TERRITORY.
 
-Disk2       = fspecial('disk',5); % For territory, use 5um RADIUS averaging disk filter.
+Disk2       = fspecial('disk',RadiusPx); % For territory, use 5um RADIUS averaging disk filter.
 Territory   = imfilter(DendMap,Disk2,'same');
 DotDist     = DotFilt.*Territory;
 DendDist    = DendFilt.*Territory;
@@ -109,7 +106,7 @@ Density.Territory   = Territory;
 Density.DotDist     = DotDist;
 Density.DendDist    = DendDist;
 
-if showPlot
+if ShowPlot
     figure;
     cmap = jet(256);
     cmap(1,:) = 0;
@@ -131,12 +128,16 @@ if showPlot
     title('Perimeter highlighted');
     pause(2);    
     % Drap heatmap of linear density (P/D)
-    image(DotDist./DendDist*256);
-    title('Puncta/Dendrite (linear density) (0-1 dots/µm)');
+    LinearDensity = DotDist ./ DendDist;
+    LinearDensity(LinearDensity == 0) = 0.01;
+    LinearDensity(isnan(LinearDensity)) = 0;
+    LinearDensityMax = max(LinearDensity(:));
+    image(LinearDensity * 256 * LinearDensityMax);
+    title(['Puncta/Dendrite (linear density) (0-' num2str(LinearDensityMax) 'dots/µm)']);
     colorbar('Ytick',[]); %Adam added color bar 3/11/2011
     axis image; % adding color bar changes image x y dimention, so resize the image.
     axis off    % remove the axis
-    saveas(gcf,[Settings.TPN 'images' filesep 'HeatmapLinearDensity.tif']);
+    %saveas(gcf,[Settings.TPN 'images' filesep 'HeatmapLinearDensity.tif']);
 end
 end
 

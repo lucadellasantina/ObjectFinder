@@ -16,32 +16,39 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function D = calcDotDensityAlongZ(Settings, Objs, Mask, showPlot)
+function D = calcDotDensityAlongZ(Settings, Objs, Mask, BinsNum, showPlot)
 %% Accumulate passing dots coordinates (xyz) into dPosPassF
 D.zStart = 1;                    % Analyze the entire volume
 D.zEnd = Settings.ImInfo.zNumVox; % Analyze the entire volume
-D.binSize = (D.zEnd - D.zStart)/100; % binning densities every 1 percent of Z-depth
+D.binSize = (D.zEnd - D.zStart)/BinsNum; % binning densities every 1 percent of Z-depth
+D.binNum = BinsNum;
+VoxelVolume = Objs.Settings.ImInfo.xyum * Objs.Settings.ImInfo.xyum * Objs.Settings.ImInfo.zum;
 
 if D.zEnd == D.zStart
     % 2D image (single Z plane)
     D.density = size(Objs.Pos, 1);
-    D.densityPerc = zeros(1, 100);
-    for i = 1:100
+    D.densityPerc = zeros(1, BinsNum);
+    for i = 1:BinsNum
         D.densityPerc(i) = Density;
     end
     
 else
     % 3D image (multiple Z planes) 
     D.density = zeros(1, (D.zEnd - D.zStart +1));
-    D.densityPerc = zeros(1, 100);
-    D.densityPercMask = zeros(1, 100);
-
+    D.densityPerc = zeros(1, BinsNum);
+    D.densityPercMask = zeros(1, BinsNum);
+    D.volume = zeros(1, (D.zEnd - D.zStart +1));    
+    D.volumePerc = zeros(1, BinsNum);
+    D.volumePercMask = zeros(1, BinsNum);
+    
     for i = D.zStart: D.zEnd -1
         D.density(i) = numel(find(Objs.Pos(:,3) == i));
+        D.volume(i) = mean(Objs.Vol(Objs.Pos(:,3) == i))*VoxelVolume;
     end
     
-    for i = 1:100
+    for i = 1:BinsNum
         D.densityPerc(i) = D.density(ceil(i*D.binSize));
+        D.volumePerc(i) = D.volume(ceil(i*D.binSize));
     end
     
     if ~isempty(Mask) && ~isempty(find(Mask.I(:), 1))        
@@ -58,12 +65,13 @@ else
             zStart  = find(zMask, 1);
             zEnd    = find(zMask, 1, 'last');
             PosPerc(i,3) = (PosPerc(i,3)-zStart) / (zEnd-zStart);
-            PosPerc(i,3) = round(PosPerc(i,3)*100);
+            PosPerc(i,3) = round(PosPerc(i,3)*BinsNum);
         end
         
         % Cound how many dots in each % bin
-        for i = 1:100
+        for i = 1:BinsNum
             D.densityPercMask(i) = numel(find(PosPerc(:,3) == i));
+            D.volumePercMask(i) = mean(Objs.Vol(PosPerc(:,3) == i))*VoxelVolume;
         end            
     end
 end
@@ -79,9 +87,9 @@ if showPlot
     nexttile;
     hold on;
     tmpY = D.densityPerc;
-    tmpX = 1:100;
+    tmpX = (1:BinsNum)*100/BinsNum;
     plot(tmpX, tmpY, 'k', 'MarkerSize', 8);
-    plot(1:100, D.densityPercMask, 'r', 'MarkerSize', 8);    
+    plot(tmpX, D.densityPercMask, 'r', 'MarkerSize', 8);    
     box off;
     set(gca, 'color', 'none',  'TickDir','out');
     ylabel('Number of objects');
@@ -93,12 +101,14 @@ if showPlot
               *Settings.ImInfo.xyum * Settings.ImInfo.yNumVox...
               *Settings.ImInfo.zum * D.binSize;
     tmpY = D.densityPerc / sizeBin;
-    tmpX = 1:100;
+    tmpX = (1:BinsNum)*100/BinsNum;
     plot(tmpX, tmpY, 'k', 'MarkerSize', 8);
 
-    MaskedVoxN = numel(find(Mask.I));
-    MaskBinVolume = Settings.ImInfo.xyum *Settings.ImInfo.xyum *Settings.ImInfo.zum * MaskedVoxN / 100;    
-    plot(1:100, D.densityPercMask / MaskBinVolume, 'r', 'MarkerSize', 8);    
+    if ~isempty(Mask)
+        MaskedVoxN = numel(find(Mask.I));
+        MaskBinVolume = Settings.ImInfo.xyum *Settings.ImInfo.xyum *Settings.ImInfo.zum * MaskedVoxN / BinsNum;    
+        plot(tmpX, D.densityPercMask / MaskBinVolume, 'r', 'MarkerSize', 8);    
+    end
     
     box off;
     set(gca, 'color', 'none',  'TickDir','out');
