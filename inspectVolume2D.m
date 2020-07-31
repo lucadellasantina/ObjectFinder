@@ -993,7 +993,13 @@ if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(Post,2)) && (Pos(2) < size(Pos
     end
     ValObjIDs = find(valIcut); % IDs of valid objects within field of view  
     RejObjIDs = find(rejIcut); % IDs of rejected objects within field of view 
-    VisObjIDs = [ValObjIDs; RejObjIDs]; % IDs of objects within field of view 
+    
+    % Concatenate objects lists depending on whether they are in columns or rows
+    if size(ValObjIDs,1) == 1
+        VisObjIDs = [ValObjIDs, RejObjIDs]; % IDs of objects within field of view 
+    else
+        VisObjIDs = [ValObjIDs; RejObjIDs]; % IDs of objects within field of view 
+    end
     
     % Flag valid and rejected object IDs within zoomed area    
     for i=1:numel(ValObjIDs)
