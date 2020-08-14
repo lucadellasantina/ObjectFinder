@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3442360435" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="898562786" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
     <param.appname>Object Finder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email />
@@ -12,8 +12,8 @@
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tp232357eb_28a4_45a5_8bef_7f4d5daf46dd.png</param.screenshot>
-    <param.version>8.8</param.version>
+    <param.screenshot>/tmp/tpb2798398_c799_486a_910c_cd149e4404c3.png</param.screenshot>
+    <param.version>8.9</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Deep Learning Toolbox</item>
@@ -45,6 +45,7 @@
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
+      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/editStruct.m</file>
       <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>
@@ -104,7 +105,6 @@
       <file>${PROJECT_ROOT}/shollAnalysis.m</file>
       <file>${PROJECT_ROOT}/skeletonizeMask.m</file>
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/TrachomaFinder/editStruct.m</file>
       <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/Skel2Graph3D.m</file>
       <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>

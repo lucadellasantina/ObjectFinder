@@ -8,11 +8,11 @@
       <file>${PROJECT_ROOT}\ObjectFinder_1_resources\icon_24.png</file>
       <file>${PROJECT_ROOT}\ObjectFinder_1_resources\icon_16.png</file>
     </param.icons>
-    <param.version>8.0</param.version>
+    <param.version>8.8</param.version>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
     <param.company />
-    <param.summary>Find objects (e.g. synapses) in three-dimentional image stacks.</param.summary>
+    <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
     <param.screenshot>${PROJECT_ROOT}\app-icon\ObjectFinder.png</param.screenshot>
     <param.guid />
@@ -82,10 +82,12 @@
     <fileset.package />
     <fileset.depfun>
       <file>${MATLAB_ROOT}\toolbox\local\userpath.m</file>
+      <file>D:\Dropbox\Colocalizazion\ON-S PKC CtBP2\LIOH_14d\651L_14d_img001\Settings.mat</file>
       <file>${PROJECT_ROOT}\calcDensity.m</file>
+      <file>${PROJECT_ROOT}\calcDotDensityAlongY.m</file>
       <file>${PROJECT_ROOT}\calcDotDensityAlongZ.m</file>
-      <file>${PROJECT_ROOT}\calcNN.m</file>
       <file>${PROJECT_ROOT}\calcPathLengthStats.m</file>
+      <file>${PROJECT_ROOT}\calcSkelDistToSoma.m</file>
       <file>${PROJECT_ROOT}\calcSkelPathLength.m</file>
       <file>${PROJECT_ROOT}\colocAutoEngulf.m</file>
       <file>${PROJECT_ROOT}\colocAutoMask.m</file>
@@ -115,6 +117,7 @@
       <file>${PROJECT_ROOT}\inpoly2.m</file>
       <file>${PROJECT_ROOT}\inpolygon_fast.m</file>
       <file>${PROJECT_ROOT}\inspectVolume2D.m</file>
+      <file>${PROJECT_ROOT}\inspectVolume3D.m</file>
       <file>${PROJECT_ROOT}\listImages.m</file>
       <file>${PROJECT_ROOT}\listNetwork.m</file>
       <file>${PROJECT_ROOT}\listObjects.m</file>
@@ -125,73 +128,73 @@
       <file>${PROJECT_ROOT}\loadNetwork.m</file>
       <file>${PROJECT_ROOT}\loadObjects.m</file>
       <file>${PROJECT_ROOT}\loadPreset.m</file>
-      <file>${PROJECT_ROOT}\loadSettings.m</file>
       <file>${PROJECT_ROOT}\loadSimulation.m</file>
       <file>${PROJECT_ROOT}\loadSkel.m</file>
       <file>${PROJECT_ROOT}\NewExperiment.mlapp</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Add-Folder.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Angler-Fish.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-BarPlot.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Blow-Fish.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-calculator.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Cancel.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-copy.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Crab.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Delete.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-dice-add.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-dice-remove.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-dice.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit-clear.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit-copy.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit-delete-2.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Edit.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-export.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Filter.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-FindObjects.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fish-Bone.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fruit-2cherries-cross.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Fruit-3cherries.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-bottom.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-down.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-top.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Go-up.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Heatmap.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Histogram.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-HomeFolder.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-image.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-import.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-info.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Inspect.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-List-add.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-List-remove.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Manual.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Map-Treaure.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Masks.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Measure.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-MIP.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-monkey.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-new.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-objects.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-PacMan.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Paint-Mask.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-render.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-save.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-scales.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-settings.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Sholl.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Tentacle.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Text-x-generic_with_pencil.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Training-set.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-trash.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-unblock-granted.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-View-refresh.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-web-browser.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Whale-Small-Fish.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\48px-Whale-Tail.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\72px-Batch-process.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\app_icon_big.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\bug.png</file>
-      <file>${PROJECT_ROOT}\ObjectFinder_resources\Fruit-2cherries-check.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Add-Folder.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Angler-Fish.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-BarPlot.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Blow-Fish.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-calculator.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Cancel.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-copy.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Crab.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Delete.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-dice-add.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-dice-remove.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-dice.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Edit-clear.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Edit-copy.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Edit-delete-2.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Edit.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-export.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Filter.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-FindObjects.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Fish-Bone.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Fruit-2cherries-cross.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Fruit-3cherries.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Go-bottom.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Go-down.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Go-top.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Go-up.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Heatmap.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Histogram.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-HomeFolder.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-image.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-import.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-info.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Inspect.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-List-add.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-List-remove.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Manual.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Map-Treaure.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Masks.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-MasksColored.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Measure.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-MIP.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-monkey.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-new.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-objects.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-PacMan.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Paint-Mask.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-render.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-save.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-scales.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-settings.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Sholl.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Tentacle.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Text-x-generic_with_pencil.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Training-set.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-trash.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-unblock-granted.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-View-refresh.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-web-browser.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Whale-Small-Fish.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\48px-Whale-Tail.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\72px-Batch-process.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\app_icon_big.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\bug.png</file>
+      <file>${PROJECT_ROOT}\Object Finder_resources\Fruit-2cherries-check.png</file>
       <file>${PROJECT_ROOT}\saveastiff.m</file>
       <file>${PROJECT_ROOT}\saveNetwork.m</file>
       <file>${PROJECT_ROOT}\saveObjects.m</file>
@@ -201,8 +204,9 @@
       <file>${PROJECT_ROOT}\saveSkel.m</file>
       <file>${PROJECT_ROOT}\shollAnalysis.m</file>
       <file>${PROJECT_ROOT}\SimpleSettings.mlapp</file>
+      <file>${PROJECT_ROOT}\skeletonizeMask.m</file>
       <file>${PROJECT_ROOT}\validateObjectWithNeuralNet.m</file>
-      <file>D:\Dropbox\MATLAB scripts\ObjectFinder_TestStacks\AOSLO\Settings.mat</file>
+      <file>D:\Dropbox\MATLAB scripts\TrachomaFinder\editStruct.m</file>
     </fileset.depfun>
     <build-deliverables>
       <file location="${PROJECT_ROOT}\ObjectFinder_1\for_testing" name="splash.png" optional="false">D:\Dropbox\MATLAB scripts\ObjectFinder\ObjectFinder_1\for_testing\splash.png</file>
@@ -211,7 +215,7 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2019b</root>
+      <root>C:\Program Files\MATLAB\R2020a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="neuralnetwork" />

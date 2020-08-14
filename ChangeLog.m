@@ -23,10 +23,18 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
+%  _*Version 8.9*             created on 2020-08-14 by Luca Della Santina_
+%
+%   + Colocalize: Plot double-colocalization analysis
+%   + Automate: Report colocalization rates
+%
 %  _*Version 8.8*             created on 2020-07-24 by Luca Della Santina_
 %
 %   + Custom binning for density by depth and volume by depth plots
-%   + Bugfixes
+%   + Calculate density along Z (whole-mount) or Y (sections) axis
+%   + Automation: Add folders recursively search all subfolder levels
+%   + Automation: Add folders ignores invalid objectfinder project folders
+%   + Colocalize: Fixed bug preventing to check colocalized objects
 %
 %  _*Version 8.6*             created on 2020-05-01 by Luca Della Santina_
 %
