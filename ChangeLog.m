@@ -27,6 +27,9 @@
 %
 %   + Colocalize: Plot double-colocalization analysis
 %   + Automate: Report colocalization rates
+%   + Inspect2D: Green/Magenta colorscheme for colorblind people
+%   + Inspect2D/manualColoc: Save snapshot button to save current screen
+%   + Inspect2D: circa 20% speed-up and lower memory footprint
 %
 %  _*Version 8.8*             created on 2020-07-24 by Luca Della Santina_
 %

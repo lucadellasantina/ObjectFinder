@@ -25,6 +25,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     size_video = [0 0.03 0.87 0.97]; % default video window size
     click = 0;
     LastDotNum = 0;
+    frame_handle = 0;
     [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
     num_frames = size(ImStk,3);
 	f = ceil(num_frames/2); % Current frame
@@ -86,8 +87,9 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
         btnColoc2     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual2.Fish1],'CallBack',@btnColoc2_clicked); %#ok, unused variable
         btnColoc12    = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.290,.110,.100], 'String','<html><center>Double<br>Colocalized','CallBack',@btnColoc12_clicked); %#ok, unused variable        
         btnNotValid   = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.200,.110,.050], 'String','<html><center>Invalid Object','CallBack',@btnNotValid_clicked); %#ok, unused variable
-    end    
-    btnSave      = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.030,.110,.050], 'String','Save','Callback',@btnSave_clicked); %#ok, unused variable
+    end
+    btnSnapshot  = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.090,.110,.040],'String','Screenshot','Callback',@btnSnapshot_clicked); %#ok, unused variable
+    btnSave      = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.030,.110,.050],'String','Save','Callback',@btnSave_clicked); %#ok, unused variable
     
     % Main drawing axes for video display
     if size_video(2) < 0.03; size_video(2) = 0.03; end % Bottom 0.03 must be used for scroll bar HO 2/17/2011
@@ -98,6 +100,14 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
 	scroll_func = @scroll; %#ok
     scroll(f);
     uiwait;
+    
+    function btnSnapshot_clicked(src, event) %#ok, unused arguments
+        % Save a snapshot of current image to disk
+        CData = get(frame_handle, 'CData');
+        FileName = ['Screenshot_' datestr(now, 'yyyy-mm-dd_HH-MM_AM') '.tif'];
+        imwrite(CData, [pwd filesep 'Results' filesep FileName]);
+        msgbox([FileName ' saved in results folder.'], 'Saved', 'help');
+    end
     
     function [ImStk, DotNum, NumRemainingDots] = getNewImageStack()
         RemainingDotIDs = ColocManual.ListDotIDsManuallyColocAnalyzed(ColocManual.ColocFlag == 0);
@@ -456,7 +466,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
 		
 		%set to the right axes and call the custom redraw function
 		set(fig_handle, 'CurrentAxes', axes_handle);
-		colocRedraw(f, ImStk, 'gray(256)');
+		frame_handle = colocRedraw(f, ImStk, 'gray(256)');
 		
 		%used to be "drawnow", but when called rapidly and the CPU is busy
 		%it didn't let Matlab process events properly (ie, close figure).
@@ -465,24 +475,25 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
 	
 end
 
-function colocRedraw(frame, vidObj, colmap)
-%   REDRAW (FRAME, VIDOBJ)
-%       frame  - frame number to process
-%       vidObj - mmread object
-%       colmap - colormap of your image, not necessary for RGB image, and
-%                even if you specify any colormap for RGB, it will not do
-%                anything to your image.
+function image_handle = colocRedraw(frame, vidObj, colmap)
+    %   REDRAW (FRAME, VIDOBJ)
+    %       frame  - frame number to process
+    %       vidObj - mmread object
+    %       colmap - colormap of your image, not necessary for RGB image, and
+    %                even if you specify any colormap for RGB, it will not do
+    %                anything to your image.
 
-% Check if vidOjb is RGB or gray, and read frame
-if size(vidObj, 4) == 3 %RGB 3-D matrix (4th dimention is R, G, B)
-    f = squeeze(vidObj(:,:,frame,:));
-else
-    f = vidObj(:,:,frame);
-end
+    % Check if vidOjb is RGB or gray, and read frame
+    if size(vidObj, 4) == 3 %RGB 3-D matrix (4th dimention is R, G, B)
+        f = squeeze(vidObj(:,:,frame,:));
+    else
+        f = vidObj(:,:,frame);
+    end
 
-% Display
-image(f); axis image off
-if exist('colmap', 'var')
-    colormap(colmap);
-end
+    % Display
+    image_handle = image(f); 
+    axis image off
+    if exist('colmap', 'var')
+        colormap(colmap);
+    end
 end
