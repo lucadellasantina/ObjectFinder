@@ -65,7 +65,7 @@ function Dots = inspectVolume2D(I, Dots, Filter)
     pnlSettings     = uipanel(  'Title','Objects'   ,'Units','normalized','Position',[.003,.005,.195,.99]); %#ok, unused variable
     txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.940,.185,.02],'String',['Valid: ' num2str(numel(find(Filter.passF)))]);
     txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.910,.185,.02],'String',['Total: ' num2str(numel(Filter.passF))]);
-    chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.130,.875,.060,.02],'String','Show', 'Value',1, 'tooltip', 'Color Objects (spacebar)','Callback',@chkShowObjects_changed);
+    chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.130,.875,.060,.02],'String','Show', 'Value',1, 'tooltip', 'Color Objects (based on validation status)','Callback',@chkShowObjects_changed);
     cmbAction       = uicontrol('Style','popup'     ,'Units','normalized','Position',[.007,.860,.120,.04],'String', {'Select (s)', 'Refine (r)'}, 'tooltip', 'Current Action','Callback', @cmbAction_changed);    
     
     % Primary filter parameter controls
@@ -92,20 +92,20 @@ function Dots = inspectVolume2D(I, Dots, Filter)
     txtSelObjRound  = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.542,.090,.02],'String','Round: N/A');
     txtSelObjLength = uicontrol('Style','text'      ,'Units','normalized','position',[.095,.542,.090,.02],'String','Length: N/A');    
 
-    btnMoveLeft     = uicontrol('Style','Pushbutton','Units','normalized','position',[.007,.390,.060,.07],'cdata',IconMoveLeft,  'tooltip', 'Move Left (a)','Callback',@move_left); %#ok, unused variable
-    btnMoveUp       = uicontrol('Style','Pushbutton','Units','normalized','position',[.069,.460,.060,.07],'cdata',IconMoveUp,    'tooltip', 'Move Up (w)','Callback',@move_up); %#ok, unused variable
+    btnMoveLeft     = uicontrol('Style','Pushbutton','Units','normalized','position',[.007,.390,.060,.07],'cdata',IconMoveLeft,  'tooltip', 'Move Left','Callback',@move_left); %#ok, unused variable
+    btnMoveUp       = uicontrol('Style','Pushbutton','Units','normalized','position',[.069,.460,.060,.07],'cdata',IconMoveUp,    'tooltip', 'Move Up','Callback',@move_up); %#ok, unused variable
     btnMoveCenter   = uicontrol('Style','Pushbutton','Units','normalized','position',[.069,.390,.060,.07],'cdata',IconMoveCenter,'tooltip', 'Move to Center','Callback',@move_center); %#ok, unused variable
-    btnMoveDown     = uicontrol('Style','Pushbutton','Units','normalized','position',[.069,.320,.060,.07],'cdata',IconMoveDown,  'tooltip', 'Move Down (s)','Callback',@move_down); %#ok, unused variable
-    btnMoveRight    = uicontrol('Style','Pushbutton','Units','normalized','position',[.132,.390,.060,.07],'cdata',IconMoveRight, 'tooltip', 'Move Right (d)','Callback',@move_right); %#ok, unused variable
+    btnMoveDown     = uicontrol('Style','Pushbutton','Units','normalized','position',[.069,.320,.060,.07],'cdata',IconMoveDown,  'tooltip', 'Move Down','Callback',@move_down); %#ok, unused variable
+    btnMoveRight    = uicontrol('Style','Pushbutton','Units','normalized','position',[.132,.390,.060,.07],'cdata',IconMoveRight, 'tooltip', 'Move Right','Callback',@move_right); %#ok, unused variable
         
     txtValidation   = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.295,.185,.02],'String','Change Validation'); %#ok, unused variable
     btnValidate     = uicontrol('Style','Pushbutton','Units','normalized','position',[.007,.220,.060,.07],'cdata',IconValidate, 'tooltip', 'Validate Selected Objects','Callback',@btnValidate_clicked); %#ok, unused variable
-    btnToggleValid  = uicontrol('Style','Pushbutton','Units','normalized','position',[.069,.220,.060,.07],'cdata',IconSwitch,   'tooltip', 'Switch Validation Value (v)','Callback',@btnToggleValid_clicked); %#ok, unused variable
+    btnToggleValid  = uicontrol('Style','Pushbutton','Units','normalized','position',[.069,.220,.060,.07],'cdata',IconSwitch,   'tooltip', 'Switch Validation for Selected Objects','Callback',@btnToggleValid_clicked); %#ok, unused variable
     btnReject       = uicontrol('Style','Pushbutton','Units','normalized','position',[.132,.220,.060,.07],'cdata',IconReject,   'tooltip', 'Reject Selected Objects','Callback',@btnReject_clicked); %#ok, unused variable
 
     txtZoom         = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.190,.185,.02],'String','Change Zoom'); %#ok, unused variable
-    btnZoomIn       = uicontrol('Style','Pushbutton','Units','normalized','position',[.007,.115,.060,.07],'cdata',IconZoomIn,   'tooltip', 'Zoom In (+)','Callback',@btnZoomIn_clicked); %#ok, unused variable
-    btnZoomOut      = uicontrol('Style','Pushbutton','Units','normalized','position',[.069,.115,.060,.07],'cdata',IconZoomOut,  'tooltip', 'Zoom Out (-)','Callback',@btnZoomOut_clicked); %#ok, unused variable
+    btnZoomIn       = uicontrol('Style','Pushbutton','Units','normalized','position',[.007,.115,.060,.07],'cdata',IconZoomIn,   'tooltip', 'Zoom In','Callback',@btnZoomIn_clicked); %#ok, unused variable
+    btnZoomOut      = uicontrol('Style','Pushbutton','Units','normalized','position',[.069,.115,.060,.07],'cdata',IconZoomOut,  'tooltip', 'Zoom Out','Callback',@btnZoomOut_clicked); %#ok, unused variable
     btnZoomFit      = uicontrol('Style','Pushbutton','Units','normalized','position',[.132,.115,.060,.07],'cdata',IconZoomFit,  'tooltip', 'Full Image','Callback',@btnZoomFit_clicked); %#ok, unused variable
 
     txtSave         = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.087,.185,.02],'String','Save Current Data'); %#ok, unused variable
@@ -587,9 +587,6 @@ function Dots = inspectVolume2D(I, Dots, Filter)
         Filter = filterObjects(Dots, Filter.FilterOpts);
         set(txtValidObjs,'string',['Valid Objects: ' num2str(numel(find(Filter.passF)))]);
         scroll(frame, 'right');
-        simulatedClick = true;        
-        SimulateClick;
-        simulatedClick = false;        
     end
 
     function selectDotsWithinPolyArea(xv, yv)
@@ -1127,7 +1124,7 @@ function Dots = inspectVolume2D(I, Dots, Filter)
     	% Move scroll bar to new position
         scroll_x = (frame - 1) / nFrames;
         set(scroll_handle, 'XData', scroll_x + [0 1 1 0] * scroll_bar_width);
-        set(fig_handle, 'Name', ['Slice ' num2str(frame) '/' num2str(nFrames) ' - Zoom:' num2str(10*ceil(10*Isize(1)/CutNumVox(1)),'%u') '% (Green=Valid, Magenta=Rejected, Yellow=Selected)']);        
+        set(fig_handle, 'Name', ['Slice ' num2str(frame) '/' num2str(nFrames) ' - Zoom:' num2str(ceil(100*Isize(1)/CutNumVox(1)),'%u') '% (Green=Valid, Magenta=Rejected, Yellow=Selected)']);        
         
         %set to the right axes and call the custom redraw function
         set(fig_handle, 'CurrentAxes', axes_handle);

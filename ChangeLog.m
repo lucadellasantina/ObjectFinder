@@ -23,6 +23,16 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
+%  _*Version 9.0*             created on 2020-08-23 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2020b, now required
+%   + App icon shows on titlebar and windows tray / mac dock
+%   + Redesigned Sliced Volume Inspector
+%   + inspectVolume2D: Speed up ~50% by drawing one view/slice at a time
+%   + inspectVolume2D: Current slice number and zoom level show in titlebar
+%   + inspectVolume2D: Screenshot highlights current zoomed region
+%   + inspectVolume2D: Fixed misalignement when zooming 1:1 from uncentered
+%
 %  _*Version 8.9*             created on 2020-08-14 by Luca Della Santina_
 %
 %   + Colocalize: Plot double-colocalization analysis
