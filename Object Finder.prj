@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1883079430" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2005645525" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
     <param.appname>Object Finder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email />
@@ -12,7 +12,7 @@
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tp7fb376df_e636_4f72_8635_974ee0bf6cab.png</param.screenshot>
+    <param.screenshot>/tmp/tpdea64574_a210_46d6_88ec_d58f9727f0a6.png</param.screenshot>
     <param.version>9.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
@@ -104,6 +104,8 @@
       <file>${PROJECT_ROOT}/shollAnalysis.m</file>
       <file>${PROJECT_ROOT}/skeletonizeMask.m</file>
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/Skel2Graph3D.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/editStruct.m</file>
       <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>

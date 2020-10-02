@@ -32,10 +32,11 @@ function [Image, ImInfo, MIP, ImRes] = loadImage(FileName)
             Image = uint8(imread_big([PathName FileName]));
         else
             ImInfo = imfinfo([PathName FileName]);
-            Image = zeros(ImInfo(1).Height, ImInfo(1).Width, length(ImInfo));
-            for j = 1:length(ImInfo)
-                Image(:,:,j)=imread([PathName FileName], j);
-            end
+%             Image = zeros(ImInfo(1).Height, ImInfo(1).Width, length(ImInfo));
+%             for j = 1:length(ImInfo)
+%                 Image(:,:,j)=imread([PathName FileName], j);
+%             end
+            Image = tiffreadVolume([PathName FileName]);
             Image = uint8(Image);
         end
         

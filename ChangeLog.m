@@ -32,6 +32,10 @@
 %   + inspectVolume2D: Current slice number and zoom level show in titlebar
 %   + inspectVolume2D: Screenshot highlights current zoomed region
 %   + inspectVolume2D: Fixed misalignement when zooming 1:1 from uncentered
+%   + Automate: Report average NN distance / overlap with S.D.
+%   + Detect tab: new button to assign mask to current objects
+%   + Detect objects: assert that selected mask and image are same size
+%   + loadImage: using memory efficient tiffreadVolume()
 %
 %  _*Version 8.9*             created on 2020-08-14 by Luca Della Santina_
 %
