@@ -36,6 +36,7 @@
 %   + Detect tab: new button to assign mask to current objects
 %   + Detect objects: assert that selected mask and image are same size
 %   + loadImage: using memory efficient tiffreadVolume()
+%   + Automate: Fixed error when batch detecting objects without a mask
 %
 %  _*Version 8.9*             created on 2020-08-14 by Luca Della Santina_
 %
