@@ -99,14 +99,14 @@ if SomaPtID ~= -1
 end
 Skel.SegStats.Seg=Seg;
 Skel.SegStats.Lengths=Lengths;
-Skel.Name = vAnswer_yes;
+Skel.Name = aFilament.mName;
 
 % Generate an unique identifier using Java's UUID generator
 tmp      = java.util.UUID.randomUUID;
 tmpStr   = tmp.toString;
 Skel.UID = tmpStr.toCharArray';
 
-% Save skeleton into the skeletons folder of the project
+%% Save skeleton into the skeletons folder of the project
 TPN = uigetdir;
 if ~exist([TPN filesep 'skeletons'], 'dir')
     mkdir([TPN filesep 'skeletons']);

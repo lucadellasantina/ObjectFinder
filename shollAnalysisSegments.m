@@ -16,8 +16,8 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function sholl = shollAnalysis(skel, step, debug)
-%% Calculate sholl analysis using a given stepping size (same units as skel.XYZ)
+function sholl = shollAnalysisSegments(skel, step, debug)
+%% Calculate sholl analysis using a given stepping size (same units as skel.FilStats.aXYZ)
 sholl = struct;
 sholl.stepSize = step;
 SomaPtID = skel.FilStats.SomaPtID +1; % Required because somas stored from C/C++ programs
@@ -49,23 +49,8 @@ for i = 1: numel(tmpShollRadius(:,1))
         plot(tmpXc, tmpYc, 'Color',[0.8,0.8,0.8]); 
     end
     
-    for j=1:numel(skel.branches)        
-        % Ensure current segment has at least 2 points to calculate intersections
-        if isfield(skel.branches, 'points') && size(skel.branches(j).points, 1) < 2
-            continue 
-        elseif isfield(skel.branches, 'XYZ') && size(skel.branches(j).XYZ, 1) < 2
-            continue % need at least 2 points to calculate intersections
-        end
-          
-        if isfield(skel.branches, 'points')        
-            if size(skel.branches(1).points,2) == 3
-                [tmpXi, ~] = intersections(skel.branches(j).points(:,1), skel.branches(j).points(:,2),tmpXc, tmpYc);
-            else
-                [tmpXi, ~] = intersections(skel.branches(j).points(:,4), skel.branches(j).points(:,5),tmpXc, tmpYc);
-            end
-        else
-            [tmpXi, ~] = intersections(skel.branches(j).XYZ(:,1), skel.branches(j).XYZ(:,2),tmpXc, tmpYc);
-        end
+    for j=1:size(skel.SegStats.Seg,1)        
+        [tmpXi, ~] = intersections(squeeze(skel.SegStats.Seg(j,1,:)), squeeze(skel.SegStats.Seg(j,2,:)),tmpXc, tmpYc);
         tmpShollRadius(i, 2) = tmpShollRadius(i, 2) + numel(tmpXi);
     end
 end
