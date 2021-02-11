@@ -1,8 +1,8 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1661194010" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3787147718" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
     <param.appname>Object Finder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
-    <param.email />
+    <param.email>luca.dellasantina@gmail.com</param.email>
     <param.company />
     <param.icon>${PROJECT_ROOT}/Object Finder_resources/icon_24.png</param.icon>
     <param.icons>
@@ -11,9 +11,9 @@
       <file>${PROJECT_ROOT}/Object Finder_resources/icon_16.png</file>
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
-    <param.description>Copyright 2016-2020 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tp407c6b0e_5256_4dce_bbf5_61f31742a987.png</param.screenshot>
-    <param.version>9.0</param.version>
+    <param.description>Copyright 2016-2021 Luca Della Santina</param.description>
+    <param.screenshot>/tmp/tped9d48f3_fd74_4315_ad54_33096f6119b8.png</param.screenshot>
+    <param.version>9.1</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Deep Learning Toolbox</item>
@@ -36,7 +36,6 @@
     <param.output>${PROJECT_ROOT}</param.output>
     <param.guid>912cbc5e-7b98-4c7b-a172-fdd315f64c21</param.guid>
     <unset>
-      <param.email />
       <param.company />
       <param.platforms />
       <param.output />
@@ -45,7 +44,6 @@
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/editStruct.m</file>
       <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>
@@ -71,6 +69,7 @@
       <file>${PROJECT_ROOT}/deleteNetwork.m</file>
       <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>
       <file>${PROJECT_ROOT}/distDotsToSkel.m</file>
+      <file>${PROJECT_ROOT}/editStruct.m</file>
       <file>${PROJECT_ROOT}/exportObjectsToImaris7.m</file>
       <file>${PROJECT_ROOT}/exportObjectsToImaris8.m</file>
       <file>${PROJECT_ROOT}/filterObjects.m</file>
@@ -149,7 +148,7 @@
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>5.8.0-33-generic</osver>
+      <osver>5.8.0-43-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>

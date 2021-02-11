@@ -22,6 +22,13 @@
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
+% TODO: bug in batch sometimes automatedmeasurements.csv is saved in the
+%       last folder visited instead of the root folder
+%
+%  _*Version 9.1*             created on 2021-02-10 by Luca Della Santina_
+%
+%   + Batch calculate Sholl analysis with custom bin number and size
+%   + Batch calculate density slong skeleton
 %
 %  _*Version 9.0*             created on 2020-08-23 by Luca Della Santina_
 %
