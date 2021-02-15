@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="3787147718" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1864466590" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
     <param.appname>Object Finder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -12,7 +12,7 @@
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2021 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tped9d48f3_fd74_4315_ad54_33096f6119b8.png</param.screenshot>
+    <param.screenshot>/tmp/tp519ff530_bc2d_4e2e_95a8_66cd9802679c.png</param.screenshot>
     <param.version>9.1</param.version>
     <param.products.name>
       <item>MATLAB</item>
