@@ -76,17 +76,17 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     txtCurrent   = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.900,.110,.020],'String',['Current: ' num2str(DotNum)]);
     txtRemaining = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.880,.110,.020],'String',['Left: ' num2str(NumRemainingDots)]);
 
-    btnResetLast = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.800,.110,.050], 'String','Reset last','CallBack',@btnResetLast_clicked); %#ok, unused variable        
+    btnResetLast = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.800,.110,.050], 'String','Reset last (r)','CallBack',@btnResetLast_clicked); %#ok, unused variable        
     if isempty(Colo2)
-        btnColoc    = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.510,.110,.100], 'String','Colocalized','CallBack',@btnColocalized_clicked); %#ok, unused variable
-        btnNotColoc = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String','<html><center>Not<br>Colocalized','CallBack',@btnNotColocalized_clicked); %#ok, unused variable
-        btnNotValid = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.300,.110,.050], 'String','<html><center>Invalid Object','CallBack',@btnNotValid_clicked); %#ok, unused variable
+        btnColoc    = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.510,.110,.100], 'String','Colocalized (c)','CallBack',@btnColocalized_clicked); %#ok, unused variable
+        btnNotColoc = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String','<html><center>Not<br>Colocalized (n)','CallBack',@btnNotColocalized_clicked); %#ok, unused variable
+        btnNotValid = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.300,.110,.050], 'String','<html><center>Invalid Object (i)','CallBack',@btnNotValid_clicked); %#ok, unused variable
     else
         btnNotColoc12 = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.620,.110,.100], 'String','<html><center>Not<br>Colocalized','CallBack',@btnNotColoc12_clicked); %#ok, unused variable        
         btnColoc1     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.510,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual.Fish1],'CallBack',@btnColoc1_clicked); %#ok, unused variable
         btnColoc2     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual2.Fish1],'CallBack',@btnColoc2_clicked); %#ok, unused variable
         btnColoc12    = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.290,.110,.100], 'String','<html><center>Double<br>Colocalized','CallBack',@btnColoc12_clicked); %#ok, unused variable        
-        btnNotValid   = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.200,.110,.050], 'String','<html><center>Invalid Object','CallBack',@btnNotValid_clicked); %#ok, unused variable
+        btnNotValid   = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.200,.110,.050], 'String','<html><center>Invalid Object (i)','CallBack',@btnNotValid_clicked); %#ok, unused variable
     end
     btnSnapshot  = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.090,.110,.040],'String','Screenshot','Callback',@btnSnapshot_clicked); %#ok, unused variable
     btnSave      = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.030,.110,.050],'String','Save','Callback',@btnSave_clicked); %#ok, unused variable
@@ -405,16 +405,34 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     end
     
 	function key_press(src, event)  %#ok, unused arguments
-		switch event.Key  %process shortcut keys
-		case 'leftarrow'
-			scroll(f - 1);
-		case 'rightarrow'
-			scroll(f + 1);
-		case 'home'
-			scroll(1);
-		case 'end'
-			scroll(num_frames);
-		end
+        switch event.Key  %process shortcut keys
+            case 'leftarrow'
+                scroll(f - 1);
+            case 'rightarrow'
+                scroll(f + 1);
+            case 'home'
+                scroll(1);
+            case 'end'
+                scroll(num_frames);
+            case 'c'
+                if isempty(Colo2)
+                    btnColocalized_clicked;
+                else
+                    btnColoc12_clicked;
+                end
+            case 'n'
+                if isempty(Colo2)
+                    btnNotColocalized_clicked;
+                else
+                    btnNotColoc12_clicked;
+                end
+            case 'i'
+                btnNotValid_clicked;
+            case 'r'
+                btnResetLast_clicked;
+            case 's'
+                btnSave_clicked;
+        end
 	end
 	
 	%mouse handler

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1864466590" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2838139533" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
     <param.appname>Object Finder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -12,7 +12,7 @@
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2021 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tp519ff530_bc2d_4e2e_95a8_66cd9802679c.png</param.screenshot>
+    <param.screenshot>/tmp/tp269c4dcc_4a7b_4284_9a48_4a17a1767997.png</param.screenshot>
     <param.version>9.1</param.version>
     <param.products.name>
       <item>MATLAB</item>
@@ -27,10 +27,10 @@
       <item>80</item>
     </param.products.id>
     <param.products.version>
-      <item>9.9</item>
-      <item>14.1</item>
-      <item>11.2</item>
-      <item>7.3</item>
+      <item>9.10</item>
+      <item>14.2</item>
+      <item>11.3</item>
+      <item>7.4</item>
     </param.products.version>
     <param.platforms />
     <param.output>${PROJECT_ROOT}</param.output>
@@ -104,7 +104,6 @@
       <file>${PROJECT_ROOT}/shollAnalysisSegments.m</file>
       <file>${PROJECT_ROOT}/skeletonizeMask.m</file>
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/Skel2Graph3D.m</file>
       <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>
@@ -117,7 +116,7 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>/home/luca/MATLAB/R2020b</root>
+      <root>/home/luca/MATLAB/R2021a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="gpucoder" />
@@ -148,7 +147,7 @@
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>5.8.0-43-generic</osver>
+      <osver>5.8.0-44-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>

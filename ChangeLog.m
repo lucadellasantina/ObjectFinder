@@ -28,6 +28,8 @@
 %   + Batch calculate Sholl analysis with custom bin number and size
 %   + Batch calculate density slong skeleton
 %   + Batch always save automatedmeasurements.csv in root folder
+%   + Objects density reported under summary statistics
+%   + Keyboard shortcuts for manual colocalization GUI
 %
 %  _*Version 9.0*             created on 2020-08-23 by Luca Della Santina_
 %
