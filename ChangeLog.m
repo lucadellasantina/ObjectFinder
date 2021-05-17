@@ -18,10 +18,21 @@
 %
 % *Change log*
 %
+% TODO: automatically convert to latest ObjectFinder version during batch
 % TODO: measure distance from closest skeleton and colocalize within it
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
+%
+%  _*Version 10.0*            created on 2021-04-25 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2021a
+%   + New streamlined format to store colocalizatin analysis
+%   + Removed old method of choosing images (btnChooseImages)
+%   + Automatic colocalization with rotated mask (90/180/270 deg)
+%   + Automatic colocalization with rotated objects (90/180/270 deg)
+%   + Verbose progress during automatic colocalization with mask
+%   + Colocalization stores rotation, centroid overlap, within distance
 %
 %  _*Version 9.1*             created on 2021-02-10 by Luca Della Santina_
 %
@@ -30,6 +41,7 @@
 %   + Batch always save automatedmeasurements.csv in root folder
 %   + Objects density reported under summary statistics
 %   + Keyboard shortcuts for manual colocalization GUI
+%   + Fixed calculation of pathlength2soma in batch density along skel
 %
 %  _*Version 9.0*             created on 2020-08-23 by Luca Della Santina_
 %

@@ -29,17 +29,20 @@
 function ColocAuto = colocAutoMask(srcDots, Colo, FileName, NumVoxOverlap, NumPercOverlap, CenterMustOverlap)
 %%
 [~, fName, ~] = fileparts(FileName);
-ColocAuto.Source        = srcDots.Name;
-ColocAuto.Fish1         = fName;
+ColocAuto.Ref = srcDots.Name;
+ColocAuto.Dst = fName;
+ColocAuto.Flag = zeros([1,numel(srcDots.Vox)], 'uint8');
 
-AutoColocAnalyzingFlag  = ones([1,numel(srcDots.Vox)], 'uint8');
-ColocAuto.ListDotIDsManuallyColocAnalyzed = find(AutoColocAnalyzingFlag == 1);
-ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
-ColocAuto.ColocFlag     = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
+ColocAuto.Settings.Method = 'AutoMask';
+ColocAuto.Settings.NumVoxOverlap = NumVoxOverlap;
+ColocAuto.Settings.NumPercOverlap = NumPercOverlap;
+ColocAuto.Settings.DistanceWithin = inf;
+ColocAuto.Settings.CentroidOverlap = CenterMustOverlap;
+ColocAuto.Settings.RotationAngle = 0;
 
-for i=1:numel(srcDots.Vox)
+for i= 1:numel(srcDots.Vox)
     if ~srcDots.Filter.passF(i)
-        ColocAuto.ColocFlag(i) = 3; % Invalid dot (filter==0)
+        ColocAuto.Flag(i) = 3; % Invalid dot (filter==0)
         continue
     end
     
@@ -52,7 +55,7 @@ for i=1:numel(srcDots.Vox)
         end
         
         if ~Colo(BrightPeakPos)
-            ColocAuto.ColocFlag(i) = 2; % Not Colocalized
+            ColocAuto.Flag(i) = 2; % Not Colocalized
             continue
         end
     end
@@ -64,20 +67,16 @@ for i=1:numel(srcDots.Vox)
     PercOverlap = 100 * VoxOverlap / srcDots.Vol(i);
     
     if (VoxOverlap >= NumVoxOverlap) && (PercOverlap >= NumPercOverlap)
-        ColocAuto.ColocFlag(i) = 1; % Colocalized
+        ColocAuto.Flag(i) = 1; % Colocalized
     else
-        ColocAuto.ColocFlag(i) = 2; % Not Colocalized
+        ColocAuto.Flag(i) = 2; % Not Colocalized
     end
 end
 
-ColocAuto.NumDotsColoc      = length(find(ColocAuto.ColocFlag == 1));
-ColocAuto.NumDotsNonColoc   = length(find(ColocAuto.ColocFlag == 2));
-ColocAuto.NumFalseDots      = length(find(ColocAuto.ColocFlag == 3));
-ColocAuto.ColocRate         = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc);
-ColocAuto.FalseDotRate      = ColocAuto.NumFalseDots/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
-ColocAuto.ColocRateInclugingFalseDots = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
-ColocAuto.Method            = 'AutoMask';
-ColocAuto.NumVoxOverlap     = NumVoxOverlap;
-ColocAuto.NumPercOverlap    = NumPercOverlap;
+ColocAuto.Results.NumColoc    = length(find(ColocAuto.Flag == 1));
+ColocAuto.Results.NumNonColoc = length(find(ColocAuto.Flag == 2));
+ColocAuto.Results.NumFalse    = length(find(ColocAuto.Flag == 3));
+ColocAuto.Results.ColocRate   = ColocAuto.Results.NumColoc/(ColocAuto.Results.NumColoc+ColocAuto.Results.NumNonColoc);
+ColocAuto.Results.FalseRate   = ColocAuto.Results.NumFalse/(ColocAuto.Results.NumColoc+ColocAuto.Results.NumNonColoc+ColocAuto.Results.NumFalse);
 
 end

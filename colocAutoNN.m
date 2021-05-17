@@ -28,19 +28,22 @@
 
 function ColocAuto = colocAutoNN(srcDots, dstDots, NN, NumVoxOverlap, NumPercOverlap, WithinDist, CenterMustOverlap)
 %%
-ColocAuto.Source        = srcDots.Name;
-ColocAuto.Fish1         = NN.Name;
+ColocAuto.Ref  = srcDots.Name;
+ColocAuto.Dst  = NN.Name;
+ColocAuto.Flag = zeros([1,numel(srcDots.Vox)], 'uint8');
 
-AutoColocAnalyzingFlag                      = ones([1,numel(srcDots.Vox)], 'uint8');
-ColocAuto.ListDotIDsManuallyColocAnalyzed   = find(AutoColocAnalyzingFlag == 1);
-ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
-ColocAuto.ColocFlag                         = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
+ColocAuto.Settings.Method = 'AutoNN';
+ColocAuto.Settings.NumVoxOverlap = NumVoxOverlap;
+ColocAuto.Settings.NumPercOverlap = NumPercOverlap;
+ColocAuto.Settings.DistanceWithin = WithinDist;
+ColocAuto.Settings.CentroidOverlap = CenterMustOverlap;
+ColocAuto.Settings.RotationAngle = 0;
 
 % Trasverse each valid object and check if Nearest Neighbor is 
 % overlappedthe above the voxel and percent thresholds
 for i = 1:numel(srcDots.Vox)
     if ~srcDots.Filter.passF(i)
-        ColocAuto.ColocFlag(i) = 3; % Invalid dot (filter==0)
+        ColocAuto.Flag(i) = 3; % Invalid dot (filter==0)
         continue
     end
     
@@ -55,26 +58,22 @@ for i = 1:numel(srcDots.Vox)
         
         % Check whether center of NN dstDot is among the voxels of srcDot
         if isempty(find(srcDots.Vox(i).Ind == BrightPeakPos, 1))
-            ColocAuto.ColocFlag(i) = 2; % Not Colocalized
+            ColocAuto.Flag(i) = 2; % Not Colocalized
             continue
         end
     end
     
     % Assign colocalization to objects overlapping more than thresholds
     if (NN.VoxOverlap(i) >= NumVoxOverlap) && (NN.VoxOverlapPerc(i) >= NumPercOverlap) && (NN.Dist(i) <= WithinDist)
-        ColocAuto.ColocFlag(i) = 1; % Colocalized
+        ColocAuto.Flag(i) = 1; % Colocalized
     else
-        ColocAuto.ColocFlag(i) = 2; % Not Colocalized
+        ColocAuto.Flag(i) = 2; % Not Colocalized
     end
 end
 
-ColocAuto.NumDotsColoc      = length(find(ColocAuto.ColocFlag == 1));
-ColocAuto.NumDotsNonColoc   = length(find(ColocAuto.ColocFlag == 2));
-ColocAuto.NumFalseDots      = length(find(ColocAuto.ColocFlag == 3));
-ColocAuto.ColocRate         = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc);
-ColocAuto.FalseDotRate      = ColocAuto.NumFalseDots/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
-ColocAuto.ColocRateInclugingFalseDots = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
-ColocAuto.Method            = 'AutoNN';
-ColocAuto.NumVoxOverlap     = NumVoxOverlap;
-ColocAuto.NumPercOverlap    = NumPercOverlap;
+ColocAuto.Results.NumColoc    = length(find(ColocAuto.Flag == 1));
+ColocAuto.Results.NumNonColoc = length(find(ColocAuto.Flag == 2));
+ColocAuto.Results.NumFalse    = length(find(ColocAuto.Flag == 3));
+ColocAuto.Results.ColocRate   = ColocAuto.Results.NumColoc/(ColocAuto.Results.NumColoc+ColocAuto.Results.NumNonColoc);
+ColocAuto.Results.FalseRate   = ColocAuto.Results.NumFalse/(ColocAuto.Results.NumColoc+ColocAuto.Results.NumNonColoc+ColocAuto.Results.NumFalse);
 end

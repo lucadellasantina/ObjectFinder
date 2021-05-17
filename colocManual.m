@@ -40,34 +40,36 @@ if exist([pwd filesep 'ColocManual.mat'],'file')
     end
 else
     if isempty(Colo2)
-        ColocManual.Source  = Dots.Name;
-        ColocManual.Fish1   = fName;
-    
-        ColocManual.ListDotIDsManuallyColocAnalyzed = 1:numel(Dots.Filter.passF);
-        ColocManual.TotalNumDotsManuallyColocAnalyzed = numel(Dots.Filter.passF);
-        ColocManual.ColocFlag = zeros([1,numel(Dots.Filter.passF)], 'uint8');
-        ColocManual.ColocFlag(find(Dots.Filter.passF == 0)) = 3; %#ok Mark invalid dots as 3 = non-dot
-        ColocManual.Method            = 'Manual';
-        ColocManual.NumVoxOverlap     = 0;
-        ColocManual.NumPercOverlap    = 0;
+        ColocManual.Ref  = Dots.Name;
+        ColocManual.Dst  = fName;
+        ColocManual.Flag = zeros([1,numel(Dots.Filter.passF)], 'uint8');
+        ColocManual.Flag(find(Dots.Filter.passF == 0)) = 3; % Mark invalid dots as 3 = non-dot
+        
+        ColocManual.Settings.Method = 'Manual';
+        ColocManual.Settings.NumVoxOverlap = 0;
+        ColocManual.Settings.NumPercOverlap = 0;
+        ColocManual.Settings.DistanceWithin = inf;
+        ColocManual.Settings.CentroidOverlap = false;
+        ColocManual.Settings.RotationAngle = 0;
         
         ColocManual2 = struct;
     else
         [~, fName2, ~] = fileparts(FileName2);
 
-        ColocManual.Source  = Dots.Name;
-        ColocManual.Fish1   = fName;
+        ColocManual.Ref  = Dots.Name;
+        ColocManual.Dst  = fName;
+        ColocManual.Flag = zeros([1,numel(Dots.Filter.passF)], 'uint8');
+        ColocManual.Flag(find(Dots.Filter.passF == 0)) = 3; % Mark invalid objects as 3 = false object
 
-        ColocManual.ListDotIDsManuallyColocAnalyzed = 1:numel(Dots.Filter.passF);
-        ColocManual.TotalNumDotsManuallyColocAnalyzed = numel(Dots.Filter.passF);
-        ColocManual.ColocFlag = zeros([1,numel(Dots.Filter.passF)], 'uint8');
-        ColocManual.ColocFlag(find(Dots.Filter.passF == 0)) = 3; %#ok Mark invalid dots as 3 = non-dot
-        ColocManual.Method            = 'Manual';
-        ColocManual.NumVoxOverlap     = 0;
-        ColocManual.NumPercOverlap    = 0;
+        ColocManual.Settings.Method = 'Manual';
+        ColocManual.Settings.NumVoxOverlap = 0;
+        ColocManual.Settings.NumPercOverlap = 0;
+        ColocManual.Settings.DistanceWithin = inf;
+        ColocManual.Settings.CentroidOverlap = false;
+        ColocManual.Settings.RotationAngle = 0;
         
         ColocManual2 = ColocManual;
-        ColocManual2.Fish1 = fName2;
+        ColocManual2.Dst = fName2;
     end    
 end
 

@@ -28,16 +28,19 @@
 
 function ColocAuto = colocAutoEngulf(srcDots, dstDots, NumVoxOverlap, NumPercOverlap, WithinDist, CenterMustOverlap)
 %%
-ColocAuto.Source = srcDots.Name;
-ColocAuto.Fish1  = dstDots.Name;
+ColocAuto.Ref  = srcDots.Name;
+ColocAuto.Dst  = dstDots.Name;
+ColocAuto.Flag = zeros([1,numel(srcDots.Vox)], 'uint8');
 
-AutoColocAnalyzingFlag                      = ones([1,numel(srcDots.Vox)], 'uint8');
-ColocAuto.ListDotIDsManuallyColocAnalyzed   = find(AutoColocAnalyzingFlag == 1);
-ColocAuto.TotalNumDotsManuallyColocAnalyzed = length(ColocAuto.ListDotIDsManuallyColocAnalyzed);
-ColocAuto.ColocFlag                         = zeros([1,ColocAuto.TotalNumDotsManuallyColocAnalyzed], 'uint8');
+ColocAuto.Settings.Method = 'AutoEngulf';
+ColocAuto.Settings.NumVoxOverlap = NumVoxOverlap;
+ColocAuto.Settings.NumPercOverlap = NumPercOverlap;
+ColocAuto.Settings.DistanceWithin = WithinDist;
+ColocAuto.Settings.CentroidOverlap = CenterMustOverlap;
+ColocAuto.Settings.RotationAngle = 0;
 
 % Trasverse each reference object and count how many objects are engulfed
-% *IMPORTANT*: ColocAuto here stores the absolute number of dstDots that 
+% *IMPORTANT*: Flag here stores the absolute number of dstDots that 
 % each srcDot is engulfing (after verifying overlap is more than threshold)
 
 xyum = srcDots.Settings.ImInfo.xyum;
@@ -45,7 +48,7 @@ zum  = srcDots.Settings.ImInfo.zum;
 
 for idx_src = 1:numel(srcDots.Vox)
     if ~srcDots.Filter.passF(idx_src)
-        ColocAuto.ColocFlag(idx_src) = -1; % Invalid dot
+        ColocAuto.Flag(idx_src) = -1; % Invalid dot
         continue
     end
    
@@ -74,18 +77,14 @@ for idx_src = 1:numel(srcDots.Vox)
         PeakDistxyz    = hypot( PeakDistxy, (srcDots.Pos(idx_src,3)-dstDots.Pos(idx_dst,3))*zum); % calculate separately along Z because this dimension has different pixel size
         
         if (VoxOverlap >= NumVoxOverlap) && (VoxOverlapPerc >= NumPercOverlap) && (PeakDistxyz <= WithinDist)
-            ColocAuto.ColocFlag(idx_src) = ColocAuto.ColocFlag(idx_src) + 1; % Add one more engulfed
+            ColocAuto.Flag(idx_src) = ColocAuto.Flag(idx_src) + 1; % Add one more engulfed
         end
     end
 end
 
-ColocAuto.NumDotsColoc      = length(find(ColocAuto.ColocFlag > 0));
-ColocAuto.NumDotsNonColoc   = length(find(ColocAuto.ColocFlag == 0));
-ColocAuto.NumFalseDots      = length(find(ColocAuto.ColocFlag < 0));
-ColocAuto.ColocRate         = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc);
-ColocAuto.FalseDotRate      = ColocAuto.NumFalseDots/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
-ColocAuto.ColocRateInclugingFalseDots = ColocAuto.NumDotsColoc/(ColocAuto.NumDotsColoc+ColocAuto.NumDotsNonColoc+ColocAuto.NumFalseDots);
-ColocAuto.Method            = 'AutoEngulf';
-ColocAuto.NumVoxOverlap     = NumVoxOverlap;
-ColocAuto.NumPercOverlap    = NumPercOverlap;
+ColocAuto.Results.NumColoc    = length(find(ColocAuto.Flag > 0));
+ColocAuto.Results.NumNonColoc = length(find(ColocAuto.Flag == 0));
+ColocAuto.Results.NumFalse    = length(find(ColocAuto.Flag < 0));
+ColocAuto.Results.ColocRate   = ColocAuto.Results.NumColoc/(ColocAuto.Results.NumColoc+ColocAuto.Results.NumNonColoc);
+ColocAuto.Results.FalseRate   = ColocAuto.Results.NumFalse/(ColocAuto.Results.NumColoc+ColocAuto.Results.NumNonColoc+ColocAuto.Results.NumFalse);
 end

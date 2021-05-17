@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2838139533" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="1271175632" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
     <param.appname>Object Finder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -12,8 +12,8 @@
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
     <param.description>Copyright 2016-2021 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tp269c4dcc_4a7b_4284_9a48_4a17a1767997.png</param.screenshot>
-    <param.version>9.1</param.version>
+    <param.screenshot>/tmp/tp0e275542_8fb5_4cba_a393_5ba79f3806a3.png</param.screenshot>
+    <param.version>10.0</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Deep Learning Toolbox</item>
@@ -65,6 +65,7 @@
       <file>${PROJECT_ROOT}/convertObjectFinderDataV4toV5.m</file>
       <file>${PROJECT_ROOT}/convertObjectFinderDataV5toV7.m</file>
       <file>${PROJECT_ROOT}/convertObjectFinderDataV7toV8.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV8toV10.m</file>
       <file>${PROJECT_ROOT}/convertSkelSNT2ml.m</file>
       <file>${PROJECT_ROOT}/deleteNetwork.m</file>
       <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>
@@ -104,6 +105,7 @@
       <file>${PROJECT_ROOT}/shollAnalysisSegments.m</file>
       <file>${PROJECT_ROOT}/skeletonizeMask.m</file>
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
+      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/Skel2Graph3D.m</file>
       <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>
@@ -147,7 +149,7 @@
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>5.8.0-44-generic</osver>
+      <osver>5.11.0-7614-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>

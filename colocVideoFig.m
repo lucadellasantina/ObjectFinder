@@ -32,7 +32,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
    
     if NumRemainingDots == 0
         disp('Colocalization analysis complete, no more objects to process.');
-        disp(['Colocalization Rate: ' num2str(ColocManual.ColocRate)]);
+        disp(['Colocalization Rate: ' num2str(ColocManual.Results.ColocRate)]);
         return;
     end
     
@@ -51,28 +51,28 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     % Add GUI conmponents
     if isempty(Colo2)
         set(gcf,'units', 'normalized', 'position', [0.25 0.1 0.455 0.72]);        
-        lblRefChan   = uicontrol('Style','text'  ,'Units','normalized','position',[.017,.050,.400,.020],'String',['Reference channel: ' ColocManual.Source]); %#ok, unused variable
-        lblCurrObjs  = uicontrol('Style','text'  ,'Units','normalized','position',[.017,.970,.400,.020],'String',['Current ' ColocManual.Source ' (green)']); %#ok, unused variable
-        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.050,.400,.020],'String',['Colocalizing channel: ' ColocManual.Fish1]); %#ok, unused variable
-        lblOverlay   = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.970,.400,.020],'String',[ColocManual.Source ' (green),' ColocManual.Fish1 ' (magenta)']); %#ok, unused variable
+        lblRefChan   = uicontrol('Style','text'  ,'Units','normalized','position',[.017,.050,.400,.020],'String',['Reference channel: ' ColocManual.Ref]); %#ok, unused variable
+        lblCurrObjs  = uicontrol('Style','text'  ,'Units','normalized','position',[.017,.970,.400,.020],'String',['Current ' ColocManual.Ref ' (green)']); %#ok, unused variable
+        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.050,.400,.020],'String',['Colocalizing channel: ' ColocManual.Dst]); %#ok, unused variable
+        lblOverlay   = uicontrol('Style','text'  ,'Units','normalized','position',[.445,.970,.400,.020],'String',[ColocManual.Ref ' (green),' ColocManual.Dst ' (magenta)']); %#ok, unused variable
     else
         set(gcf,'units', 'normalized', 'position', [0.05 0.1 0.9 0.72]);        
-        lblRefChan   = uicontrol('Style','text'  ,'Units','normalized','position',[.010,.050,.200,.020],'String',['Reference channel: ' ColocManual.Source]); %#ok, unused variable
-        lblCurrObjs  = uicontrol('Style','text'  ,'Units','normalized','position',[.010,.970,.200,.020],'String',['Current ' ColocManual.Source ' (green)']); %#ok, unused variable
+        lblRefChan   = uicontrol('Style','text'  ,'Units','normalized','position',[.010,.050,.200,.020],'String',['Reference channel: ' ColocManual.Ref]); %#ok, unused variable
+        lblCurrObjs  = uicontrol('Style','text'  ,'Units','normalized','position',[.010,.970,.200,.020],'String',['Current ' ColocManual.Ref ' (green)']); %#ok, unused variable
 
-        lblColoOlay  = uicontrol('Style','text'  ,'Units','normalized','position',[.225,.050,.200,.020],'String',['Colocalizing channel: ' ColocManual.Fish1]); %#ok, unused variable
-        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.225,.970,.200,.020],'String',[ColocManual.Source ' (green), ' ColocManual.Fish1 ' (magenta)']); %#ok, unused variable
+        lblColoOlay  = uicontrol('Style','text'  ,'Units','normalized','position',[.225,.050,.200,.020],'String',['Colocalizing channel: ' ColocManual.Dst]); %#ok, unused variable
+        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.225,.970,.200,.020],'String',[ColocManual.Ref ' (green), ' ColocManual.Dst ' (magenta)']); %#ok, unused variable
 
-        lblColoOlay  = uicontrol('Style','text'  ,'Units','normalized','position',[.440,.050,.200,.020],'String',['Colocalizing channel: ' ColocManual2.Fish1]); %#ok, unused variable
-        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.440,.970,.200,.020],'String',[ColocManual.Source ' (green), ' ColocManual2.Fish1 ' (magenta)']); %#ok, unused variable
+        lblColoOlay  = uicontrol('Style','text'  ,'Units','normalized','position',[.440,.050,.200,.020],'String',['Colocalizing channel: ' ColocManual2.Dst]); %#ok, unused variable
+        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.440,.970,.200,.020],'String',[ColocManual.Ref ' (green), ' ColocManual2.Dst ' (magenta)']); %#ok, unused variable
 
-        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.655,.050,.200,.020],'String',['Colocalizing red: ' ColocManual.Fish1 ' blue: ' ColocManual2.Fish1]); %#ok, unused variable
-        lblOverlay   = uicontrol('Style','text'  ,'Units','normalized','position',[.655,.970,.200,.020],'String',[ColocManual.Source ' (green), ' ColocManual.Fish1 ' (red), ' ColocManual2.Fish1 ' (blue)']); %#ok, unused variable
+        lblColoChan  = uicontrol('Style','text'  ,'Units','normalized','position',[.655,.050,.200,.020],'String',['Colocalizing red: ' ColocManual.Dst ' blue: ' ColocManual2.Dst]); %#ok, unused variable
+        lblOverlay   = uicontrol('Style','text'  ,'Units','normalized','position',[.655,.970,.200,.020],'String',[ColocManual.Ref ' (green), ' ColocManual.Dst ' (red), ' ColocManual2.Dst ' (blue)']); %#ok, unused variable
     end
 
     pnlSettings  = uipanel(  'Title',' '         ,'Units','normalized','Position',[.865,.005,.133,.990]); %#ok, unused variable    
     lblObjNum    = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.950,.110,.020],'String','Objects'); %#ok, unused variable
-    lblObjTotal  = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.920,.110,.020],'String',['Total: ' num2str(ColocManual.TotalNumDotsManuallyColocAnalyzed)]); %#ok, unused variable
+    lblObjTotal  = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.920,.110,.020],'String',['Total: ' num2str(numel(Find(Dots.Filter.passF)))]); %#ok unused variable
     txtCurrent   = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.900,.110,.020],'String',['Current: ' num2str(DotNum)]);
     txtRemaining = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.880,.110,.020],'String',['Left: ' num2str(NumRemainingDots)]);
 
@@ -83,8 +83,8 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
         btnNotValid = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.300,.110,.050], 'String','<html><center>Invalid Object (i)','CallBack',@btnNotValid_clicked); %#ok, unused variable
     else
         btnNotColoc12 = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.620,.110,.100], 'String','<html><center>Not<br>Colocalized','CallBack',@btnNotColoc12_clicked); %#ok, unused variable        
-        btnColoc1     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.510,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual.Fish1],'CallBack',@btnColoc1_clicked); %#ok, unused variable
-        btnColoc2     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual2.Fish1],'CallBack',@btnColoc2_clicked); %#ok, unused variable
+        btnColoc1     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.510,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual.Dst],'CallBack',@btnColoc1_clicked); %#ok, unused variable
+        btnColoc2     = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.400,.110,.100], 'String',['<html><center>Colocalized<br>with<br>' ColocManual2.Dst],'CallBack',@btnColoc2_clicked); %#ok, unused variable
         btnColoc12    = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.290,.110,.100], 'String','<html><center>Double<br>Colocalized','CallBack',@btnColoc12_clicked); %#ok, unused variable        
         btnNotValid   = uicontrol('Style','Pushbutton','Units','normalized','position',[.880,.200,.110,.050], 'String','<html><center>Invalid Object (i)','CallBack',@btnNotValid_clicked); %#ok, unused variable
     end
@@ -110,7 +110,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     end
     
     function [ImStk, DotNum, NumRemainingDots] = getNewImageStack()
-        RemainingDotIDs = ColocManual.ListDotIDsManuallyColocAnalyzed(ColocManual.ColocFlag == 0);
+        RemainingDotIDs = find(ColocManual.Flag == 0);
         NumRemainingDots = length(RemainingDotIDs);
         if NumRemainingDots > 0
             dot = ceil(rand*NumRemainingDots); % randomize the order of analyzing dots
@@ -196,21 +196,19 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
 
         else
             % Add stats so that you can remember ColocFlag of 1 is coloc, etc.
-            ColocManual.NumDotsColoc = length(find(ColocManual.ColocFlag == 1));
-            ColocManual.NumDotsNonColoc = length(find(ColocManual.ColocFlag == 2));
-            ColocManual.NumFalseDots = length(find(ColocManual.ColocFlag == 3));
-            ColocManual.ColocRate = ColocManual.NumDotsColoc/(ColocManual.NumDotsColoc+ColocManual.NumDotsNonColoc);
-            ColocManual.FalseDotRate = ColocManual.NumFalseDots/(ColocManual.NumDotsColoc+ColocManual.NumDotsNonColoc+ColocManual.NumFalseDots);
-            ColocManual.ColocRateInclugingFalseDots = ColocManual.NumDotsColoc/(ColocManual.NumDotsColoc+ColocManual.NumDotsNonColoc+ColocManual.NumFalseDots);            
+            ColocManual.Results.NumColoc = length(find(ColocManual.Flag == 1));
+            ColocManual.Results.NumNonColoc = length(find(ColocManual.Flag == 2));
+            ColocManual.Results.NumFalse = length(find(ColocManual.Flag == 3));
+            ColocManual.Results.ColocRate = ColocManual.Results.NumColoc/(ColocManual.Results.NumColoc+ColocManual.Results.NumNonColoc);
+            ColocManual.Results.FalseRate = ColocManual.Results.NumFalse/(ColocManual.Results.NumColoc+ColocManual.Results.NumNonColoc+ColocManual.Results.NumFalse);
 
             if ~isempty(Colo2)            
                     % Add stats so that you can remember ColocFlag of 1 is coloc, etc.
-                    ColocManual2.NumDotsColoc = length(find(ColocManual2.ColocFlag == 1));
-                    ColocManual2.NumDotsNonColoc = length(find(ColocManual2.ColocFlag == 2));
-                    ColocManual2.NumFalseDots = length(find(ColocManual2.ColocFlag == 3));
-                    ColocManual2.ColocRate = ColocManual2.NumDotsColoc/(ColocManual2.NumDotsColoc+ColocManual2.NumDotsNonColoc);
-                    ColocManual2.FalseDotRate = ColocManual2.NumFalseDots/(ColocManual2.NumDotsColoc+ColocManual2.NumDotsNonColoc+ColocManual2.NumFalseDots);
-                    ColocManual2.ColocRateInclugingFalseDots = ColocManual2.NumDotsColoc/(ColocManual2.NumDotsColoc+ColocManual2.NumDotsNonColoc+ColocManual2.NumFalseDots);            
+                    ColocManual2.Results.NumColoc = length(find(ColocManual2.Flag == 1));
+                    ColocManual2.Results.NumNonColoc = length(find(ColocManual2.Flag == 2));
+                    ColocManual2.Results.NumFalse = length(find(ColocManual2.ColocFlag == 3));
+                    ColocManual2.Results.ColocRate = ColocManual2.Results.NumColoc/(ColocManual2.Results.NumColoc+ColocManual2.Results.NumNonColoc);
+                    ColocManual2.Results.FalseRate = ColocManual2.Results.NumFalse/(ColocManual2.Results.NumColoc+ColocManual2.Results.NumNonColoc+ColocManual2.Results.NumFalse);
             end
             
             if exist([pwd filesep 'Coloc.mat'], 'file')
@@ -219,11 +217,11 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
                 FoundColocManual  = false;
                 FoundColocManual2 = false;
                 for i=1:numel(Coloc)
-                    if strcmp(Coloc(i).Source, ColocManual.Source) && strcmp(Coloc(i).Fish1, ColocManual.Fish1)
+                    if strcmp(Coloc(i).Ref, ColocManual.Ref) && strcmp(Coloc(i).Dst, ColocManual.Dst)
                         Coloc(i) = ColocManual;
                         FoundColocManual = true;
                     end
-                    if (~isempty(Colo2)) && strcmp(Coloc(i).Source, ColocManual2.Source) && strcmp(Coloc(i).Fish1, ColocManual2.Fish1)
+                    if (~isempty(Colo2)) && strcmp(Coloc(i).Ref, ColocManual2.Ref) && strcmp(Coloc(i).Dst, ColocManual2.Dst)
                         Coloc(i) = ColocManual2;
                         FoundColocManual2 = true;
                     end
@@ -269,14 +267,14 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     function btnResetLast_clicked(src, event) %#ok, unused arguments
         if LastDotNum > 0
             %disp(['resetting dot #: ' num2str(LastDotNum)]); 
-            ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==LastDotNum)=0;
+            ColocManual.Flag(LastDotNum)=0;
             LastDotNum = 0;
             msgbox('Last object will be examined again in random order');
         end
     end
 
     function btnColocalized_clicked(src, event) %#ok, unused arguments
-        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        ColocManual.Flag(DotNum) = 1;
         LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
@@ -291,7 +289,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     end
 
     function btnNotColocalized_clicked(src, event) %#ok, unused arguments
-        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        ColocManual.Flag(DotNum) = 2;
         LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
@@ -306,7 +304,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     end
 
     function btnNotValid_clicked(src, event) %#ok, unused arguments
-        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=3;
+        ColocManual.Flag(DotNum) = 3;
         LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
@@ -321,8 +319,8 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     end
 
     function btnNotColoc12_clicked(src, event) %#ok, unused arguments
-        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
-        ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        ColocManual.Flag(DotNum) = 2;
+        ColocManual2.Flag(DotNum) = 2;
         LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
@@ -337,8 +335,8 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     end
 
     function btnColoc1_clicked(src, event) %#ok, unused arguments
-        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
-        ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
+        ColocManual.Flag(DotNum) = 1;
+        ColocManual2.Flag(DotNum) = 2;
         LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
@@ -353,8 +351,8 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     end
 
     function btnColoc2_clicked(src, event) %#ok, unused arguments
-        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=2;
-        ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        ColocManual.Flag(DotNum) = 2;
+        ColocManual2.Flag(DotNum) = 1;
         LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0
@@ -369,8 +367,8 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     end
 
     function btnColoc12_clicked(src, event) %#ok, unused arguments
-        ColocManual.ColocFlag(ColocManual.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
-        ColocManual2.ColocFlag(ColocManual2.ListDotIDsManuallyColocAnalyzed==DotNum)=1;
+        ColocManual.Flag(DotNum) = 1;
+        ColocManual2.Flag(DotNum) = 1;
         LastDotNum = DotNum;
         [ImStk, DotNum, NumRemainingDots] = getNewImageStack();
         if DotNum == 0

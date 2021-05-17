@@ -31,27 +31,27 @@
 function Coloc = colocManualCheckDouble(Dots, Filter, Post, Colo, ColocManual, Colo2, ColocManual2)
 if isempty(Colo2) % Single channel, check only colocalized objects
     % Find objects that are colocalized with both channels
-    Coloc1 = find(ColocManual.ColocFlag==1); % Numbers of colocalized dots analyzed
+    Coloc1 = find(ColocManual.Flag==1); % Numbers of colocalized dots analyzed
     
     % Flag as 0 (redo) those objects in order to re-analyze them
-    ColocManual.ColocFlag(Coloc1) = 0;
-    ColocManual.NumDotsColoc = ColocManual.NumDotsColoc - numel(Coloc1);
+    ColocManual.Flag(Coloc1) = 0;
+    ColocManual.Results.NumColoc = ColocManual.Results.NumColoc - numel(Coloc1);
     
     % Re-annalyze only double colocalized objects
     %Grouped = getFilteredObjects(Dots, Filter);
     Coloc = colocVideoFig(ColocManual, Dots, Post, Colo, Colo2, ColocManual2);
 else % 2 Colocalizing channels, check only double-colocalized objects
     % Find objects that are colocalized with both channels
-    Coloc1 = find(ColocManual.ColocFlag==1); % Numbers of colocalized dots analyzed
-    Coloc2 = find(ColocManual2.ColocFlag==1); % Numbers of colocalized dots analyzed
+    Coloc1 = find(ColocManual.Flag==1); % Numbers of colocalized dots analyzed
+    Coloc2 = find(ColocManual2.Flag==1); % Numbers of colocalized dots analyzed
     Coloc12 = intersect(Coloc1, Coloc2);
     
     % Flag those objects off in order to re-analyze them
-    ColocManual.ColocFlag(Coloc12) = 0;
-    ColocManual.NumDotsColoc = ColocManual.NumDotsColoc - numel(Coloc12);
+    ColocManual.Flag(Coloc12) = 0;
+    ColocManual.Results.NumColoc = ColocManual.Results.NumColoc - numel(Coloc12);
     
-    ColocManual2.ColocFlag(Coloc12) = 0;
-    ColocManual2.NumDotsColoc = ColocManual2.NumDotsColoc - numel(Coloc12);
+    ColocManual2.Flag(Coloc12) = 0;
+    ColocManual2.Results.NumColoc = ColocManual2.Results.NumColoc - numel(Coloc12);
     
     % Re-annalyze only double colocalized objects
     %Grouped = getFilteredObjects(Dots, Filter);
