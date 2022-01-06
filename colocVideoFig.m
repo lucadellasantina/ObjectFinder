@@ -72,7 +72,7 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
 
     pnlSettings  = uipanel(  'Title',' '         ,'Units','normalized','Position',[.865,.005,.133,.990]); %#ok, unused variable    
     lblObjNum    = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.950,.110,.020],'String','Objects'); %#ok, unused variable
-    lblObjTotal  = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.920,.110,.020],'String',['Total: ' num2str(numel(Find(Dots.Filter.passF)))]); %#ok unused variable
+    lblObjTotal  = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.920,.110,.020],'String',['Total: ' num2str(numel(find(Grouped.Filter.passF)))]); %#ok unused variable
     txtCurrent   = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.900,.110,.020],'String',['Current: ' num2str(DotNum)]);
     txtRemaining = uicontrol('Style','text'      ,'Units','normalized','position',[.880,.880,.110,.020],'String',['Left: ' num2str(NumRemainingDots)]);
 
@@ -104,8 +104,10 @@ function Coloc = colocVideoFig(ColocManual, Grouped, Post, Colo, Colo2, ColocMan
     function btnSnapshot_clicked(src, event) %#ok, unused arguments
         % Save a snapshot of current image to disk
         CData = get(frame_handle, 'CData');
-        FileName = ['Screenshot_' datestr(now, 'yyyy-mm-dd_HH-MM_AM') '.tif'];
-        imwrite(CData, [pwd filesep 'Results' filesep FileName]);
+        assignin('base','CData',CData);
+        FileName = ['Screenshot_' datestr(now, 'yyyy-mm-dd_HH-MM_AM') '.tif'];        
+        %imwrite(CData, [pwd filesep 'Results' filesep FileName]);
+        imwrite(CData, FileName);
         msgbox([FileName ' saved in results folder.'], 'Saved', 'help');
     end
     

@@ -36,7 +36,7 @@ function saveNetwork(Net, FieldName)
     
     if isempty(FieldName)
         % Save struct on file with fields split tino separate variables
-        save(FileName, '-struct', 'Net', '-v7.3');
+        save(FileName, '-struct', 'Net', '-v7.3', '-nocompression');
     else
         % Save only a specific FieldName on disk
         save(FileName, '-struct', 'Net', FieldName,'-append');

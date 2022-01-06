@@ -1,0 +1,163 @@
+%% Instructions
+%
+%  Save Spots as ObjectFinder's set of objects
+%
+%  Installation:
+%
+%  - Copy this file into the XTensions folder in the Imaris installation directory
+%  - You will find this function in the Image Processing menu
+%
+%    <CustomTools>
+%      <Menu>
+%       <Submenu name="Spots Functions">
+%        <Item name="ConvertSpots2ObjectFinder" icon="Matlab" tooltip="ConvertSpots2ObjectFinder">
+%          <Command>Matlab::ConvertSpots2ObjectFinder(%i)</Command>
+%        </Item>
+%       </Submenu>
+%      </Menu>
+%      <SurpassTab>
+%        <SurpassComponent name="bpSpots">
+%          <Item name="ConvertSpots2ObjectFinder" icon="Matlab" tooltip="ConvertSpots2ObjectFinder">
+%            <Command>Matlab::ConvertSpots2ObjectFinder(%i)</Command>
+%          </Item>
+%        </SurpassComponent>
+%        <SurpassComponent name="bpSpots">
+%          <Item name="ConvertSpots2ObjectFinder" icon="Matlab" tooltip="ConvertSpots2ObjectFinder">
+%            <Command>Matlab::ConvertSpots2ObjectFinder(%i)</Command>
+%          </Item>
+%        </SurpassComponent>
+%      </SurpassTab>
+%    </CustomTools>
+%
+%  
+%  Description:
+%
+%   The User chooses which spots to export, coordinates of spots are
+%   represented as rows of the SpotXYZ matrix, [X,Y,Z] 
+%   Coordinates are expressed in pixel
+%
+%% Connect to Imaris Com interface
+function ConvertSpots2ObjectFinder(aImarisApplicationID)
+
+if ~isa(aImarisApplicationID, 'COM.Imaris_Application')
+    vImarisServer = actxserver('ImarisServer.Server');
+    vImarisApplication = vImarisServer.GetObject(aImarisApplicationID);
+else
+    vImarisApplication = aImarisApplicationID;
+end
+%% Start Imaris from matlab and make it visible (comment before saving)
+%   vImarisApplication=actxserver('Imaris.Application');
+%    vImarisApplication.mVisible=true;
+  
+
+%% the user has to create a scene 
+vSurpassScene = vImarisApplication.mSurpassScene;
+if isequal(vSurpassScene, [])
+    msgbox('Please create a Surpass scene!');
+    return;
+end
+
+%% get image size and pixel resolution
+tmpDataset = vImarisApplication.mDataset; %get the dataset to retrieve size/resolution
+xs = tmpDataset.mSizeX; %X size in pixel
+ys = tmpDataset.mSizeY; %Y size in pixel
+zs = tmpDataset.mSizeZ; %Z size in pixel
+xsReal = tmpDataset.mExtendMaxX - tmpDataset.mExtendMinX; %X size in micron
+ysReal = tmpDataset.mExtendMaxY - tmpDataset.mExtendMinY; %Y size in micron
+zsReal = tmpDataset.mExtendMaxZ - tmpDataset.mExtendMinZ; %Z size in micron
+xr = xsReal/xs; %X pixel resolution (usually micron per pixel)
+yr = ysReal/ys; %Y pixel resolution (usually micron per pixel)
+zr = zsReal/zs; %Z pixel resolution (usually micron per pixel)
+
+%% make directory of Spots in surpass scene
+cnt = 0;
+for vChildIndex = 1:vSurpassScene.GetNumberOfChildren
+    if vImarisApplication.mFactory.IsSpots(vSurpassScene.GetChild(vChildIndex - 1))
+        cnt = cnt+1;
+        vSpots{cnt} = vSurpassScene.GetChild(vChildIndex - 1);
+    end
+end
+
+%% choose passing spots
+vSpotsCnt = length(vSpots);
+for n= 1:vSpotsCnt
+    vSpotsName{n} = vSpots{n}.mName;
+end
+cellstr = cell2struct(vSpotsName,{'names'},vSpotsCnt+2);
+str = {cellstr.names};
+[vAnswer_iPass,~] = listdlg('ListSize',[200 160], ... 
+    'PromptString','Chose spots to export',...
+    'SelectionMode','multiple',...
+    'ListString',str);
+
+%% Create an ObjectFinder set if ibjects
+
+Objs         = struct;
+Objs.Name    = vAnswer_iPass;
+
+tmp          = java.util.UUID.randomUUID;
+tmpStr       = tmp.toString;
+Objs.UID     = tmpStr.toCharArray';
+Objs.Shape   = struct;
+Objs.Density = struct; % Density measurements
+Objs.NN      = struct; % Nearest neighbor measurements
+Objs.Coloc   = struct; % Colocalization measurements
+Objs.Skel    = struct; % Skeleton measurements (e.g distance to cell body)
+
+Objs.Settings.Version = 10.0;
+Objs.Settings.debug = 0;
+Objs.ImInfo.DenCh = 0;
+Objs.ImInfo.PostCh = 0;
+Objs.ImInfo.ColoCh = 0;
+Objs.ImInfo.xyum = xr;
+Objs.ImInfo.zum = zr;
+Objs.ImInfo.xNumVox = xs;
+Objs.ImInfo.yNumVox = ys;
+Objs.ImInfo.zNumVox = zs;
+Objs.ImInfo.PostNameCh = '';
+Objs.ImInfo.CBpos = [1 1 1];
+Objs.ImInfo.MedFilt = 0;
+Objs.ImInfo.MedFiltKern = 0;
+
+Objs.Settings.objfinder.blockSize = 90;
+Objs.Settings.objfinder.blockBuffer = 15;
+Objs.Settings.objfinder.thresholdStep = 2;
+Objs.Settings.objfinder.maxDotSize = 2;
+Objs.Settings.objfinder.minDotSize = 1;
+Objs.Settings.objfinder.itMin = 1;
+Objs.Settings.objfinder.minFinalDotSize = 1;
+Objs.Settings.objfinder.watershed = 0;
+Objs.Settings.objfinder.blockSearch = 0;
+Objs.Settings.objfinder.sphericity = 0;
+Objs.Settings.objfinder.minIntensity = 1;
+
+% Add coordinates of each spot, size will be one voxel
+for i = 1:numel(vAnswer_iPass)
+    iPassSpots = vSpots{vAnswer_iPass(i)};
+    [SpotsXYZ,~,~] = iPassSpots.Get;
+    SpotsXYZ(:,1) = ceil(SpotsXYZ(:,1)./xr); %convert coordinates to pixel
+    SpotsXYZ(:,2) = ceil(SpotsXYZ(:,2)./yr); %convert coordinates to pixel
+    SpotsXYZ(:,3) = ceil(SpotsXYZ(:,3)./zr); %convert coordinates to pixel
+end
+Objs.Pos = SpotsXYZ;
+Objs.Vol = ones(1,size(Objs.Pos, 1), 'double');
+Objs.ITMax = ones(1,size(Objs.Pos, 1), 'uint8');
+Objs.ITSum = ones(1,size(Objs.Pos, 1), 'double');
+Objs.MeanBright = ones(1,size(Objs.Pos, 1), 'single');
+
+% populate the Vox field
+for i = 1:size(Objs.Pos, 1)
+    Objs.Vox(i).Pos = Objs.Pos(1,:);
+    
+end
+
+%% Save objects set to disk
+
+TPN = uigetdir;
+folder   = [TPN filesep 'objects'];
+FileName = [folder filesep Dots.UID '.mat'];
+if ~isfolder(folder), mkdir(folder); end
+save(FileName, '-struct', 'Dots', '-v7');
+
+fprintf('Spots converted!')    
+

@@ -196,7 +196,7 @@ parfor block = 1:(NumBx*NumBy*NumBz)
     end    
     
     wsLabelList                 = unique(wsTMLabels);
-    Blocks(block).wsTMLabels    = uint16(wsTMLabels);
+    Blocks(block).wsTMLabels    = wsTMLabels;
     Blocks(block).wsLabelList   = wsLabelList(2:end); % Remove background (1st label)
     Blocks(block).nLabels       = length(wsLabelList(2:end));
 end
@@ -355,5 +355,5 @@ clear B* CC contour* cutOff debug Gm* i j k Ig* labels Losing* ans NumalidObject
 clear max* n* Num* Overlap* p peak* Possible* size(Post,2) size(Post,1) size(Post,3) Surrouding*
 clear tmp* threshold* Total*  v Vox* Winning* ws* x* y* z* itMin DotsToDelete
 clear block blockBuffer blockSize minDotSize minDotSize  MultiPeakDotSizeCorrectionFactor
-clear ContendedVoxIDs idx Loser Winner minIntensity use_watershed ValidDots blockSearch
+clear ContendedVoxIDs idx Loser Winner minIntensity use_watershed ValidDots blockSearch connectedVoxN
 end

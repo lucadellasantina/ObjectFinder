@@ -24,7 +24,7 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
 %
-%  _*Version 10.0*            created on 2021-04-25 by Luca Della Santina_
+%  _*Version 10.0*            created on 2021-05-17 by Luca Della Santina_
 %
 %   + Ported to MATLAB R2021a
 %   + New streamlined format to store colocalizatin analysis
@@ -33,6 +33,7 @@
 %   + Automatic colocalization with rotated objects (90/180/270 deg)
 %   + Verbose progress during automatic colocalization with mask
 %   + Colocalization stores rotation, centroid overlap, within distance
+%   + Custom voxel connectivity in batch object detection
 %
 %  _*Version 9.1*             created on 2021-02-10 by Luca Della Santina_
 %

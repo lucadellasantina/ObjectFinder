@@ -1,0 +1,94 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/SlicedVolumeInspector.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="SlicedVolumeInspector" target="target.mlapps" target-name="Package App">
+    <param.appname>SlicedVolumeInspector</param.appname>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.icon />
+    <param.icons />
+    <param.summary />
+    <param.description />
+    <param.screenshot>/tmp/tp0a5fd2f4_2c82_41b5_bef9_a0f487f81a1b.png</param.screenshot>
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>${PROJECT_ROOT}</param.output>
+    <param.guid>1660240c-66b5-4fa1-ba15-4c5d85cc4249</param.guid>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.summary />
+      <param.description />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+      <param.output />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}/SlicedVolumeInspector.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}/Object Finder_resources/48px-Zoom-fit.png</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources/48px-Zoom-in.png</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources/48px-Zoom-out.png</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources/48px-center.png</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources/48px-down.png</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources/48px-left.png</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources/48px-right.png</file>
+      <file>${PROJECT_ROOT}/Object Finder_resources/48px-up.png</file>
+      <file>${PROJECT_ROOT}/loadImage.m</file>
+      <file>${PROJECT_ROOT}/loadObjects.m</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="/home/luca/Dropbox/MATLAB scripts" name="ObjectFinder" optional="false">/home/luca/Dropbox/MATLAB scripts/ObjectFinder</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>/home/luca/MATLAB/R2021a</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>true</unix>
+      <mac>false</mac>
+      <windows>false</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>true</linux>
+      <solaris>false</solaris>
+      <osver>5.11.0-7614-generic</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>glnxa64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
