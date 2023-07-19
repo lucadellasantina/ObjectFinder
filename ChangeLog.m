@@ -23,6 +23,21 @@
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: bug in findObjectsSimple crashes on DAPI marcus example
+% TODO: AOSLO Luca cannot validate, inspector looks for 3rd dimension
+% TODO: Selection of 2nd point does not work in 2023a on linux
+%
+%  _*Version 10.1*            created on 2023-07-18 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2023a
+%   + Added support for ShuffleNet models
+%   + Added support for DenseNet-201 models
+%   + Added support for NASNet-Large / NASNet-Mobile models
+%   + Added support for DarkNet-19 / DarkNet53 models
+%   + Added support for EfficientNet-b0 models
+%   + Fixed net evaluation performance metrics
+%   + Fixed errors in network training
+%   + Generate Training data now asks for destination folder
+%   + Allowed training rate values from 0.00001
 %
 %  _*Version 10.0*            created on 2021-05-17 by Luca Della Santina_
 %

@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="1714667859" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder_1.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder_1" preferred-package-location="/home/luca/D:\Dropbox\MATLAB scripts\ObjectFinder\ObjectFinder_1\for_redistribution" target="target.ezdeploy.standalone" target-name="Application Compiler">
+  <configuration build-checksum="2569297877" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder_1.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="ObjectFinder_1" preferred-package-location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/ObjectFinder_1/for_redistribution" preferred-package-type="package.type.install" target="target.ezdeploy.standalone" target-name="Application Compiler">
     <param.appname>ObjectFinder</param.appname>
     <param.icon>${PROJECT_ROOT}/ObjectFinder_1_resources/icon.ico</param.icon>
     <param.icons>
@@ -8,19 +8,32 @@
       <file>${PROJECT_ROOT}/ObjectFinder_1_resources/icon_24.png</file>
       <file>${PROJECT_ROOT}/ObjectFinder_1_resources/icon_16.png</file>
     </param.icons>
-    <param.version>9.1</param.version>
+    <param.version>10.1</param.version>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
     <param.company />
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
-    <param.description>Copyright 2016-2021 Luca Della Santina</param.description>
+    <param.description>Copyright 2016-2023 Luca Della Santina</param.description>
     <param.screenshot>${PROJECT_ROOT}/app-icon/ObjectFinder.png</param.screenshot>
     <param.guid />
     <param.installpath.string>/ObjectFinder/</param.installpath.string>
     <param.installpath.combo>option.installpath.user</param.installpath.combo>
     <param.logo />
     <param.install.notes />
-    <param.target.install.notes />
+    <param.target.install.notes>In the following directions, replace MR/R2023a by the directory on the target machine where MATLAB is installed, or MR by the directory where the MATLAB Runtime is installed.
+
+(1) Set the environment variable XAPPLRESDIR to this value:
+
+MR/R2023a/X11/app-defaults
+
+
+(2) If the environment variable LD_LIBRARY_PATH is undefined, set it to the following:
+
+MR/R2023a/runtime/glnxa64:MR/R2023a/bin/glnxa64:MR/R2023a/sys/os/glnxa64:MR/R2023a/sys/opengl/lib/glnxa64
+
+If it is defined, set it to the following:
+
+${LD_LIBRARY_PATH}:MR/R2023a/runtime/glnxa64:MR/R2023a/bin/glnxa64:MR/R2023a/sys/os/glnxa64:MR/R2023a/sys/opengl/lib/glnxa64</param.target.install.notes>
     <param.intermediate>${PROJECT_ROOT}/ObjectFinder_1/for_testing</param.intermediate>
     <param.files.only>${PROJECT_ROOT}/ObjectFinder_1/for_redistribution_files_only</param.files.only>
     <param.output>${PROJECT_ROOT}/ObjectFinder_1/for_redistribution</param.output>
@@ -28,7 +41,13 @@
     <param.enable.clean.build>false</param.enable.clean.build>
     <param.user.defined.mcr.options />
     <param.target.type>subtarget.standalone</param.target.type>
-    <param.support.packages />
+    <param.support.packages>
+      <item>&lt;package displayname="Deep Learning Toolbox Model for VGG-16 Network" enabled="false" name="Deep Learning Toolbox Model for VGG-16 Network" product="Deep Learning Toolbox"/&gt;</item>
+      <item>&lt;package displayname="Deep Learning Toolbox Model for Xception Network" enabled="false" name="Deep Learning Toolbox Model for Xception Network" product="Deep Learning Toolbox"/&gt;</item>
+      <item>&lt;package displayname="Deep Learning Toolbox Model for Inception-v3 Network" enabled="false" name="Deep Learning Toolbox Model for Inception-v3 Network" product="Deep Learning Toolbox"/&gt;</item>
+      <item>&lt;package displayname="Deep Learning Toolbox Model for ResNet-50 Network" enabled="false" name="Deep Learning Toolbox Model for ResNet-50 Network" product="Deep Learning Toolbox"/&gt;</item>
+      <item>&lt;package displayname="Deep Learning Toolbox Model for AlexNet Network" enabled="false" name="Deep Learning Toolbox Model for AlexNet Network" product="Deep Learning Toolbox"/&gt;</item>
+    </param.support.packages>
     <param.web.mcr>true</param.web.mcr>
     <param.package.mcr>false</param.package.mcr>
     <param.no.mcr>false</param.no.mcr>
@@ -54,7 +73,6 @@
       <param.installpath.combo />
       <param.logo />
       <param.install.notes />
-      <param.target.install.notes />
       <param.intermediate />
       <param.files.only />
       <param.output />
@@ -62,7 +80,6 @@
       <param.enable.clean.build />
       <param.user.defined.mcr.options />
       <param.target.type />
-      <param.support.packages />
       <param.web.mcr />
       <param.package.mcr />
       <param.no.mcr />
@@ -81,7 +98,6 @@
     <fileset.resources />
     <fileset.package />
     <fileset.depfun>
-      <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/Object Finder_resources/48px-Add-Folder.png</file>
       <file>${PROJECT_ROOT}/Object Finder_resources/48px-Angler-Fish.png</file>
@@ -181,6 +197,7 @@
       <file>${PROJECT_ROOT}/convertObjectFinderDataV4toV5.m</file>
       <file>${PROJECT_ROOT}/convertObjectFinderDataV5toV7.m</file>
       <file>${PROJECT_ROOT}/convertObjectFinderDataV7toV8.m</file>
+      <file>${PROJECT_ROOT}/convertObjectFinderDataV8toV10.m</file>
       <file>${PROJECT_ROOT}/convertSkelSNT2ml.m</file>
       <file>${PROJECT_ROOT}/deleteNetwork.m</file>
       <file>${PROJECT_ROOT}/distDotsToCellBody.m</file>
@@ -230,21 +247,15 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>/home/luca/MATLAB/R2021a</root>
+      <root>/home/luca/MATLAB/R2023a</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
-        <toolbox name="gpucoder" />
         <toolbox name="neuralnetwork" />
       </toolboxes>
       <toolbox>
         <matlabcoder>
           <enabled>true</enabled>
         </matlabcoder>
-      </toolbox>
-      <toolbox>
-        <gpucoder>
-          <enabled>true</enabled>
-        </gpucoder>
       </toolbox>
       <toolbox>
         <neuralnetwork>
@@ -261,7 +272,7 @@
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>5.8.0-44-generic</osver>
+      <osver>6.2.6-76060206-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>
