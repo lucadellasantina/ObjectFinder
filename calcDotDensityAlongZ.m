@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2020 Luca Della Santina
+%  Copyright (C) 2016-2024 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -29,7 +29,7 @@ if D.zEnd == D.zStart
     D.density = size(Objs.Pos, 1);
     D.densityPerc = zeros(1, BinsNum);
     for i = 1:BinsNum
-        D.densityPerc(i) = Density;
+        D.densityPerc(i) = numel(Objs.Pos(:,1));
     end
     
 else

@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2020 Luca Della Santina
+%  Copyright (C) 2016-2024 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -16,7 +16,7 @@
 %  You should have received a copy of the GNU General Public License
 %  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 %
-function Filter = validateObjectWithNeuralNet(Dots, NeuralNet)
+function Filter = validateObjectWithNeuralNet(Dots, NeuralNet, Confidence)
 %% Classify objects using neural network (outcome == 'Object' or 'Noise')
 tic;
 sz = NeuralNet.Layers.Layers(1).InputSize;     
@@ -47,7 +47,9 @@ for i = 1:length(Dots.Vox)
     end
 
     % Classify using pretrained neural network
-    Filter.passF(i) = (classify(NeuralNet.Net, I) == 'Object');
+    %Filter.passF(i) = (classify(NeuralNet.Net, I) == 'Object');
+    [~, P] = classify(NeuralNet.Net, I);
+    Filter.passF(i) = (P(2) >= Confidence);
 end
 disp(['Done in ' num2str(toc) ' seconds, valid objects: ' num2str(numel(find(Filter.passF))) ' / ' num2str(numel(Filter.passF))]);
 end

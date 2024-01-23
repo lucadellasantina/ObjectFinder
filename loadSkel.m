@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2020 Luca Della Santina
+%  Copyright (C) 2016-2024 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -39,6 +39,11 @@ end
 
 if ~isempty(Skel) && ~isfield(Skel, 'branches')
 
+    if isa(Skel.Name, 'java.lang.String')
+        % Convert to string if name is a Java char array
+        Skel.Name = Skel.Name.toCharArray';
+    end
+    
     Skel.XYZ = Skel.FilStats.aXYZ;
     Skel.SomaPtID = Skel.FilStats.SomaPtID+1;
     Skel.FilStats.aEdges = Skel.FilStats.aEdges - Skel.FilStats.aEdges(1,1) + 1; % shift index edges so that first element starts with 1

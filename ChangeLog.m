@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2020 Luca Della Santina
+%  Copyright (C) 2016-2024 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -26,6 +26,11 @@
 % TODO: AOSLO Luca cannot validate, inspector looks for 3rd dimension
 % TODO: Selection of 2nd point does not work in 2023a on linux
 %
+%  _*Version 10.2*            created on 2024-01-23 by Luca Della Santina_
+%
+%   + Added ROC calculation in validate neural network
+%   + Ported to MATLAB R2023b
+%
 %  _*Version 10.1*            created on 2023-07-18 by Luca Della Santina_
 %
 %   + Ported to MATLAB R2023a
@@ -36,8 +41,14 @@
 %   + Added support for EfficientNet-b0 models
 %   + Fixed net evaluation performance metrics
 %   + Fixed errors in network training
+%   + inspect2D: redraw error scrolling into a tile that has 1 valid object
+%   + inspect2D: robot click simulator gets mouse position from java.awt
 %   + Generate Training data now asks for destination folder
 %   + Allowed training rate values from 0.00001
+%   + Test NeuralNet reports Accuracy, Precision, Sensitivity, Specificity
+%   + new/edited/renamed NeuralNet are selected automatically in table
+%   + fixed bug not allowing validation of 2D images
+%   + Handled exception in which skeleton name is a java.lang.String
 %
 %  _*Version 10.0*            created on 2021-05-17 by Luca Della Santina_
 %

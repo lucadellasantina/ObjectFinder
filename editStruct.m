@@ -1,5 +1,5 @@
 %% Clarinet: Electrophysiology time series analysis
-% Copyright (C) 2018-2020 Luca Della Santina
+% Copyright (C) 2018-2024 Luca Della Santina
 %
 %  This file is part of Clarinet
 %

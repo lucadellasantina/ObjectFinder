@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2020 Luca Della Santina
+%  Copyright (C) 2016-2024 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -29,9 +29,15 @@ SkelUIDs  = {};
 files = dir([folder filesep 'skeletons' filesep '*.mat']);
 for f = 1:numel(files)
     load([folder filesep 'skeletons' filesep files(f).name],'Name', 'UID');
+
     if isnumeric(Name)
+        % Matlab names cannot start with a number
         Name = ['Filament ' num2str(Name)];       
+    elseif isa(Name, 'java.lang.String')
+        % Convert to string if name is a Java char array
+        Name = Name.toCharArray';
     end
+
     if isempty(SkelNames)
         SkelNames = {Name};
         SkelUIDs  = {UID};

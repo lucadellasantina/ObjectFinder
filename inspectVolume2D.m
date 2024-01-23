@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2020 Luca Della Santina
+%  Copyright (C) 2016-2024 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -21,10 +21,18 @@ function Dots = inspectVolume2D(I, Dots, Filter)
     % Default parameter values
     CutNumVox  = size(I); % Magnify a zoom region of this size
     Isize      = size(I);
-    nFrames    = Isize(3);
+    if numel(size(I)) == 2
+        nFrames = 1;
+    else
+        nFrames    = Isize(3);
+    end
     actionType = 'Select';
 
-    Pos        = ceil([Isize(2)/2, Isize(1)/2, Isize(3)/2]); % Initial position is middle of the stack
+    if numel(size(I)) == 2
+        Pos        = ceil([Isize(2)/2, Isize(1)/2, 1]); % Initial position is middle of the stack
+    else
+        Pos        = ceil([Isize(2)/2, Isize(1)/2, Isize(3)/2]); % Initial position is middle of the stack
+    end
     PosRect    = ceil([Isize(2)/2-CutNumVox(2)/2, Isize(1)/2-CutNumVox(1)/2]); % Initial position of zoomed rectangle (top-left vertex)
     PosZoom    = [-1, -1, -1];    % Initial position in zoomed area
     click      = 0;               % Initialize click status
@@ -1199,7 +1207,9 @@ if (Pos(1) > 0) && (Pos(2) > 0) && (Pos(1) < size(F,2)) && (Pos(2) < size(F,1))
     RejObjIDs = find(rejIcut); % IDs of rejected objects within field of view 
     
     % Concatenate objects lists depending on whether they are in columns or rows
-    if size(ValObjIDs,1) == 1
+    if numel(ValObjIDs) == 1
+        VisObjIDs = [ValObjIDs; RejObjIDs]; % IDs of objects within field of view 
+    elseif size(ValObjIDs,1) == 1
         VisObjIDs = [ValObjIDs, RejObjIDs]; % IDs of objects within field of view 
     else
         VisObjIDs = [ValObjIDs; RejObjIDs]; % IDs of objects within field of view 
@@ -1292,15 +1302,17 @@ end
 function SimulateClick
     % Simulates a mouse left left-clicking to bring in the middle of the 
     % main figure and then reposition the mouse back where it was
+    import java.awt.MouseInfo;
     import java.awt.Robot;
     import java.awt.event.*;
     
     mouse = Robot;
-    ScreenSize = get(0, 'screensize');
-    MousePos = get(0, 'PointerLocation');
-    MousePos = [MousePos(1,1), ScreenSize(4) - MousePos(1,2)];
+    %ScreenSize = get(0, 'screensize'); % Screen dim [1 1 width height]
+    %MousePos = get(0, 'PointerLocation') % Mouse position from MATLAB [x,y]
+    MousePos = [MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y]; % Mouse position from Java
     FigPos = get(gcf, 'position');
-    mouse.mouseMove(FigPos(1)+FigPos(3)/2, FigPos(2)+FigPos(4)/2);    
+
+    mouse.mouseMove(FigPos(1)+3*FigPos(3)/4, FigPos(2)+3*FigPos(4)/4);    
     mouse.mousePress(InputEvent.BUTTON1_MASK);
     mouse.mouseRelease(InputEvent.BUTTON1_MASK);
     mouse.mouseMove(MousePos(1), MousePos(2));
