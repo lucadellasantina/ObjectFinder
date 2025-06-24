@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2024 Luca Della Santina
+%  Copyright (C) 2016-2025 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -22,14 +22,19 @@
 % TODO: measure distance from closest skeleton and colocalize within it
 % TODO: Allow processing of 12/16-bit images
 % TODO: Make heatmaps plots with finer convolution disk
-% TODO: bug in findObjectsSimple crashes on DAPI marcus example
 % TODO: AOSLO Luca cannot validate, inspector looks for 3rd dimension
-% TODO: Selection of 2nd point does not work in 2023a on linux
+%
+%  _*Version 10.3*            created on 2025-06-24 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2024b
+%   + inspectObject2D: Added button to find specific object by ID number
+%   + Updated copyright years
 %
 %  _*Version 10.2*            created on 2024-01-23 by Luca Della Santina_
 %
 %   + Added ROC calculation in validate neural network
 %   + Ported to MATLAB R2023b
+%   + Fixed error when associating an empty mask with the current obj set
 %
 %  _*Version 10.1*            created on 2023-07-18 by Luca Della Santina_
 %

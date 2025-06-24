@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1513984100" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="519589911" file="/home/luca/Dropbox/MATLAB scripts/ObjectFinder/Object Finder.prj" location="/home/luca/Dropbox/MATLAB scripts/ObjectFinder" name="Object Finder" target="target.mlapps" target-name="Package App">
     <param.appname>Object Finder</param.appname>
     <param.authnamewatermark>Luca Della Santina</param.authnamewatermark>
     <param.email>luca.dellasantina@gmail.com</param.email>
@@ -11,9 +11,9 @@
       <file>${PROJECT_ROOT}/Object Finder_resources/icon_16.png</file>
     </param.icons>
     <param.summary>Find objects in three-dimentional image stacks.</param.summary>
-    <param.description>Copyright 2016-2024 Luca Della Santina</param.description>
-    <param.screenshot>/tmp/tpfedf65d3_2c1a_4f7f_a677_552fc7f5aa85.png</param.screenshot>
-    <param.version>10.2</param.version>
+    <param.description>Copyright 2016-2025 Luca Della Santina</param.description>
+    <param.screenshot>/tmp/tp6750fd75_1c25_4cc9_b696_c78622833f54.png</param.screenshot>
+    <param.version>10.3</param.version>
     <param.products.name>
       <item>MATLAB</item>
       <item>Deep Learning Toolbox</item>
@@ -27,10 +27,10 @@
       <item>80</item>
     </param.products.id>
     <param.products.version>
-      <item>23.2</item>
-      <item>23.2</item>
-      <item>23.2</item>
-      <item>23.2</item>
+      <item>24.2</item>
+      <item>24.2</item>
+      <item>24.2</item>
+      <item>24.2</item>
     </param.products.version>
     <param.platforms />
     <param.output>${PROJECT_ROOT}</param.output>
@@ -44,21 +44,7 @@
       <file>${PROJECT_ROOT}/ObjectFinder.mlapp</file>
     </fileset.main>
     <fileset.depfun>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-Delete.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-Edit.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-Manual.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-Masks.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-Training-set.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-copy.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-export.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-import.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-info.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-monkey.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-new.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-save.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-unblock-granted.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/48px-web-browser.png</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/Eyemeter/Eyemeter_resources/bug.png</file>
+      <file>/home/luca/Downloads/IHC Zebrafish Thiru/control_zf1-1_DAPI_SNAP_Ribeye_MAGUK_0002/Settings.mat</file>
       <file>${PROJECT_ROOT}/DiameterCalculator.mlapp</file>
       <file>${PROJECT_ROOT}/NewExperiment.mlapp</file>
       <file>${PROJECT_ROOT}/SimpleSettings.mlapp</file>
@@ -120,71 +106,6 @@
       <file>${PROJECT_ROOT}/shollAnalysisSegments.m</file>
       <file>${PROJECT_ROOT}/skeletonizeMask.m</file>
       <file>${PROJECT_ROOT}/validateObjectWithNeuralNet.m</file>
-      <file>/home/luca/Dropbox/MATLAB scripts/VolumeCut/Skel2Graph3D.m</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Add-Folder.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Angler-Fish.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-BarPlot.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Blow-Fish.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Cancel.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Crab.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Edit-clear.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Edit-copy.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Edit-delete-2.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Filter.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-FindObjects.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Fish-Bone.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Fruit-2cherries-cross.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Fruit-3cherries.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Go-bottom.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Go-down.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Go-top.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Go-up.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Heatmap.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Histogram.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-HomeFolder.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Inspect.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Link_Image.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-List-add.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-List-remove.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-MIP.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Map-Treaure.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-MasksColored.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Measure.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-PacMan.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Paint-Mask.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Sholl.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Tentacle.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Text-x-generic_with_pencil.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-View-refresh.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Whale-Small-Fish.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Whale-Tail.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Zoom-fit.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Zoom-in.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-Zoom-out.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-calculator.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-center.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-dice-add.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-dice-remove.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-dice.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-down.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-floppy.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-image.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-left.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-objects.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-reject.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-render.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-right.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-scales.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-screenshot.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-settings.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-switch.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-trash.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-up.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/48px-validate.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/72px-Batch-process.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/Fruit-2cherries-check.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/ObjectFinder.png</file>
-      <file>/home/luca/MATLAB Add-Ons/Apps/ObjectFinder/Dropbox/MATLAB scripts/ObjectFinder/Object Finder_resources/app_icon_big.png</file>
       <file>${MATLAB_ROOT}/toolbox/local/userpath.m</file>
     </fileset.depfun>
     <fileset.resources>
@@ -197,7 +118,7 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>/home/luca/MATLAB/R2023b</root>
+      <root>/home/luca/MATLAB/R2024b</root>
       <toolboxes>
         <toolbox name="matlabcoder" />
         <toolbox name="gpucoder" />
@@ -228,7 +149,7 @@
       <vista>false</vista>
       <linux>true</linux>
       <solaris>false</solaris>
-      <osver>6.6.6-76060606-generic</osver>
+      <osver>6.12.10-76061203-generic</osver>
       <os32>false</os32>
       <os64>true</os64>
       <arch>glnxa64</arch>

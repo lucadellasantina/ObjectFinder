@@ -1,5 +1,5 @@
 %% ObjectFinder - Recognize 3D structures in image stacks
-%  Copyright (C) 2016-2024 Luca Della Santina
+%  Copyright (C) 2016-2025 Luca Della Santina
 %
 %  This file is part of ObjectFinder
 %
@@ -44,6 +44,7 @@ function Dots = inspectVolume2D(I, Dots, Filter)
     SelObjID   = 0;               % Initialize selected object ID#
 	
     % Load icons
+    IconFindObj     = imread('48px-FindObjects.png');
     IconZoomIn      = imread('48px-Zoom-in.png');
     IconZoomOut     = imread('48px-Zoom-out.png');
     IconZoomFit     = imread('48px-Zoom-fit.png');    
@@ -71,8 +72,9 @@ function Dots = inspectVolume2D(I, Dots, Filter)
     % Add GUI conmponents
     set(gcf,'units', 'normalized', 'position', [0.25 0.1 0.5 0.75]);
     pnlSettings     = uipanel(  'Title','Objects'   ,'Units','normalized','Position',[.003,.005,.195,.99]); %#ok, unused variable
-    txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.940,.185,.02],'String',['Valid: ' num2str(numel(find(Filter.passF)))]);
-    txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.910,.185,.02],'String',['Total: ' num2str(numel(Filter.passF))]);
+    btnSelObjID     = uicontrol('Style','Pushbutton','Units','normalized','position',[.132,.905,.060,.07],'cdata',IconFindObj, 'tooltip', 'Select a specific object by ID number','Callback',@btn_SelObjID_pressed); %#ok, unused variable
+    txtValidObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.940,.125,.02],'String',['Valid: ' num2str(numel(find(Filter.passF)))]);
+    txtTotalObjs    = uicontrol('Style','text'      ,'Units','normalized','position',[.007,.910,.125,.02],'String',['Total: ' num2str(numel(Filter.passF))]);
     chkShowObjects  = uicontrol('Style','checkbox'  ,'Units','normalized','position',[.130,.875,.060,.02],'String','Show', 'Value',1, 'tooltip', 'Color Objects (spacebar)','Callback',@chkShowObjects_changed);
     cmbAction       = uicontrol('Style','popup'     ,'Units','normalized','Position',[.007,.860,.120,.04],'String', {'Select (s)', 'Refine (r)'}, 'tooltip', 'Current Action','Callback', @cmbAction_changed);    
     
@@ -158,6 +160,33 @@ function Dots = inspectVolume2D(I, Dots, Filter)
         simulatedClick = true;
         SimulateClick;
         simulatedClick = false;        
+    end
+
+    function btn_SelObjID_pressed(src,event) %#ok, unused arguments 
+        ReqObjID = inputdlg('Specify ID# of object to select:');
+        
+        if isempty(ReqObjID)
+            return % User cancelled
+        end
+
+        ReqObjID = str2double(ReqObjID{1});
+        if ReqObjID >0 && ReqObjID<=Dots.Num
+            SelObjID = ReqObjID;
+            frame = Dots.Pos(SelObjID,3);
+            Pos = Dots.Pos(SelObjID,[2 1]);
+        else
+            msgbox('Eneter object ID not found.', 'Invalid ID', 'error');
+            return
+        end
+          
+        % Make sure zoom rectangle is within image area
+        Pos = [max(CutNumVox(2)/2+1,Pos(1)),...
+            max(CutNumVox(1)/2+1,Pos(2)), frame];
+        Pos = [min(Isize(2)-CutNumVox(2)/2,Pos(1)),...
+            min(Isize(1)-CutNumVox(1)/2,Pos(2)),frame];
+
+        scroll(frame, 'right');
+
     end
 
     function btnValidate_clicked(src,event) %#ok, unused arguments 
