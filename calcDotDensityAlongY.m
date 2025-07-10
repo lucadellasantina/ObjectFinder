@@ -29,7 +29,7 @@ if D.yEnd == D.yStart
     D.density = size(Objs.Pos, 1);
     D.densityPerc = zeros(1, BinsNum);
     for i = 1:BinsNum
-        D.densityPerc(i) = Density;
+        D.densityPerc(i) = numel(Objs.Pos(:,1));
     end
     
 else

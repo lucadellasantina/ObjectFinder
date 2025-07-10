@@ -1,0 +1,652 @@
+%% ObjectFinder - Recognize 3D structures in image stacks
+%  Copyright (C) 2016-2025 Luca Della Santina
+%
+%  This file is part of ObjectFinder
+%
+%  ObjectFinder is free software: you can redistribute it and/or modify
+%  it under the terms of the GNU General Public License as published by
+%  the Free Software Foundation, either version 3 of the License, or
+%  (at your option) any later version.
+%
+%  This program is distributed in the hope that it will be useful,
+%  but WITHOUT ANY WARRANTY; without even the implied warranty of
+%  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%  GNU General Public License for more details.
+%
+%  You should have received a copy of the GNU General Public License
+%  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+%
+% *Change log*
+%
+% TODO: automatically convert to latest ObjectFinder version during batch
+% TODO: measure distance from closest skeleton and colocalize within it
+% TODO: Allow processing of 12/16-bit images
+% TODO: Make heatmaps plots with finer convolution disk
+% TODO: AOSLO Luca cannot validate, inspector looks for 3rd dimension
+%
+%  _*Version 10.4*            created on 2025-07-10 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2025a
+%   + App packaging now through MATLAB project tasks
+%   + Removed dependency to Octave for inpoly2.m
+%   + Removed error call to Dist2CB in convertObjectFinderDatav4to5.m
+%   + Fixed error when replacing an existing colocalization analysis
+%   + Fixed error in simulating random addition of objects (positions)
+%   + Fixed missing PoverD calculation in calcPath
+%
+%  _*Version 10.3*            created on 2025-06-24 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2024b
+%   + inspectObject2D: Added button to find specific object by ID number
+%   + Updated copyright years
+%
+%  _*Version 10.2*            created on 2024-01-23 by Luca Della Santina_
+%
+%   + Added ROC calculation in validate neural network
+%   + Ported to MATLAB R2023b
+%   + Fixed error when associating an empty mask with the current obj set
+%
+%  _*Version 10.1*            created on 2023-07-18 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2023a
+%   + Added support for ShuffleNet models
+%   + Added support for DenseNet-201 models
+%   + Added support for NASNet-Large / NASNet-Mobile models
+%   + Added support for DarkNet-19 / DarkNet53 models
+%   + Added support for EfficientNet-b0 models
+%   + Fixed net evaluation performance metrics
+%   + Fixed errors in network training
+%   + inspect2D: redraw error scrolling into a tile that has 1 valid object
+%   + inspect2D: robot click simulator gets mouse position from java.awt
+%   + Generate Training data now asks for destination folder
+%   + Allowed training rate values from 0.00001
+%   + Test NeuralNet reports Accuracy, Precision, Sensitivity, Specificity
+%   + new/edited/renamed NeuralNet are selected automatically in table
+%   + fixed bug not allowing validation of 2D images
+%   + Handled exception in which skeleton name is a java.lang.String
+%
+%  _*Version 10.0*            created on 2021-05-17 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2021a
+%   + New streamlined format to store colocalizatin analysis
+%   + Removed old method of choosing images (btnChooseImages)
+%   + Automatic colocalization with rotated mask (90/180/270 deg)
+%   + Automatic colocalization with rotated objects (90/180/270 deg)
+%   + Verbose progress during automatic colocalization with mask
+%   + Colocalization stores rotation, centroid overlap, within distance
+%   + Custom voxel connectivity in batch object detection
+%
+%  _*Version 9.1*             created on 2021-02-10 by Luca Della Santina_
+%
+%   + Batch calculate Sholl analysis with custom bin number and size
+%   + Batch calculate density slong skeleton
+%   + Batch always save automatedmeasurements.csv in root folder
+%   + Objects density reported under summary statistics
+%   + Keyboard shortcuts for manual colocalization GUI
+%   + Fixed calculation of pathlength2soma in batch density along skel
+%
+%  _*Version 9.0*             created on 2020-08-23 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2020b, now required
+%   + App icon shows on titlebar and windows tray / mac dock
+%   + Redesigned Sliced Volume Inspector
+%   + inspectVolume2D: Speed up ~50% by drawing one view/slice at a time
+%   + inspectVolume2D: Current slice number and zoom level show in titlebar
+%   + inspectVolume2D: Screenshot highlights current zoomed region
+%   + inspectVolume2D: Fixed misalignement when zooming 1:1 from uncentered
+%   + Automate: Report average NN distance / overlap with S.D.
+%   + Detect tab: new button to assign mask to current objects
+%   + Detect objects: assert that selected mask and image are same size
+%   + loadImage: using memory efficient tiffreadVolume()
+%   + Automate: Fixed error when batch detecting objects without a mask
+%
+%  _*Version 8.9*             created on 2020-08-14 by Luca Della Santina_
+%
+%   + Colocalize: Plot double-colocalization analysis
+%   + Automate: Report colocalization rates
+%   + Inspect2D: Green/Magenta colorscheme for colorblind people
+%   + Inspect2D/manualColoc: Save snapshot button to save current screen
+%   + Inspect2D: circa 20% speed-up and lower memory footprint
+%
+%  _*Version 8.8*             created on 2020-07-24 by Luca Della Santina_
+%
+%   + Custom binning for density by depth and volume by depth plots
+%   + Calculate density along Z (whole-mount) or Y (sections) axis
+%   + Automation: Add folders recursively search all subfolder levels
+%   + Automation: Add folders ignores invalid objectfinder project folders
+%   + Colocalize: Fixed bug preventing to check colocalized objects
+%
+%  _*Version 8.6*             created on 2020-05-01 by Luca Della Santina_
+%
+%   + Fixed major bug preventing calculation of density within mask
+%   + Density of objects within mask only uses objects within mask
+%   + Automatic skeletonization of binary masks
+%   + inspect2D: Fixed error when clicking on scrollbar during button_up 
+%   + load mask calibration from mask image file
+%   + density-by-depth saves density in excel table intead of objects#
+%   + Fixes mismatch in validating objects with automate vs detect tabs
+%   + inspect2D: fixed misaligned drawing of zoomed panel
+%   + inspect2D: fixed inaccurate dot selection on clicking
+%   + inspect2D: selecting multiple objects is significant sped-up
+%   + findObjectsSimple: fixed error in overlap regions resolution
+%   + inspect2D: Added buttons to validate/reject all selected objects
+%   + Enforced reading image resolution from current app.Post image
+%   + Ensured current image is loaded before starting manual colocalization
+%
+%  _*Version 8.5*             created on 2020-04-14 by Luca Della Santina_
+%
+%   + Automate tab: adding folders does not load all images into gallery
+%   + Automate tab: choose image stack&mask from combo boxes in search
+%   + App renamed to "Object Finder" for better display in matlab app tab
+%   + Faster boot and load experiment by loading Images only when needed
+%   + Faster window centering at boot time
+%   + Report objects statistics text alligned consistently in table 
+%
+%  _*Version 8.4*             created on 2020-03-27 by Luca Della Santina_
+%
+%   + Density by depth calculates also within mask boundaries
+%   + Bugfixes in batch report object density by depth
+%
+%  _*Version 8.3*             created on 2020-03-20 by Luca Della Santina_
+%
+%   + fixed Major bug in NN distance calculation, invalid objects were also
+%     considered in the pool of potential neighbors for the calculation
+%   + New option in batch colocalizaion to force NN distance recalculation
+%   + New dialog in auto colocalization to force NN distance recalculation
+%   + Improved speed of NN distance calculation
+%
+%  _*Version 8.2*             created on 2020-03-17 by Luca Della Santina_
+%
+%   + App version automatically displayed in title
+%   + Simulate colocalization rate at different overlap with binary mask
+%   + LateX interpreter disabled when plotting simulation results
+%
+%  _*Version 8.1*             created on 2020-01-12 by Luca Della Santina_
+%
+%   + 3D Volume Inspector tool: renders volume and objects
+%   + New button to create a mask where objects are randomly colored
+%
+%  _*Version 8.0*             created on 2020-01-10 by Luca Della Santina_
+%
+%   + Updated copyright notices to 2020
+%   + Inspect2D pixels not beloning to any objects are now shown in grey
+%   + Batch nearest neighbor analysis, colocalization and report
+%   + Removed bottom bar with Log and Lamp
+%   + Multiple skeletons management
+%   + findObjects: Fixed noise=min bug preventing detection of binary masks
+%   + removed 'data' and 'images' subdfolders from each project
+%   + direct selection of images and masks without going through gallery
+%   + New NeuralNet management system and improved usage
+%   + Simulations: new management system
+%   + Simulations: rename and clone simulations
+%   + Removed colocRedraw.m, now embedded into colocVideoFig.m
+%   + Colocalize: new option to save not colocalized objects as a new set
+%   + colocManual: colocalization window automatically closes at the end
+%   + colocManual: user can mark objects as not valid
+%   + colocManual: fixed reset last object button, was resetting current
+%   + Resolved all code warnings in AppDesigner
+%   + Plot Skeleton and Locations have en-face and side-view panels
+%   + UI cleanup
+%   + Included all icons into app packaging
+%   + Removed calcDensityFiner.m
+%   + Updated all imarisXT plugins for the new format
+%   + inspect2D allows adding a new object and refining object voxels
+%   + Simplified Detect tab UI
+%   + Support for storing/retrieving Presets of detection parameters
+%   + Simulate colocalization rate at different thresholds
+%   + Native builds for Windows, macOS, Linux
+%
+%  _*Version 7.8*             created on 2019-08-22 by Luca Della Santina_
+%
+%   + Multiple thresholds enabled in batch processing and filterObjects()
+%   + New Z position threshold available for validation 
+%   + Bugfixes in filterObjects
+%   + New colocalization with mask option checkbox: centroid must overlap
+%   + New colocalization between objects: centroid must overlap
+%
+%  _*Version 7.7*             created on 2019-08-21 by Luca Della Santina_
+%
+%   + Improved image loading / saving time
+%   + Better visual feedback of progress using dialogs
+%   + Improved speed of adding multiple folder for batch processing
+%   + Bugfixes
+%
+%  _*Version 7.6*             created on 2019-08-19 by Luca Della Santina_
+%
+%   + Unambiguos tracking of objects by UID
+%   + Faster objects loading time
+%   + NeuralNets database handling via UID, similar to objects 
+%   + New experiment button allows graphic creation of home folder
+%   + Fixed lost focus of main window when modal dialogs are created
+%
+%  _*Version 7.5*             created on 2019-08-17 by Luca Della Santina_
+%
+%   + Rewrote inspectVolume2D to be fater and contained in a single .m file
+%   + Fixed saveobjects error if /objects folder does not exist
+%   + Enclose tool allows polygon selection of multiple objects on screen
+%   + Change Validation can change multiple objects at the same time
+%   + Button to save Objects report summary as a table in reports folder
+%   + Visual feedback of progress using dialogs throughout the app
+%   + Removed stop button in automate, using cancellable progress dialog
+%   + Ensured zoomed regions is always within image borders
+%   + Fixed wait mouse pointer while computing lasso selection region
+%   + Improved Colocalization analysis loading time
+%
+%  _*Version 7.4*             created on 2019-05-21 by Luca Della Santina_
+%
+%   + New simulations folder and handling using same logic as objects
+%   + New within distance parameter for colocalization between object sets
+%   + Colocalization: larger UI space for lists of objects and images
+%   + Colocalization: better selection of Objects/Images logic
+%   + Colocaliation NN: if NN distance is not available, calculates it
+%   + calcNN: fixed bug due to missing initialization of p2overlap vector
+%   + Report tab now displays average stats in a table
+%   + Improved app startup time
+%   + Improved experiment loading time
+%   + Removed use of Settings.TPN
+%   + Select folder now resets app.Dots and app.Sim
+%   + Allow to plot skeleton and sholl analysis when no Objects are created
+%   + Fixed soma location circle position when plotting a skeleton
+%   + Sholl analysis asks user to define the stepping size in microns
+%   + Fixed error when loading settings for multiple batch folders 
+%   + Fixed updating the list of available images for batch colocalization
+%
+%  _*Version 7.3*             created on 2019-05-15 by Luca Della Santina_
+%
+%   + Colocalization: Plot distribution of engulfed objects
+%   + Colocalization: Plot locaion of colocalized objects on skeleton
+%   + Colocalization summary now displayed in a table
+%   + Colocalization summary can be saved into an Excel spreadsheet
+%   + filterObjects: Fixed error when Shape properties are not present 
+%   + load images: Fixed black MIP display of 0-1 mask tif files
+%   + findObjects: Fixed no objects if searching in a binary image
+%
+%  _*Version 7.2*             created on 2019-03-28 by Luca Della Santina_
+%
+%   + Support for TIF files larger than 4GB
+%   + New noise estimator: Minimum intensity
+%   + NeuralNet allows processing of 2D images
+%   + NeuralNet allows training data augmentation
+%   + NeuralNet allows choosing which objects to accumulate
+%   + NeuralNet allows accumulating all objects found in folders
+%   + Fixed normalization for preview of binary mask files
+%   + Fixed Find objects disabled when new folder is selected
+%
+%  _*Version 7.1*             created on 2019-03-23 by Luca Della Santina_
+%
+%   + New Noise Estimator combobox allow chosing mode|std noise estimation
+%   + New Noise Estimator: Standard devidation
+%   + New Simple settings dialog asks user simple questions for settings
+%   + inspect2D allows to Zoom in/out using +/- shortcuts and buttons
+%   + loadObjects allows to load only some fields from file
+%
+%  _*Version 7.0*             created on 2019-03-18 by Luca Della Santina_
+%
+%   + New objects storage format in /objects/ folder instead of Dots.mat    
+%   + New engulfed colocalization allows counting of engulfed objects
+%   + New NeuralNet Training button to add all subfolders of a root folder
+%   + New Import NeuralNet model from Keras, Caffe, ONNX, MATLAB formats
+%   + New Simulate tab allows permutation-based simulations/hypothesis testing 
+%   + All reports now generate new figure windows
+%   + Fixed calculation of colocalization rates to exclude invalid objects
+%   + Fixed error when colocalization old and new data were mixed
+%   + Saving colocalized objs as new set now recalculates density
+%   + Manual double-colocalization has now 8 panels with all combinations
+%   + findObjects: fixed no object was found when block search was disabled 
+%   + Fixed error in calling colocalizeMask from automate tab
+%   + Dots.mat is now saved in v7.3 format to allow >2Gb files
+%   + colocAutoNN fixes bug when Dots and NN have different number elements
+%   + If an unfinished manual colocalization exists, ask user what to do
+%   + NNdist: when multiple objs are nearest,pick the one with most overlap
+%   + NNdist: if NNdist with same dstDots already exists, replace it
+%
+%  _*Version 6.5*             created on 2019-02-18 by Luca Della Santina_
+%
+%   + Batch colocalization analysis allows to save results in a table
+%   + Fixed error when manual colocalization analysis window is closed
+%   + If no Z-resolution is present in TIF file, use ImageJ default of '1'
+%   + Fixed bug in colocalization analysis not storing all dots
+%   + Added confirmation dialog before removing objects or coloc analysis
+%   + Fixed getFilteredObject bug when filter is not stored as booleans
+%
+%  _*Version 6.4*             created on 2019-02-03 by Luca Della Santina_
+%
+%   + Automation of colocalization with mask or objects
+%   + Automate colocalization with objects calculates NN distance if needed
+%   + Automate now displays the short-name of each processed folder
+%   + Automate  overwrote if an existing set with same name exists
+%   + Fixed mask filename was wrongly printed on screen
+%   + Fixed error in Automate if user canceled selection of a folder
+%   + Fixed Automation log scrolling disabled
+%
+%  _*Version 6.3*             created on 2019-01-29 by Luca Della Santina_
+%
+%   + Automate: fixed bug preventing to batch-calculate shape properties
+%   + Automate: added ability to load all experiments from a root folder
+%   + Automate: added option to specify new images for the analysis
+%   + Automate: added option to propagate settings of 1st folder to all
+%
+%  _*Version 6.2*             created on 2019-01-29 by Luca Della Santina_
+%
+%   + Detect: If objects set already exists, Ask user then oveerwrite them
+%   + Inspect2D: Objects can be filtered according to their Z position
+%
+%  _*Version 6.1*             created on 2019-01-29 by Luca Della Santina_
+%
+%   + Detect: User can select whether to estimate local / global noise
+%   + New button to purge a set of objects from invalid objects
+%   + getFilteredObjects now return a Dots struct with all fields
+%
+%  _*Version 6.0*             created on 2019-01-28 by Luca Della Santina_
+%
+%   + Added confirmation dialog for all Clear buttons to ensure user's will
+%   + Colocalzation: saved fields "Method, NumVoxOverlap, NumPercOverlap"
+%   + Removed itMin parameter for search
+%   + Fixed watershed postprocessing was removing very bright puncta
+%   + findObjects code cleaning in calculating block size
+%   + Removed delayed execution timer when not in batch-mode
+%   + Removed Local thresholding search method
+%   + Simplified UI of Detect and Automate tabs
+%   + Added calculator to convert volume into diameter of equivalent sphere
+%   + Fixed button Clear colocalization was missing "Yes" option
+%   + Batch processing was highlighting the wrong item as being processed
+%   + Fixed Automate bug where Dots kept accumulating across experiments
+%   + Fixed Automate bug not refreshing current experiment at batch end
+%   + Choose images: arrange MIPs into N(2x3) panels
+%   + Isnpect2D: Fixed wrong mouse location reading when mozing zoom region
+%
+%  _*Version 5.18*             created on 2019-01-14 by Luca Della Santina_
+%
+%   + Colocaliz. rates are calculated from raw data and expressed clearly
+%   + Removed need for refresh buttons in the user interface
+%   + Removed log text area from detect tab
+%   + Added current folder, image file to the UI
+%   + Choose images: maintains aspect ratio of each MIP
+%   + Choose images: hidden menu and tool bars
+%   + Choose images: binary masks are stretched between 0 and 255
+%   + Choose images: disabled LaTeX interpreter for panel titles
+%   + Choose images: shows images on multiple rows to optimize space usage
+%
+%  _*Version 5.17*              created on 2019-01-13 by Luca Della Santina_
+%
+%   + Inspect2D: improved accuracy in selecting objects with left-click
+%   + Inspect2D: improved accuracy in moving zoom region with left-click
+%
+%  _*Version 5.16*              created on 2019-01-11 by Luca Della Santina_
+%
+%   + Inspect manually objects that are detected as NOT colocalized
+%   + Simplified code for calling inspection of colocalized objects
+%   + Uniformed font type across UI panels
+%   + Fixed error if user aborts early inspection of colocalized objects
+%
+%  _*Version 5.15*              created on 2019-01-10 by Luca Della Santina_
+%
+%   + Iverted xy coordinates when importing SNT skeleton.traces files
+%   + Fixed when checking colocalized objects with mask, mask was too dim
+%   + Lamp shows busy yellow light when removing colocalization results
+%   + Fixed error in pool of objects used for autocolocalization with mask
+%
+%  _*Version 5.14*              created on 2019-01-09 by Luca Della Santina_
+%
+%   + Fixed lstColoDone component was not updated when selecting new folder
+%
+%  _*Version 5.13*              created on 2018-10-09 by Luca Della Santina_
+%
+%   + Linear density along skeleton is also reported by depth
+%   + Volume occupancy of objects is also reported within mask
+%   + During image selection mask=0 always means no mask
+%   + Fixed bug in automatic colocalization analysis with binary mask
+%   + Fixed bug loading 2D images, when Z resolution was missing use XY res
+%   + Fixed bug in labels of NN distribution plots and saved spreadsheets
+%
+%  _*Version 5.12*              created on 2018-10-08 by Luca Della Santina_
+%
+%   + Support for Imaris 7.2.4+, 8.x, 9.x
+%   + Oblongness and major axis length exported as Imaris spots properties
+%   + Backward compatibility with R2018a restored
+%
+%  _*Version 5.11*              created on 2018-10-07 by Luca Della Santina_
+%
+%   + Support for 2D images
+%   + Fixed error when image files are missing voxel resolution info
+%
+%  _*Version 5.10*              created on 2018-10-04 by Luca Della Santina_
+%
+%   + Support for skeletons created with ImageJ's Simple Neurite Tracer
+%   + Removed need for SkelFiner.mat
+%
+%  _*Version 5.9*              created on 2018-09-22 by Luca Della Santina_
+%
+%   + findObjects: Improved speed when found objects are > 1 million
+%   + Added compatilibity with MATLAB R2018b
+%   + Added tooltips for all major UI components
+%
+%  _*Version 5.8*              created on 2018-09-18 by Luca Della Santina_
+%
+%   + findObjects: Removed thresholdStep, now stepping is one by default
+%   + About tab: added buttons to Homepage, User manual, Report issue
+%   + Added tooltips to main UI components
+%   + Upgraded project to MATLAB R2018b
+%
+%  _*Version 5.7*              created on 2018-09-17 by Luca Della Santina_
+%
+%   + findObjects: Improved speed of blocks conflict resolution by ~200X
+%   + findObjects: No more need to delete empty objects after resolution
+%
+%  _*Version 5.6*              created on 2018-09-06 by Luca Della Santina_
+%
+%   + findObjects: Improved speed of objects accumulation by 10X
+%   + findObjects: Improved speed of blocks conflict resolution by ~40X
+%
+%  _*Version 5.5*              created on 2018-09-06 by Luca Della Santina_
+%
+%   + findObjects: Improved speed of search algorithms by 10X
+%   + Fixed error when loading multiple images of different size
+%
+%  _*Version 5.4*              created on 2018-09-06 by Luca Della Santina_
+%
+%   + Added Local thresholding mode, 30X faster than iterative thresholding
+%   + User can choose between search algorithms
+%   + Simplified object size to a single Max and Min diameter values
+%   + Reverted resolution of duplicates to old method because recursive
+%     intersect becomes too slow when more than 2000 objects are detected
+%   + Cheched that objects are within size limits before watershed
+%   + Different size images (not resolution) allowed in the same experiment
+%   + New Copy objects button creates a new set of objects copy of selected
+%   + FitShpere bug, now it can handle reference spheres of all sizes
+%   + Fixed error in volume inspector if no shape properties are available
+%   + Simplified fitSphere to calculate only Oblong and MajorAxisLength
+%
+%  _*Version 5.3*              created on 2018-09-06 by Luca Della Santina_
+%
+%   + Simplified resolution of duplicated objects across overlapping blocks
+%   + Fixed insufficient block buffer calculation (now 2 times max xy size)
+%   + Fixed inconsistent block size calculation (now 3 times max xy size)
+%   + When detecting a new set of objects remember previous search settings
+%
+%  _*Version 5.2*              created on 2018-08-29 by Luca Della Santina_
+%
+%   + 8 new NeuralNetworks (VGG, SqueezeNet, GoogleNet, Inception, ResNet)
+%   + Objects can be filtered based on Roundness and Major Axis Length
+%   + Colocalized objects can now be saved as a new set of objects
+%   % Colocalization with mask no longer asks for objects name
+%   % Inspect2D: Fixed bug in applying secondary filter 
+%   % Removed need for a custom readfunction when training NeuralNet
+%   % Fixed selecting objects with names that are substrings of each other
+%
+%  _*Version 5.1*              created on 2018-08-28 by Luca Della Santina_
+%
+%   % Improved 5x the validation speed when using NeuralNetwork
+%
+%  _*Version 5.0*              created on 2018-08-22 by Luca Della Santina_
+%
+%   + Custom neural network can be trained and used as validation method
+%   + Multiple objects per experiment are now allowed
+%   + Nearest neighbor analysis with distance and overlap distribution calc
+%   + Automatic colocalization analysis between nearest neigbor object sets
+%   + User can disable block search
+%   + Connectivity min. constrained to a certain # times the local noise
+%   + New icons sea creature themed and updated graphical layout
+%   + Oblongness is calculated/plotted as proxy for sphericity
+%   + Inspect2D allows visualization of non-square images
+%   + Inspect2D now able to show images smaller than the default 256x256
+%   + Report plots distribution of size/brightness with custom fitting
+%   + Conversion tool for data analyzed with version 4.x
+%   + Lenght of major object axis is calculated as part of sphericity
+%   % User can repeat sphericity calculation at will
+%   % Ispect2D fixed wrong calculation of Pos and PosZoom
+%   % Dots.mat now contains info on Settings/Density/NNdist/Coloc/Filter
+%   % findObjects: Fixed wrong computation when watershed was disabled
+%   % findObjects: Fixed skipping objects on border region
+%   % findObjects: Fixed error when no LosingID is found
+%   % Reorganized plot section into the broaded report setion
+%   % Plots are in a new window by default and save always data as table
+%   % Automatic colocalization analysis against mask 
+%   % Removed need for files Density.mat, Coloc.mat, Filter.mat
+%   % Fixes error if cancel is clicked when loading images
+%   % fitSphere takes now into account XY resolution different from Z res.
+%
+% _*Version 4.10.5*            created on 2018-07-03 by Luca Della Santina_
+%
+%   + Colocalization of objects allowed with 2 channels at the same time
+%   + Check double colocalization to reinspect only double-colocalized obj
+%   + Inspect2D arrows and wasd allow nagivation across the left panel
+%   + Colocalization settings panel on right hand of GUI
+%   + Colocalization GUI panels visually separated by gray lines
+%   % Colocalization GUI scrollbar overlapped with panel
+%   % Sholl analysis plot didn't show axes when called after heatmap plot
+%   % Colocalized channel replaces any previous version of it in Coloc.mat
+%   - Removed settings.TPN from colocVideoFig (pwd filesep is default)
+%   % Fixed bug preventing selection of border object in volume inspector
+%   % Primary filter did not allow to lower threshold below starting value
+%   % Renamed ITMax as Score in the GUI to allow new search algorithms
+%   % Inverted order of presented panels in colocalization analysis
+%
+% _*Version 4.9.1*             created on 2018-05-25 by Luca Della Santina_
+%
+%   + Inspect2D allows to select individual objects in the zoomed region
+%   + Inspect2D allows to toggle validation status of selected object
+%   + Inspect2D right-clicking zoomed region panel centers the view there
+%   % Inspect2D left-clicking obhect highlights it in blue
+%   % Filter now saves Threshold field among options on file
+%   % Filter now loads threshold direction from options on file
+%   % Filter now defaults to average values for if no value is on file
+%   % Total # of valid objects updates when user manually change validation
+
+% _*Version 4.8*               created on 2018-05-20 by Luca Della Santina_
+%
+%   + Bigger button sizes (better for HiDPI screens)
+%   + Inspector type selection (Stack inspector vs Imaris 7)
+%   + 2D inspector allows switching show objects via checkbox (or spacebar)
+%   + 2D inspector allows filtering direction >= or <= than set threshold
+%   % Update folder path in saved Settings.mat upon home folder selection
+%   % try statement catches errors pushing custom statistics to imaris
+%   % Removed need for Settings.TPN, just use current working directory
+%   % New GUI required MATLAB R2018a
+%   % 2D inspector saves filter thresholds chosen by user into Filter.mat
+%   - 2D inspector cliking on zoomed region does not blank out zoomed view
+%
+% _*Version 4.7*               created on 2018-03-31 by Luca Della Santina_
+%
+%  + Colocalization analysis tab: manual colocalization
+%  + Colocalization of multiple channels are accumulated into Coloc.mat
+%  % Colocalization shows isolated object overlayed to Coloc. channel
+%  % Fixed titles of colocalization and indpector windows
+%  % Objects filtered using the 2D inspector are correctly passed to Imaris
+%  % 2D Inspector allows "None" as primary threshold to show no highlights
+%
+% _*Version 4.6*               created on 2018-03-26 by Luca Della Santina_
+%
+%  % Reduced findObjects mem usage by passing only block volume to workers 
+%  % Improved speed by 30% by optimizing search block size
+%  % findObjects uses Dots struct array for simpler manipulations
+%  % fixed missing Settings.mat when using RunAnalysis on new folder
+%  - Removed minFinalDotSize from parameters, just use MinDotSize
+%  - Removed multiPeakCorrectionfactor from parameters, use MaxDotSize
+%  - Removed psychophisics cutoff values from findObjects
+%
+% _*Version 4.5*               created on 2018-03-13 by Luca Della Santina_
+%
+%  + Batch processing mode under the new Automate tab
+%  % filterObjects accepts custom thresholds for ITMax, Vol, MeanBright
+%
+% _*Version 4.4*               created on 2018-03-10 by Luca Della Santina_
+%
+%  + Custom timer allows to start ObjectFinder at a specific time of day
+%  + 2D inspector allows to pick a visual threshold with volume navigation
+%  % Inspect3D returns error if Imaris cannot be started via COM interface
+%  % Inspect3D optional whether to display validated and rejected objects
+%  % Post, Dend and Mask are loaded at startup if present in working folder
+%  % Fixed error in calculating object density by depth percentage
+%
+% _*Version 4.3*               created on 2018-03-01 by Luca Della Santina_
+%
+%  % Calculation of sphericity properties is now optional
+%  % Inspect3D catches validated spots from imaris (no need for XTension)
+%
+% _*Version 4.2*               created on 2018-02-25 by Luca Della Santina_
+%
+%  + Added user control over search algorithm settings via GUI
+%  + Added user control over filter settings via GUI
+%  + Watershed segmentation is now optional in findObjects()
+%  + Replaced princomp with pca for PCA analysis in fitShphere()
+%
+% _*Version 4.1*               created on 2018-02-24 by Luca Della Santina_
+%
+%  + Plot Sholl analysis on Skel
+%  + getFilteredObjects returns all validated objects according to Filter
+%  + Added License text in the GUI's About tab
+%  + Added visual log on GUI during detection phase
+%  - Removed need for grouped.mat, all Objects are store in Dots.mat
+%
+% _*Version 4.0*               created on 2018-02-08 by Luca Della Santina_
+%
+%  + Packaged ObjectFinder into a matlab app (requires MATLAB R2016b+)
+%  + Added GUI using app designer (requires MATLAB R2016b+)
+%  + Sholl analysis calculation for Skeleton
+%  + GUI allows to save plot data as Excel table in "results" folder
+%  + GUI allows to plot skeleton+objects in vector format for publication
+%  + GUI allows plotting Density (linear or by depth) of objects
+%  + GUI allows plotting in a separate window so plots can be saved
+%  + GUI allows plotting heatmap if linear density alog skeleton
+%  + additional scripts to plot objects density and size across experiments
+%  % Do not ask which skel to select if only one is available in Imaris
+%  % if SG.PassI does not exists, load SG.PassF by default in imaris
+%  % Don't ask where to save skel/dots/mask when exporting from Imaris
+%  % Pruned filterObjects from all suprefluous code
+%  % Moved SG.mat to the main folder, now called Filter.mat
+%  % Filter.PassF contains flags of most recent passing opjects
+%  - removed dependency from dist.m and cfigure.m
+%  - removed distinction between PassF and PassI, now last passing is PassF
+%  - removed "find" folder
+%  - removed "temp" folder
+%  - removed on-screen plots from groupFacingObjects and filterObjects
+%
+% _*Version 3.0*               created on 2017-11-03 by Luca Della Santina_
+%
+%  + Multi-threaded findObjects (times faster = number of cores available)
+%  + Complete multi-platform support (Windows / macOS / Linux)
+%  + Z resolution is automatically detected from TIFF image description
+%  - Removed median filtering of source images (unuseful to most people)
+%  - Removed experiment detail description (unuseful to most people)
+%  % All settings are stored in Settings.mat (no more TPN and similar file)
+%  % Throw error if current working directory strucrue is invalid
+%
+% _*Version 2.5*               created on 2017-10-22 by Luca Della Santina_
+%
+%  + Display more than 4 images if present in the I folder
+%  + Automatically read x-y image resolution from tif files saved by ImageJ
+%  + Added text progress bars to follow progress during processing steps
+%  + Added debug=0/1 mode in subroutines to toggle text/graphic output
+%  - Removed dependency from getVars() to get user input
+%  - Removed redundances in user inputs (i.e. image resolution asked twice)
+%  - Removed anaRa, anaRead, CAsampleCollect, StratNoCBmedian, Gradient
+%  - Merged redundant scripts(anaCB/anaCBGrouped, anaRd/anaRdGrouped)
+%  % Unified Imaris XTensions under ObjectFinder_ names
+%  % Imaris extensions provided visual confirmation dialog upon success
+%  % Restructured main look into 4 distinct operations for maintainability
+%  % Return Dots from objFinder and others instead of saving on disk
+%  % Replaced GetMyDir dependency with pwd and work from current folder
+%  % filterObjects(TPN) skips questions and just reprocess Imaris dots
+%  % Stored ImageInfo (size,res) inside Grouped.InInfo for plotting
+%

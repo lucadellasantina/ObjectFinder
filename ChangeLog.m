@@ -24,6 +24,17 @@
 % TODO: Make heatmaps plots with finer convolution disk
 % TODO: AOSLO Luca cannot validate, inspector looks for 3rd dimension
 %
+%  _*Version 10.4*            created on 2025-07-10 by Luca Della Santina_
+%
+%   + Ported to MATLAB R2025a
+%   + App packaging now through MATLAB project tasks
+%   + Removed dependency to Octave for inpoly2.m
+%   + Removed error call to Dist2CB in convertObjectFinderDatav4to5.m
+%   + Fixed error when replacing an existing colocalization analysis
+%   + Fixed error in simulating random addition of objects (positions)
+%   + Fixed missing PoverD calculation in calcPathLengthStats.m
+%   + Fixed density calculation for 2D images in calcDotDensityAlongY.m
+%
 %  _*Version 10.3*            created on 2025-06-24 by Luca Della Santina_
 %
 %   + Ported to MATLAB R2024b

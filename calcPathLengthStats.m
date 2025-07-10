@@ -26,13 +26,14 @@ EdgeLengthList      = Skel.SegStats.Lengths;
 
 EdgePathLengthMax   = ceil(max(EdgePathLengthList));
 
-DistBin             = 10; %Bin distance is 10 micron by default
+DistBin             = 10; % Bin distance is 10 micron by default
 DistFromSoma        = 5:1:EdgePathLengthMax;
 NumDots             = zeros(1, length(DistFromSoma));
 EdgeLengths         = zeros(1, length(DistFromSoma));
 for i = 1 : length(DistFromSoma)
     NumDots(i)      = length(find((DotPathLengthList>DistFromSoma(i)-DistBin/2) & (DotPathLengthList<=DistFromSoma(i)+DistBin/2)));
     EdgeLengths(i)  = sum(EdgeLengthList((EdgePathLengthList>DistFromSoma(i)-DistBin/2) & (EdgePathLengthList<=DistFromSoma(i)+DistBin/2)));
+    PoverD          = NumDots./EdgeLengths;
 end
 
 PathLengthStats.PathLengthBin       = DistBin;
@@ -60,7 +61,7 @@ if showPlot
     axis([0 EdgePathLengthMax 0 250]);
     set(gca, 'XColor', [1 1 1]); set(gca, 'YColor', [1 1 1]);
     title('bin=10um');
-    xlabel('Path length from cell body (�m)');
+    xlabel('Path length from cell body (um)');
     ylabel('Total number of dots in the bin');
     
     subplot(3,1,2, 'Color', [0 0 0]), hold on;
@@ -68,7 +69,7 @@ if showPlot
     axis([0 EdgePathLengthMax 0 400]);
     set(gca, 'XColor', [1 1 1]); set(gca, 'YColor', [1 1 1]);
     title('bin=10um');
-    xlabel('Path length from cell body (�m)');
+    xlabel('Path length from cell body (um)');
     ylabel('Total lengths of dendrites in the bin');
     
     subplot(3,1,3, 'Color', [0 0 0]), hold on;
@@ -76,8 +77,8 @@ if showPlot
     axis([0 EdgePathLengthMax 0 max(1, max(PoverD))]);
     set(gca, 'XColor', [1 1 1]); set(gca, 'YColor', [1 1 1]);
     title('bin=10um');
-    xlabel('Path length from cell body (�m)');
-    ylabel('#puncta/�m dendrite');
+    xlabel('Path length from cell body (um)');
+    ylabel('#puncta/um dendrite');
     
     set(gcf,'inverthardcopy','off'); %this will prevent color change back to default upon saving or printing
     %saveas(gcf, [pwd filesep 'images' filesep 'DotDend_vs_PathLengthStats'], 'tif');

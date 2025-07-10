@@ -126,39 +126,13 @@ function [stat,bnds] = inpoly2(varargin)
         sort(vert(:,+2)) ;
     vert = vert (ivec,:) ;
     
-    if (exist( ...
-        'OCTAVE_VERSION','builtin')  > +0)
-    
-    if (exist('inpoly2_oct','file') == +3)
-        
-    %-- delegate to the compiled version of the code if it's
-    %-- available
-        
-       [stat,bnds] = ...
-            inpoly2_oct( ...
-                vert,node,edge,fTOL,lbar) ;
-    
-    else
-   
-    %-- otherwise, just call the native m-code version
-   
-       [stat,bnds] = ...
-            inpoly2_mat( ...
-                vert,node,edge,fTOL,lbar) ;
-   
-    end
-   
-    else
-        
     %-- MATLAB's JIT is generally smart enough these days to
     %-- run this efficiently
         
        [stat,bnds] = ...
             inpoly2_mat( ...
                 vert,node,edge,fTOL,lbar) ;
-        
-    end
-    
+            
     stat(ivec) = stat ;
     bnds(ivec) = bnds ;
 
